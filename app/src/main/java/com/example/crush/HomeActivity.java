@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Twitter.initialize(this);
         setContentView(R.layout.activity_home);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -118,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().list(twitterSession.getId(), next, 20).enqueue(new retrofit2.Callback() {
+        myTwitterApiClient.getCustomTwitterService().list(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
