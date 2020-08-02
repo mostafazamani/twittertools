@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Twitter.initialize(this);
+
         setContentView(R.layout.activity_home);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -77,13 +77,11 @@ public class HomeActivity extends AppCompatActivity {
         mhandler = new myHandler();
 
 
-        Toast.makeText(activity, "" + nextCursor, Toast.LENGTH_SHORT).show();
         adapter = new ListAdapter(getApplicationContext());
-        DbHelper d = new DbHelper(activity);
-//        adapter.AddItemToList(d.getItem());
         mainListView.setAdapter(adapter);
 
-        loginMethod(session, nextCursor);
+
+            loginMethod(session, nextCursor);
 
 
         final Thread thread = new threadGetmoredata();
@@ -117,41 +115,34 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void loginMethod(final TwitterSession twitterSession, long next) {
-        final List<following> list = new ArrayList<>();
-        final DbHelper dbHelper = new DbHelper(activity);
-        dbHelper.getWritableDatabase();
+
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-
-//            for (int j =0 ; j<3 ; j++) {
-        do {
-            myTwitterApiClient.getCustomTwitterService().list(twitterSession.getId(), nextCursor, 20).enqueue(new retrofit2.Callback() {
-                @Override
-                public void onResponse(Call call, @NonNull Response response) {
-                    if (response.body() != null) {
-                        followingmodel fol = (followingmodel) response.body();
-//
-//                          for (int i = 0 ; i<fol.getResults().size();i++){
-//                              list.add(fol.getResults().get(i));
-//                          }
-
-                        nextCursor = Long.parseLong(fol.getNextCursorStr());
+        myTwitterApiClient.getCustomTwitterService().list(twitterSession.getId(), next, 20).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    followingmodel fol = (followingmodel) response.body();
 
 
-                        Toast.makeText(HomeActivity.this, "" + fol.getNextCursorStr(), Toast.LENGTH_SHORT).show();
-                    }
+                    adapter.AddItemToList(fol.getResults());
+                    adapter.notifyDataSetChanged();
+
+                    Toast.makeText(HomeActivity.this, "" + fol.getNextCursor(), Toast.LENGTH_SHORT).show();
+
+                    if (fol.getNextCursor() !=0)  loginMethod(twitterSession,fol.getNextCursor());
                 }
+            }
 
-                @Override
-                public void onFailure(Call call, Throwable t) {
+            @Override
+            public void onFailure(Call call, Throwable t) {
 
-                    Toast.makeText(HomeActivity.this, "" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "" + t, Toast.LENGTH_SHORT).show();
 
-                }
-            });
-        } while (nextCursor != 0);
-//            adapter.AddItemToList(list);
-//            adapter.notifyDataSetChanged();
+            }
+        });
+//        }
+
         Toast.makeText(activity, "end", Toast.LENGTH_SHORT).show();
     }
 

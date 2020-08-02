@@ -12,6 +12,10 @@ public class followingmodel {
     @Expose
     private String nextCursorStr;
 
+    @SerializedName("next_cursor")
+    @Expose
+    private long nextCursor;
+
     @SerializedName("previous_cursor")
     @Expose
     private long previousCursor;
@@ -39,6 +43,12 @@ public class followingmodel {
     public void setPreviousCursorStr(String previousCursorStr) {
         this.previousCursorStr = previousCursorStr;
     }
+    public void setNextCursor(long nextCursor) {
+        this.nextCursor = nextCursor;
+    }
+
+
+    public long getNextCursor() { return nextCursor; }
 
     public String getNextCursorStr() {
         return nextCursorStr;
