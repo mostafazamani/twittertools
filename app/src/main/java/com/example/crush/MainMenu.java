@@ -3,6 +3,7 @@ package com.example.crush;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.crush.models.UserShow;
@@ -30,11 +31,17 @@ public class MainMenu extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private TwitterSession session;
 
+    ImageView profile , banner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
         setContentView(R.layout.main_menu_activity);
+
+        banner = findViewById(R.id.banner_profile);
+        profile = findViewById(R.id.profile_image);
+
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
