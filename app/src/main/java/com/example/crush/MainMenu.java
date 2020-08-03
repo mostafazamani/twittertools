@@ -1,9 +1,14 @@
 package com.example.crush;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.crush.models.UserShow;
@@ -22,6 +27,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.InputStream;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +39,7 @@ public class MainMenu extends AppCompatActivity {
     private TwitterSession session;
 
     ImageView profile , banner;
+    TextView follower_num , following_num , twitts_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,10 @@ public class MainMenu extends AppCompatActivity {
 
         banner = findViewById(R.id.banner_profile);
         profile = findViewById(R.id.profile_image);
+        follower_num =findViewById(R.id.follower_num);
+        following_num = findViewById(R.id.following_num);
+        twitts_num = findViewById(R.id.twitt_num);
+
 
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -98,6 +110,17 @@ public class MainMenu extends AppCompatActivity {
                     Toast.makeText(MainMenu.this, ""+show.getProfile_name() + "\n"
                             +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
 
+                    String purl = show.getProfile_image_url();
+                    String burl = show.getProfile_banner_url();
+                    follower_num.setText(String.valueOf(show.getFollowers_count()));
+                    following_num.setText(String.valueOf(show.getFollowings_count()));
+
+                    new DownloadImageTask((ImageView) findViewById(R.id.banner_profile))
+                            .execute(burl);
+
+                    new DownloadImageTask((ImageView) findViewById(R.id.profile_image))
+                            .execute(purl);
+
                 }
 
 
@@ -109,6 +132,33 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bannerImage ;
+
+        public DownloadImageTask(ImageView bannerImage ) {
+            this.bannerImage = bannerImage;
+         //   this.profileImage = profilImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("خطا در بارگیری عکس", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bannerImage.setImageBitmap(result);
+            //profileImage.setImageBitmap(result);
+        }
     }
 
 
