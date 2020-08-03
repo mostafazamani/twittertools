@@ -3,10 +3,15 @@ package com.example.crush;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
+import com.example.crush.models.UserShow;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,14 +21,26 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainMenu extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private TwitterSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Twitter.initialize(this);
         setContentView(R.layout.main_menu_activity);
+
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+
+        user_info(session);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -60,4 +77,32 @@ public class MainMenu extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
+    public void user_info(TwitterSession session){
+
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+        myTwitterApiClient.getCustomTwitterService().User(session.getUserId() , session.getUserName()).enqueue(new Callback<UserShow>() {
+            @Override
+            public void onResponse(Call<UserShow> call, Response<UserShow> response) {
+
+                if (response.body() != null) {
+                    UserShow show = response.body();
+                    Toast.makeText(MainMenu.this, ""+show.getProfile_name() + "\n"
+                            +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<UserShow> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
 }

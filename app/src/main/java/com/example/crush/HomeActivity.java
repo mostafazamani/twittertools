@@ -3,12 +3,11 @@ package com.example.crush;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.crush.models.followingmodel;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -52,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().list(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
+        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
@@ -71,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, Throwable t) {
 
-                Toast.makeText(HomeActivity.this, "" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "wtf", Toast.LENGTH_SHORT).show();
 
             }
         });

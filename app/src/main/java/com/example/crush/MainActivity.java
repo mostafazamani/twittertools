@@ -31,74 +31,56 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
     long loggedUserTwitterId;
+    SharedPreferences preferences;
 
     TwitterLoginButton loginButton;
     TwitterSession session;
     TwitterAuthClient twitterAuthClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
         setContentView(R.layout.activity_main);
 
+        preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+
+
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
-        loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                // Do something with result, which provides a TwitterSession for making API calls
-                session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-                TwitterAuthToken authToken = session.getAuthToken();
+            loginButton.setCallback(new Callback<TwitterSession>() {
+                @Override
+                public void success(Result<TwitterSession> result) {
+                    // Do something with result, which provides a TwitterSession for making API calls
+                    session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                    preferences.edit().putString("log", "login").apply();
+                    TwitterAuthToken authToken = session.getAuthToken();
 
-                loggedUserTwitterId = session.getId();
-                //String token = authToken.token;
-                //  String secret = authToken.secret;
+                    loggedUserTwitterId = session.getId();
+                    //String token = authToken.token;
+                    //  String secret = authToken.secret;
 
-                loginMethod(session);
-            }
+                    loginMethod(session);
+                }
 
-            @Override
-            public void failure(TwitterException exception) {
-                // Do something on failure
-                Toast.makeText(getApplicationContext(),"Login fail",Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void failure(TwitterException exception) {
+                    // Do something on failure
+                    Toast.makeText(getApplicationContext(), "Login fail", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
     }
 
-    public void loginMethod(final TwitterSession twitterSession){
+    public void loginMethod(final TwitterSession twitterSession) {
 
-        String userName=twitterSession.getUserName();
-        Intent intent= new Intent(MainActivity.this,MainMenu.class);
-        intent.putExtra("username",userName);
+        String userName = twitterSession.getUserName();
+        Intent intent = new Intent(MainActivity.this, MainMenu.class);
+        intent.putExtra("username", userName);
         startActivity(intent);
 
 
-
-//        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-//        myTwitterApiClient.getCustomTwitterService().list(loggedUserTwitterId).enqueue(new retrofit2.Callback() {
-//            @Override
-//            public void onResponse(Call call, Response response) {
-//                followingmodel fol = (followingmodel) response.body();
-//
-//
-//
-//
-//
-//                for (int k=0;k<20;k++){
-//                    listAdapter.add(fol.getResults().get(k).getName());
-//
-//                }
-//                listAdapter.notifyDataSetChanged();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call call, Throwable t) {
-//
-//                Toast.makeText(activity, ""+t, Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
     }
 
     @Override
@@ -108,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         // Pass the activity result to the login button.
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
 }

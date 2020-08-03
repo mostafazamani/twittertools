@@ -1,4 +1,4 @@
-package com.example.crush;
+package com.example.crush.models;
 
 import android.content.ContentValues;
 

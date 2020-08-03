@@ -1,4 +1,4 @@
-package com.example.crush;
+package com.example.crush.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.crush.models.following;
+
 import java.util.ArrayList;
 import java.util.List;
 
