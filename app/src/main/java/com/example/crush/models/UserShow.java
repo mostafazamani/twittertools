@@ -31,6 +31,17 @@ public class UserShow {
     @Expose
     private String profile_banner_url;
 
+    @SerializedName("statuses_count")
+    @Expose
+    private int statuses_count;
+
+    public int getStatuses_count() {
+        return statuses_count;
+    }
+
+    public void setStatuses_count(int statuses_count) {
+        this.statuses_count = statuses_count;
+    }
 
     public String getProfile_name() {
         return profile_name;
