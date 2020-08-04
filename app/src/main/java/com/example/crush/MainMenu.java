@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.crush.models.UserShow;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -19,6 +21,7 @@ import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,6 +43,7 @@ public class MainMenu extends AppCompatActivity {
 
     ImageView profile , banner;
     TextView follower_num , following_num , twitts_num;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +56,57 @@ public class MainMenu extends AppCompatActivity {
         follower_num =findViewById(R.id.follower_num);
         following_num = findViewById(R.id.following_num);
         twitts_num = findViewById(R.id.twitt_num);
+        bottomNavigationView = findViewById(R.id.bottom_nav);
 
 
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+      //  bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+
+                    case R.id.item_1:
+                        Toast.makeText(MainMenu.this, "fuck off1", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    case R.id.item_2:
+                        Toast.makeText(MainMenu.this, "fuck off2", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    case R.id.item_3:
+                        Toast.makeText(MainMenu.this, "fuck off3", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                }
+
+                return false;
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         user_info(session);

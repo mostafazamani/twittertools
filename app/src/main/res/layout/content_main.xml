@@ -184,7 +184,19 @@
 
         </LinearLayout>
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_item"
+            android:background="#000000"
+
+            app:itemTextColor="@color/whiteSmoke"
+            app:itemIconTint="@color/whiteSmoke"
+            android:id="@+id/bottom_nav"
+            app:itemBackground="@color/lightBlue"
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
+
 
     <fragment
         android:id="@+id/nav_host_fragment"
