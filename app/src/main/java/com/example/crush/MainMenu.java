@@ -22,6 +22,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -49,106 +50,30 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
-        setContentView(R.layout.main_menu_activity);
+        setContentView(R.layout.content_main);
 
-        banner = findViewById(R.id.banner_profile);
+       /* banner = findViewById(R.id.banner_profile);
         profile = findViewById(R.id.profile_image);
         follower_num =findViewById(R.id.follower_num);
         following_num = findViewById(R.id.following_num);
-        twitts_num = findViewById(R.id.twitt_num);
+        twitts_num = findViewById(R.id.twitt_num);*/
         bottomNavigationView = findViewById(R.id.bottom_nav);
 
 
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-      //  bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
+        //user_info(session);
 
-                    case R.id.item_1:
-                        Toast.makeText(MainMenu.this, "fuck off1", Toast.LENGTH_SHORT).show();
-                        return true;
-
-                    case R.id.item_2:
-                        Toast.makeText(MainMenu.this, "fuck off2", Toast.LENGTH_SHORT).show();
-                        return true;
-
-                    case R.id.item_3:
-                        Toast.makeText(MainMenu.this, "fuck off3", Toast.LENGTH_SHORT).show();
-                        return true;
-
-                }
-
-                return false;
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        user_info(session);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 
 
+
+/*
     public void user_info(TwitterSession session){
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
@@ -210,7 +135,28 @@ public class MainMenu extends AppCompatActivity {
             bannerImage.setImageBitmap(result);
             //profileImage.setImageBitmap(result);
         }
-    }
+    }*/
+
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragment = null;
+                    switch (menuItem.getItemId()) {
+                        case R.id.item_1:
+                            selectedFragment = new HomeBottomFragment();
+                            break;
+                        case R.id.item_2:
+                            selectedFragment = new ExploreBottomFragment();
+                            break;
+                        case R.id.item_3:
+                            selectedFragment = new TwittsBottomFragment();
+                            break;
 
 
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    return true;
+                }
+            };
 }

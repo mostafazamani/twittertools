@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     long loggedUserTwitterId;
     SharedPreferences preferences;
 
+
     TwitterLoginButton loginButton;
     TwitterSession session;
     TwitterAuthClient twitterAuthClient;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+
 
 
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
