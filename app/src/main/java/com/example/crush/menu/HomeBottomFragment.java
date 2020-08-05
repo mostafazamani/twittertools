@@ -19,6 +19,7 @@ import com.example.crush.MainMenu;
 import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
 import com.example.crush.models.UserShow;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import java.io.InputStream;
@@ -35,11 +36,15 @@ public class HomeBottomFragment extends Fragment {
 
     private TwitterSession session;
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.home_fragment, container, false);
+
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
         banner  = view.findViewById(R.id.banner_profile);
         profile = view.findViewById(R.id.profile_image);
@@ -48,7 +53,7 @@ public class HomeBottomFragment extends Fragment {
         twitts_num = view.findViewById(R.id.twitt_num);
 
         // Lashi Error Mide.
-      //  user_info(session);
+        user_info(session);
 
 
 
