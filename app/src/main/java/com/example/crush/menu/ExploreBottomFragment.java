@@ -1,4 +1,4 @@
-package com.example.crush;
+package com.example.crush.menu;
 
 //import android.support.v4.app.Fragment;
 
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.crush.R;
 
 public class ExploreBottomFragment extends Fragment {
 

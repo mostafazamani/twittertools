@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.crush.menu.ExploreBottomFragment;
+import com.example.crush.menu.HomeBottomFragment;
+import com.example.crush.menu.TwittsBottomFragment;
 import com.example.crush.models.UserShow;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

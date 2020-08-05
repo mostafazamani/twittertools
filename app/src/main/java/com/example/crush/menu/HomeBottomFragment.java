@@ -1,4 +1,4 @@
-package com.example.crush;
+package com.example.crush.menu;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.crush.MainMenu;
+import com.example.crush.MyTwitterApiClient;
+import com.example.crush.R;
 import com.example.crush.models.UserShow;
 import com.twitter.sdk.android.core.TwitterSession;
 
