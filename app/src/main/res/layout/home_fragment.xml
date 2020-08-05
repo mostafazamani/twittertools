@@ -28,10 +28,22 @@
             android:background="@color/lightBlue"
             app:cardBackgroundColor="@color/lightBlue"
             >
+            <androidx.cardview.widget.CardView
+                android:layout_width="97dp"
+                android:layout_height="97dp"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                app:cardCornerRadius="50dp"
+                android:background="@color/whiteSmoke"
+                app:cardBackgroundColor="@color/whiteSmoke"
+                >
+
+
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:id="@+id/profile_image"/>
+            </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
 
         <LinearLayout

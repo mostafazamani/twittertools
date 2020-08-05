@@ -25,6 +25,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -50,6 +51,10 @@ public class MainMenu extends AppCompatActivity {
     ImageView profile , banner;
     TextView follower_num , following_num , twitts_num;
     BottomNavigationView bottomNavigationView;
+    Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
 
     Fragment fragment1 = new HomeBottomFragment();
     Fragment fragment2 = new ExploreBottomFragment();
@@ -69,6 +74,39 @@ public class MainMenu extends AppCompatActivity {
         following_num = findViewById(R.id.following_num);
         twitts_num = findViewById(R.id.twitt_num);*/
         bottomNavigationView = findViewById(R.id.bottom_nav);
+        toolbar = findViewById(R.id.m_toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem drawItem) {
+                int id = drawItem.getItemId();
+                switch(id)
+                {
+                    case R.id.about_us:
+                        Toast.makeText(MainMenu.this, "My Account",Toast.LENGTH_SHORT).show();break;
+                    case R.id.settings:
+                        Toast.makeText(MainMenu.this,"Settings",Toast.LENGTH_SHORT).show();break;
+                    case R.id.mycart:
+                        Toast.makeText(MainMenu.this, "My Cart",Toast.LENGTH_SHORT).show();break;
+                    default:
+                        return true;
+                }
+
+
+                return true;
+
+            }
+        });
+
 
         fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
