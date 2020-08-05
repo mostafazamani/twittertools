@@ -26,6 +26,8 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -49,6 +51,12 @@ public class MainMenu extends AppCompatActivity {
     TextView follower_num , following_num , twitts_num;
     BottomNavigationView bottomNavigationView;
 
+    Fragment fragment1 = new HomeBottomFragment();
+    Fragment fragment2 = new ExploreBottomFragment();
+    Fragment fragment3 = new TwittsBottomFragment();
+    FragmentManager fm = getSupportFragmentManager();
+    Fragment active = fragment1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +70,15 @@ public class MainMenu extends AppCompatActivity {
         twitts_num = findViewById(R.id.twitt_num);*/
         bottomNavigationView = findViewById(R.id.bottom_nav);
 
-
+        fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
+        fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
+        fm.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
+       // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
 
         //user_info(session);
 
@@ -144,22 +154,35 @@ public class MainMenu extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
                     Fragment selectedFragment = null;
+
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
-                            selectedFragment = new HomeBottomFragment();
-                            break;
+                            fm.beginTransaction().hide(active).show(fragment1).commit();
+                            active = fragment1;
+                            return true;
+                            //selectedFragment = new HomeBottomFragment();
+
+                            //break;
                         case R.id.item_2:
-                            selectedFragment = new ExploreBottomFragment();
-                            break;
+                            fm.beginTransaction().hide(active).show(fragment2).commit();
+                            active = fragment2;
+                            return true;
+                           // selectedFragment = new ExploreBottomFragment();
+                           // break;
                         case R.id.item_3:
-                            selectedFragment = new TwittsBottomFragment();
-                            break;
+                            fm.beginTransaction().hide(active).show(fragment3).commit();
+                            active = fragment3;
+                            return true;
+                            //selectedFragment = new TwittsBottomFragment();
+                            //break;
 
 
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    return true;
+                   // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    //return true;
+                    return false; //for 2
                 }
             };
 }
