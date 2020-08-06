@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,18 +51,20 @@ public class homeTimeline extends RecyclerView.Adapter<homeTimeline.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-
-        TweetUtils.loadTweet(list.get(position), new Callback<Tweet>() {
+        for (int i = 0 ; i< list.size();i++)
+        TweetUtils.loadTweet(list.get(i), new Callback<Tweet>() {
             @Override
             public void success(Result<Tweet> result) {
 
-                holder.myLayout.addView(new TweetView(context, result.data, R.style.tw__TweetLightWithActionsStyle));
+                TweetView tweets = new TweetView(context, result.data, R.style.tw__TweetLightWithActionsStyle);
+
+                holder.myLayout.addView(tweets);
 
             }
 
             @Override
             public void failure(TwitterException exception) {
-                // Toast.makeText(...).show();
+                Toast.makeText(context, ""+exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -19,6 +19,7 @@ import com.example.crush.R;
 import com.example.crush.adapter.homeTimeline;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -55,20 +56,26 @@ public class ExploreBottomFragment extends Fragment {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
-                    JsonArray elements = (JsonArray) response.body();
+                    try {
+                        JsonArray elements = (JsonArray) response.body();
 
-                    for (int i = 0; i < 99; i++) {
-                        JsonObject jsonObject = (JsonObject) elements.get(i);
-                        JsonElement f = jsonObject.get("id");
+                        for (int i = 0; i < 99; i++) {
+
+                            JsonObject jsonObject = (JsonObject) elements.get(i);
+                            JsonElement f = jsonObject.get("id");
 
 
-                        list.add(jsonObject.get("id").getAsLong());
+                            list.add(jsonObject.get("id").getAsLong());
+
+
+                        }
+
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(getContext(), ""+list, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "" + list, Toast.LENGTH_SHORT).show();
                     adapter.AddItemToList(list);
-
                 }
-
             }
 
             @Override
