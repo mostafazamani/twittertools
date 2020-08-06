@@ -4,4 +4,10 @@
     android:background="#FFAA00"
     android:layout_height="match_parent">
 
+ <androidx.recyclerview.widget.RecyclerView
+     android:id="@+id/timeline_item"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"/>
+
+
 </RelativeLayout>

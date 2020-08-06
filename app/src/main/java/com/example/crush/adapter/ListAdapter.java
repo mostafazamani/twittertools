@@ -1,4 +1,4 @@
-package com.example.crush;
+package com.example.crush.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.crush.R;
 import com.example.crush.models.following;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        View v = View.inflate(context,R.layout.simplerow,null);
+        View v = View.inflate(context, R.layout.simplerow,null);
         if (list!=null){
             TextView textView = v.findViewById(R.id.rowTextView);
              textView.setText(list.get(i).getName());

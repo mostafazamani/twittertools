@@ -12,22 +12,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crush.R;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.tweetui.Timeline;
 import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
 import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
+import com.twitter.sdk.android.tweetui.TwitterListTimeline;
 import com.twitter.sdk.android.tweetui.UserTimeline;
 
 public class TwittsBottomFragment extends Fragment {
+
+    private TwitterSession session;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.twitts_fragment,container,false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
         final UserTimeline userTimeline = new UserTimeline.Builder()
-                .screenName("Mzamani1998")
+                .screenName(session.getUserName())
                 .build();
 
         final TweetTimelineRecyclerViewAdapter adapter =
