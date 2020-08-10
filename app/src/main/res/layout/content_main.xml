@@ -15,13 +15,7 @@
         layout="@layout/toolsbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/navigation_menu"
-        android:fitsSystemWindows="true"
-        android:id="@+id/navigation_view"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,7 +45,13 @@
             app:itemBackground="@color/lightBlue"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>
-
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/navigation_menu"
+        android:fitsSystemWindows="true"
+        android:id="@+id/navigation_view"/>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

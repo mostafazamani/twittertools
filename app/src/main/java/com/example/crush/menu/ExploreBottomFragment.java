@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class ExploreBottomFragment extends Fragment {
     private TwitterSession session;
     List<Long> list;
     RecyclerView recyclerView;
+    GridView gridView;
 
     @Nullable
     @Override
@@ -49,6 +51,7 @@ public class ExploreBottomFragment extends Fragment {
         adapter = new homeTimeline(view.getContext());
         list = new ArrayList<>();
         recyclerView.setAdapter(adapter);
+
 
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
@@ -85,6 +88,21 @@ public class ExploreBottomFragment extends Fragment {
 
             }
         });
+
+        //////////////////////GRIDVIEW/////////////////
+
+        String [] ex = new String[12]; //{"1", "2", "3", "4", "5"}
+
+        gridView = (GridView)view.findViewById(R.id.gridview);
+        ExploreAdapter exploreAdapter = new ExploreAdapter(view.getContext(), ex);
+        gridView.setAdapter(exploreAdapter);
+
+
+
+
+
+
+
 
 
         return view;
