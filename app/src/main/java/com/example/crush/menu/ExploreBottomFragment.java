@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,7 +36,6 @@ public class ExploreBottomFragment extends Fragment {
     private TwitterSession session;
     List<Long> list;
     RecyclerView recyclerView;
-    GridView gridView;
 
     @Nullable
     @Override
@@ -51,57 +49,6 @@ public class ExploreBottomFragment extends Fragment {
         adapter = new homeTimeline(view.getContext());
         list = new ArrayList<>();
         recyclerView.setAdapter(adapter);
-
-
-
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
-        myTwitterApiClient.getCustomTwitterService().HomeTimeline(100).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    try {
-                        JsonArray elements = (JsonArray) response.body();
-
-                        for (int i = 0; i < 99; i++) {
-
-                            JsonObject jsonObject = (JsonObject) elements.get(i);
-                            JsonElement f = jsonObject.get("id");
-
-
-                            list.add(jsonObject.get("id").getAsLong());
-
-
-                        }
-
-                    } catch (Exception e) {
-                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    Toast.makeText(getContext(), "" + list, Toast.LENGTH_SHORT).show();
-                    adapter.AddItemToList(list);
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-                Toast.makeText(getContext(), "wtf" + t.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        //////////////////////GRIDVIEW/////////////////
-
-        String [] ex = new String[12]; //{"1", "2", "3", "4", "5"}
-
-        gridView = (GridView)view.findViewById(R.id.gridview);
-        ExploreAdapter exploreAdapter = new ExploreAdapter(view.getContext(), ex);
-        gridView.setAdapter(exploreAdapter);
-
-
-
-
-
-
 
 
 

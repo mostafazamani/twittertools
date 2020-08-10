@@ -16,19 +16,19 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
-    private static final String DBname = "users";
-    private static final String TB_NAME = "followers";
+    private static final String DBname = "usr";
+    private static final String TB_NAME = "follow";
 
 
     private static final String CMD = "CREATE TABLE " + TB_NAME + " ("
             + following.Key_ID + " long PRIMARY KEY NOT NULL, "
             + following.KEY_NAME + " TEXT, "
-            + following.KEY_IMAGE + " TEXT "+
+            + following.KEY_IMAGE + " TEXT " +
             ");";
 
     public DbHelper(@Nullable Context context) {
         super(context, DBname, null, 1);
-        this.context=context;
+        this.context = context;
     }
 
     @Override
@@ -48,13 +48,29 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void AddItem(following items) {
 
-        SQLiteDatabase sd = this.getWritableDatabase();
-        long insertId = sd.insert(TB_NAME, null, items.getContentValues());
 
-        Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
+        SQLiteDatabase sd = this.getWritableDatabase();
+        if (!CheckItem(items.getId())) {
+            long insertId = sd.insert(TB_NAME, null, items.getContentValues());
+            Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
+        }
         if (sd.isOpen()) sd.close();
 
     }
+
+    public boolean CheckItem(long i) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + following.Key_ID + "='" + i + "'", null);
+
+        if (cursor.moveToFirst()) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public List<following> getItem() {
 
@@ -71,7 +87,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 sl.setId(cursor.getLong(cursor.getColumnIndex(following.Key_ID)));
                 sl.setName(cursor.getString(cursor.getColumnIndex(following.KEY_NAME)));
                 sl.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(following.KEY_IMAGE)));
-
 
 
                 lsl.add(sl);

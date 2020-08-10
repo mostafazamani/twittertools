@@ -12,8 +12,6 @@ public class following {
     public static final String KEY_IMAGE = "Uri_image";
 
 
-
-
     @SerializedName("id")
     @Expose
     private long id;
@@ -67,8 +65,11 @@ public class following {
 
         values.put(Key_ID, getId());
         values.put(KEY_NAME, getScreenName());
-        values.put(KEY_IMAGE, getProfilePictureUrl());
-
+        if (getProfilePictureUrl() == null) {
+            values.put(KEY_IMAGE, "non");
+        } else {
+            values.put(KEY_IMAGE, getProfilePictureUrl());
+        }
 
 
         return values;

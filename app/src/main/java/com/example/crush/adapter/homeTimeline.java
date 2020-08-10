@@ -51,8 +51,8 @@ public class homeTimeline extends RecyclerView.Adapter<homeTimeline.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        for (int i = 0 ; i< list.size();i++)
-        TweetUtils.loadTweet(list.get(i), new Callback<Tweet>() {
+
+        TweetUtils.loadTweet(list.get(position), new Callback<Tweet>() {
             @Override
             public void success(Result<Tweet> result) {
 
