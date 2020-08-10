@@ -6,8 +6,18 @@
 
  <androidx.recyclerview.widget.RecyclerView
      android:id="@+id/timeline_item"
-     android:layout_width="match_parent"
+     android:layout_width="0dp"
      android:layout_height="match_parent"/>
-
+ <GridView
+     android:id="@+id/gridview"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:gravity="center"
+     android:columnWidth="100dp"
+     android:numColumns="auto_fit"
+     android:verticalSpacing="24dp"
+     android:horizontalSpacing="10dp"
+     android:stretchMode="spacingWidthUniform"
+     />
 
 </RelativeLayout>

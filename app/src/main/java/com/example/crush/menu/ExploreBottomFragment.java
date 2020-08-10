@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
+import com.example.crush.adapter.ExploreAdapter;
 import com.example.crush.adapter.homeTimeline;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,6 +39,8 @@ public class ExploreBottomFragment extends Fragment {
     List<Long> list;
     RecyclerView recyclerView;
 
+    GridView gridView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +55,10 @@ public class ExploreBottomFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
 
+        ////////////////GridView//////////////////////////
+        gridView = view.findViewById(R.id.gridview);
+        ExploreAdapter exploreAdapter = new ExploreAdapter(view.getContext(),list );
+        gridView.setAdapter(exploreAdapter);
 
         return view;
     }
