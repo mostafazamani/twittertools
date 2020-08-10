@@ -2,6 +2,7 @@ package com.example.crush;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.crush.models.followingmodel;
 import com.twitter.sdk.android.core.Callback;
@@ -20,7 +21,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     TwitterAuthClient twitterAuthClient;
     private DbHelper dbHelper;
 
+    Switch n;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 
     public void loginMethod() {
 

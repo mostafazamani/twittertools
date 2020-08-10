@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"/>
 
+
         <ImageView
             android:id="@+id/imageview_favorite"
             android:layout_width="24dp"
@@ -22,6 +23,7 @@
             android:layout_gravity="bottom|right"/>
 
     </FrameLayout>
+
 
     <TextView
         android:id="@+id/textview_book_name"

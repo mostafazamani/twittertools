@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/about_us"
         android:icon="@drawable/ic_menu_share"
         android:title="My Account"/>
     <item android:id="@+id/settings"
         android:icon="@drawable/ic_menu_manage"
+        
         android:title="Settings"/>
     <item android:id="@+id/mycart"
         android:icon="@drawable/ic_menu_camera"
         android:title="My Cart"/>
+    <item android:id="@+id/nav_switch"
+        app:actionLayout="@layout/toggle_switch_navigation"
+        android:title="Night Mode"
+        android:icon="@drawable/ic_day_night"/>
+
 
 </menu>

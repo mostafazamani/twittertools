@@ -13,6 +13,7 @@
 
     <include
         layout="@layout/toolsbar"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -33,15 +34,16 @@
             android:layout_above="@+id/bottom_nav"
             android:id="@+id/fragment_container"/>
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_item"
             android:background="#000000"
-
             app:itemTextColor="@color/whiteSmoke"
             app:itemIconTint="@color/whiteSmoke"
             android:id="@+id/bottom_nav"
+            app:labelVisibilityMode="unlabeled"
             app:itemBackground="@color/lightBlue"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>
@@ -49,6 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemBackground="?attr/cardBackground"
+        app:itemIconTint="?attr/tintcolor"
+        app:itemTextColor="?attr/textcolor"
+        android:background="?attr/backgroundcolor"
         app:menu="@menu/navigation_menu"
         android:fitsSystemWindows="true"
         android:id="@+id/navigation_view"/>
