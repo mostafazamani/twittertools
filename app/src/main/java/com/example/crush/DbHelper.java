@@ -52,7 +52,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sd = this.getWritableDatabase();
         if (!CheckItem(items.getId())) {
             long insertId = sd.insert(TB_NAME, null, items.getContentValues());
-            Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
         }
         if (sd.isOpen()) sd.close();
 

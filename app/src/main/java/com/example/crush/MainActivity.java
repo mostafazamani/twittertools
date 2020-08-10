@@ -1,7 +1,9 @@
 package com.example.crush;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.crush.models.followingmodel;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -33,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
     long loggedUserTwitterId;
     SharedPreferences preferences;
 
+    public long nextCursor = -1L;
 
     TwitterLoginButton loginButton;
     TwitterSession session;
     TwitterAuthClient twitterAuthClient;
+    private DbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
 
+        if (preferences.getString("log","").equals("login")){
+            session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+            load(session, nextCursor);
+            Intent intent = new Intent(MainActivity.this, MainMenu.class);
+            startActivity(intent);
+        }else {
             loginButton.setCallback(new Callback<TwitterSession>() {
                 @Override
                 public void success(Result<TwitterSession> result) {
@@ -62,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     //String token = authToken.token;
                     //  String secret = authToken.secret;
 
-                    loginMethod(session);
+
+                    load(session, nextCursor);
+
+
+                    loginMethod();
                 }
 
                 @Override
@@ -71,19 +85,54 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Login fail", Toast.LENGTH_LONG).show();
                 }
             });
-
+        }
 
     }
 
-    public void loginMethod(final TwitterSession twitterSession) {
+    public void loginMethod() {
 
-        String userName = twitterSession.getUserName();
         Intent intent = new Intent(MainActivity.this, MainMenu.class);
-        intent.putExtra("username", userName);
         startActivity(intent);
 
 
     }
+
+
+    public void load(final TwitterSession twitterSession, long next) {
+        dbHelper = new DbHelper(MainActivity.this);
+        dbHelper.getWritableDatabase();
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
+        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    followingmodel fol = (followingmodel) response.body();
+                    if (fol.getResults() != null)
+                        for (int i = 0 ; i < fol.getResults().size() ; i++){
+
+                            dbHelper.AddItem(fol.getResults().get(i));
+                        }
+                    dbHelper.close();
+
+
+
+
+                    if (fol.getNextCursor() != 0) load(twitterSession, fol.getNextCursor());
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+
+            }
+        });
+
+
+    }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
