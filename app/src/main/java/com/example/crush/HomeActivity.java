@@ -48,12 +48,7 @@ public class HomeActivity extends AppCompatActivity {
 
 //        loginMethod(session, nextCursor);
 
-        DbHelper db = new DbHelper(this);
 
-        db.getReadableDatabase();
-        List<following> li = db.getItem();
-
-        Toast.makeText(activity, ""+li.get(1).getName() + "\n"+li.size(), Toast.LENGTH_SHORT).show();
 
 
     }

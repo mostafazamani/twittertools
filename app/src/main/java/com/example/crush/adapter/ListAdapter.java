@@ -24,11 +24,7 @@ public class ListAdapter extends BaseAdapter {
 
     }
 
-    public void AddItemToList(List<following> l){
-        list.addAll(l);
-        this.notifyDataSetChanged();
 
-    }
 
 
     @Override

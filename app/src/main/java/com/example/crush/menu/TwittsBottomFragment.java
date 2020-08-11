@@ -81,7 +81,7 @@ public class TwittsBottomFragment extends Fragment {
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(getContext(), "" + list, Toast.LENGTH_SHORT).show();
+
                     adapter.AddItemToList(list);
                 }
             }

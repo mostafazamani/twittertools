@@ -1,6 +1,10 @@
 package com.example.crush.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 import android.view.View;
@@ -14,6 +18,8 @@ import androidx.annotation.NonNull;
 
 import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
+import com.example.crush.menu.HomeBottomFragment;
+import com.example.crush.models.UserShow;
 import com.example.crush.models.following;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,21 +27,30 @@ import com.google.gson.JsonObject;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExploreAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<Long> ex;
+    private final List<following> ex;
     private TwitterSession session;
 
     // 1
-    public ExploreAdapter(Context context, List<Long> ex) {
+    public ExploreAdapter(Context context) {
+        ex = new ArrayList<>();
         this.mContext = context;
-        this.ex = ex;
+    }
+
+    public void AddItemToList(List<following> l) {
+        ex.addAll(l);
+        this.notifyDataSetChanged();
+
     }
 
     // 2
@@ -58,7 +73,7 @@ public class ExploreAdapter extends BaseAdapter {
 
     // 5
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // 1
         //   final Book book = books[position];
 
@@ -74,46 +89,45 @@ public class ExploreAdapter extends BaseAdapter {
         final TextView idname = (TextView) convertView.findViewById(R.id.textview_book_author);
         //final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
 
-        ///////////////////////////////////////////
 
+        String purl = ex.get(position).getProfilePictureUrl();
 
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
-        myTwitterApiClient.getCustomTwitterService().userlookup(ex.get(position)).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    try {
-                        JsonArray elements = (JsonArray) response.body();
+        textname.setText(ex.get(position).getName());
+        idname.setText(ex.get(position).getScreenName());
 
+        new DownloadImageTask(profilePic)
+                .execute(purl);
 
-                        List<following> jsonObject = (List<following>) elements.get(0);
-
-
-                   //  profilePic.setImageResource(.getImageResource());
-                     textname.setText(jsonObject.get(0).getName());
-                     idname.setText(jsonObject.get(0).getScreenName());
-
-                    } catch (Exception e) {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-
-            }
-        });
-
-
-        /////////////////////////////////////////
-        // 3
-
-        // 4
 
         return convertView;
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bannerImage;
+
+        public DownloadImageTask(ImageView bannerImage) {
+            this.bannerImage = bannerImage;
+            //   this.profileImage = profilImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("خطا در بارگیری عکس", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bannerImage.setImageBitmap(result);
+            //profileImage.setImageBitmap(result);
+        }
     }
 
 }

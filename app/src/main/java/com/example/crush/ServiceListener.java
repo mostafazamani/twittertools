@@ -20,8 +20,4 @@ public interface ServiceListener {
     @GET("1.1/statuses/home_timeline.json")
     Call<JsonArray> HomeTimeline(@Query("count") int count);
 
-    @GET("1.1/users/lookup.json")
-    Call<JsonArray> userlookup(@Query("user_id") long id);
-
-
 }

@@ -72,24 +72,18 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<following> getItem() {
+    public List<Long> getItem() {
 
         SQLiteDatabase db = getReadableDatabase();
-        List<following> lsl = new ArrayList<>();
+        List<Long> lsl = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME, null);
 
 
         if (cursor.moveToFirst()) {
             do {
 
-                following sl = new following();
+                lsl.add(cursor.getLong(cursor.getColumnIndex(following.Key_ID)));
 
-                sl.setId(cursor.getLong(cursor.getColumnIndex(following.Key_ID)));
-                sl.setName(cursor.getString(cursor.getColumnIndex(following.KEY_NAME)));
-                sl.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(following.KEY_IMAGE)));
-
-
-                lsl.add(sl);
             } while (cursor.moveToNext());
         }
         cursor.close();
