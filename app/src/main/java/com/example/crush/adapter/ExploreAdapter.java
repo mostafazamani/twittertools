@@ -12,18 +12,14 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 
-import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
-import com.example.crush.menu.HomeBottomFragment;
-import com.example.crush.models.UserShow;
+
+
 import com.example.crush.models.following;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+
+
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -31,9 +27,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ExploreAdapter extends BaseAdapter {
 
@@ -91,17 +84,29 @@ public class ExploreAdapter extends BaseAdapter {
 
 
         String purl = ex.get(position).getProfilePictureUrl();
+        String url = geturlpic(purl);
 
         textname.setText(ex.get(position).getName());
         idname.setText(ex.get(position).getScreenName());
 
         new DownloadImageTask(profilePic)
-                .execute(purl);
+                .execute(url);
 
 
         return convertView;
     }
 
+    public String geturlpic(String s) {
+        char[] chars = s.toCharArray();
+        String url = "";
+        for (int i = 0; i < chars.length - 11; i++) {
+            url += chars[i];
+        }
+
+        url += ".jpg";
+
+        return url;
+    }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bannerImage;

@@ -2,7 +2,6 @@ package com.example.crush;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.crush.models.followingmodel;
 import com.twitter.sdk.android.core.Callback;
@@ -19,19 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     TwitterLoginButton loginButton;
     TwitterSession session;
     TwitterAuthClient twitterAuthClient;
-    private DbHelper dbHelper;
+    private DbFollowers dbHelper;
 
     Switch n;
     @Override
@@ -105,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void load(final TwitterSession twitterSession, long next) {
-        dbHelper = new DbHelper(MainActivity.this);
+        dbHelper = new DbFollowers(MainActivity.this);
         dbHelper.getWritableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {

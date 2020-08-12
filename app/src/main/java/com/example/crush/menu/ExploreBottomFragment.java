@@ -13,21 +13,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.crush.DbHelper;
-import com.example.crush.HomeActivity;
+import com.example.crush.DbFollowers;
 import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
 import com.example.crush.adapter.ExploreAdapter;
 import com.example.crush.adapter.homeTimeline;
 import com.example.crush.models.following;
 import com.example.crush.models.followingmodel;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -45,8 +39,9 @@ public class ExploreBottomFragment extends Fragment {
     int j = 0;
     List<following> sl;
     RecyclerView recyclerView;
-    DbHelper db;
+    DbFollowers db;
     public long nextCursor = -1L;
+
 
     GridView gridView;
     private ExploreAdapter exploreAdapter;
@@ -58,7 +53,7 @@ public class ExploreBottomFragment extends Fragment {
         final View view = inflater.inflate(R.layout.explore_fragment, container, false);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-        db = new DbHelper(view.getContext());
+        db = new DbFollowers(view.getContext());
         db.getReadableDatabase();
 
         list = db.getItem();
@@ -103,10 +98,11 @@ public class ExploreBottomFragment extends Fragment {
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
                     followingmodel fol = (followingmodel) response.body();
+
                     if (fol.getResults() != null)
                         for (int i = 0 ; i < fol.getResults().size() ; i++){
-                                following fl = new following();
-                            if (!db.CheckItem(fol.getResults().get(i).getId())){
+                            following fl = new following();
+                            if (!db.CheckItem(fol.getResults().get(i).getId()) && session.getId() != fol.getResults().get(i).getId()){
                                 fl.setId(fol.getResults().get(i).getId());
                                 fl.setName(fol.getResults().get(i).getName());
                                 fl.setScreenName(fol.getResults().get(i).getScreenName());
@@ -140,4 +136,20 @@ public class ExploreBottomFragment extends Fragment {
     }
 
 
+    public boolean cheklist(List<following> list , long id){
+        boolean b = false;
+        
+        for (int i = 0 ; i< list.size() ;i++){
+            
+            if (list.get(i).getId() == id){
+                b = false;
+            }else {
+                b = true;
+            }
+            
+        }
+        
+        return b;
+    }
+    
 }

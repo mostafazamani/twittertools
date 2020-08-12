@@ -8,14 +8,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.crush.adapter.ListAdapter;
-import com.example.crush.models.following;
 import com.example.crush.models.followingmodel;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -25,7 +22,7 @@ public class HomeActivity extends AppCompatActivity {
     private HomeActivity activity = this;
     public ListView mainListView;
     public ListAdapter adapter;
-    DbHelper dbHelper;
+    DbFollowers dbHelper;
     public long nextCursor = -1L;
 
     public TwitterSession session;
@@ -55,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void loginMethod(final TwitterSession twitterSession, long next) {
-        dbHelper = new DbHelper(activity);
+        dbHelper = new DbFollowers(activity);
         dbHelper.getWritableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {

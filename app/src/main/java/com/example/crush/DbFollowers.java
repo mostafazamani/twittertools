@@ -14,7 +14,7 @@ import com.example.crush.models.following;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbHelper extends SQLiteOpenHelper {
+public class DbFollowers extends SQLiteOpenHelper {
     Context context;
     private static final String DBname = "usr";
     private static final String TB_NAME = "follow";
@@ -26,7 +26,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + following.KEY_IMAGE + " TEXT " +
             ");";
 
-    public DbHelper(@Nullable Context context) {
+    public DbFollowers(@Nullable Context context) {
         super(context, DBname, null, 1);
         this.context = context;
     }

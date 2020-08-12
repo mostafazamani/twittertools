@@ -79,12 +79,12 @@ public class HomeBottomFragment extends Fragment {
                     String burl = show.getProfile_banner_url();
                     follower_num.setText(String.valueOf(show.getFollowers_count()));
                     following_num.setText(String.valueOf(show.getFollowings_count()));
-
+                    String url = geturlpic(purl);
                     new HomeBottomFragment.DownloadImageTask(banner)
                             .execute(burl);
 
                     new HomeBottomFragment.DownloadImageTask(profile)
-                            .execute(purl);
+                            .execute(url);
 
                 }
 
@@ -97,6 +97,18 @@ public class HomeBottomFragment extends Fragment {
             }
         });
 
+    }
+
+    public String geturlpic(String s){
+        char[] chars = s.toCharArray();
+        String url="";
+        for (int i = 0 ; i<chars.length-11;i++){
+            url += chars[i];
+        }
+
+        url += ".jpg";
+
+        return url;
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
