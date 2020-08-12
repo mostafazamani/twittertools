@@ -153,7 +153,6 @@ public class MainMenu extends AppCompatActivity {
                         return true;
                 }
                 return true;
-
             }
         });
 
@@ -163,11 +162,10 @@ public class MainMenu extends AppCompatActivity {
         fm.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
+        bottomNavigationView.setItemIconTintList(null); //baraye selectas
 
        // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
-
         //user_info(session);
 
     }
@@ -176,8 +174,6 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 /*
     public void user_info(TwitterSession session){
 
@@ -267,14 +263,14 @@ public class MainMenu extends AppCompatActivity {
                             fm.beginTransaction().hide(active).show(fragment3).commit();
                             active = fragment3;
                             return true;
-                            //selectedFragment = new TwittsBottomFragment();
-                            //break;
+                         //   selectedFragment = new TwittsBottomFragment();
+                         //   break;
 
 
                     }
-                   // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    //return true;
-                    return false; //for 2
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    return true;
+                   // return false; //for 2
                 }
             };
 }

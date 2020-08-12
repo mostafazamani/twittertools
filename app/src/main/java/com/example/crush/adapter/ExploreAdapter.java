@@ -77,9 +77,9 @@ public class ExploreAdapter extends BaseAdapter {
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-        final ImageView profilePic = (ImageView) convertView.findViewById(R.id.imageview_cover_art);
-        final TextView textname = (TextView) convertView.findViewById(R.id.textview_book_name);
-        final TextView idname = (TextView) convertView.findViewById(R.id.textview_book_author);
+        final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image);
+        final TextView textname = (TextView) convertView.findViewById(R.id.profile_name);
+        final TextView idname = (TextView) convertView.findViewById(R.id.profile_id);
         //final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
 
 

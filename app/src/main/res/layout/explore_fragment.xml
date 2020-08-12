@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:background="#FFAA00"
+    android:background="?attr/backgroundcolor"
     android:layout_height="match_parent">
 
  <androidx.recyclerview.widget.RecyclerView
@@ -13,11 +13,14 @@
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:gravity="center"
-     android:columnWidth="100dp"
-     android:numColumns="auto_fit"
-     android:verticalSpacing="24dp"
-     android:horizontalSpacing="10dp"
-     android:stretchMode="spacingWidthUniform"
+     android:layout_marginEnd="1dp"
+     android:layout_marginStart="1dp"
+     android:stretchMode="columnWidth"
+
+     android:numColumns="3"
+     android:verticalSpacing="1dp"
+     android:horizontalSpacing="1dp"
+
      />
 
 </RelativeLayout>

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
+    android:background="?attr/backgroundcolor"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -36,23 +37,33 @@
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottom_item"
-            android:background="#000000"
-            app:itemTextColor="@color/whiteSmoke"
-            app:itemIconTint="@color/whiteSmoke"
-            android:id="@+id/bottom_nav"
-            app:labelVisibilityMode="unlabeled"
-            app:itemBackground="@color/lightBlue"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:animateLayoutChanges="true"
+
+            android:animationCache="true"
+            android:background="?attr/backgroundcolor"
+            android:elevation="8dp"
+            app:elevation="8dp"
+
+            app:itemBackground="?attr/backgroundcolor"
+            app:itemHorizontalTranslationEnabled="true"
+
+            app:itemTextColor="?attr/textcolor"
+            app:labelVisibilityMode="selected"
+            app:menu="@menu/bottom_item" />
     </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemBackground="?attr/cardBackground"
-        app:itemIconTint="?attr/tintcolor"
+        app:itemBackground="?attr/backgroundcolor"
+        android:layoutMode="clipBounds"
+        android:animateLayoutChanges="true"
+        android:animationCache="true"
+
         app:itemTextColor="?attr/textcolor"
         android:background="?attr/backgroundcolor"
         app:menu="@menu/navigation_menu"
