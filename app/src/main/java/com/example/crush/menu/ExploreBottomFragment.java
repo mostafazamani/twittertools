@@ -123,6 +123,7 @@ public class ExploreBottomFragment extends Fragment {
                                 fl.setScreenName(fol.getResults().get(i).getScreenName());
                                 fl.setProfilePictureUrl(fol.getResults().get(i).getProfilePictureUrl());
                                 dbSuggest.AddItem(fl);
+                                sl.add(fl);
 
 
                             }
