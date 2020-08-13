@@ -7,25 +7,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class SuggestUser {
     public static final String Key_ID = "Id";
-    public static final String KEY_NAME = "Item_text";
-    public static final String KEY_SCREEN = "Item_text";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_SCREEN = "screen_name";
     public static final String KEY_IMAGE = "Uri_image";
 
 
-    @SerializedName("id")
-    @Expose
     private long id;
 
-    @SerializedName("name")
-    @Expose
     private String name;
 
-    @SerializedName("profile_image_url_https")
-    @Expose
     private String profilePictureUrl;
 
-    @SerializedName("screen_name")
-    @Expose
+
     private String screenName;
 
     public long getId() {

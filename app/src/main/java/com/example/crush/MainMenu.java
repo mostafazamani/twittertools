@@ -71,17 +71,16 @@ public class MainMenu extends AppCompatActivity {
     FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
 
+    boolean f2 = true;
+    boolean f3 = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
         setContentView(R.layout.content_main);
 
-       /* banner = findViewById(R.id.banner_profile);
-        profile = findViewById(R.id.profile_image);
-        follower_num =findViewById(R.id.follower_num);
-        following_num = findViewById(R.id.following_num);
-        twitts_num = findViewById(R.id.twitt_num);*/
+
         bottomNavigationView = findViewById(R.id.bottom_nav);
         toolbar = findViewById(R.id.m_toolbar);
         setSupportActionBar(toolbar);
@@ -157,8 +156,8 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-        fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
-        fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
+
+
         fm.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -174,69 +173,6 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-/*
-    public void user_info(TwitterSession session){
-
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
-        myTwitterApiClient.getCustomTwitterService().User(session.getUserId() , session.getUserName()).enqueue(new Callback<UserShow>() {
-            @Override
-            public void onResponse(Call<UserShow> call, Response<UserShow> response) {
-
-                if (response.body() != null) {
-                    UserShow show = response.body();
-                    Toast.makeText(MainMenu.this, ""+show.getProfile_name() + "\n"
-                            +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
-
-                    String purl = show.getProfile_image_url();
-                    String burl = show.getProfile_banner_url();
-                    follower_num.setText(String.valueOf(show.getFollowers_count()));
-                    following_num.setText(String.valueOf(show.getFollowings_count()));
-
-                    new DownloadImageTask((ImageView) findViewById(R.id.banner_profile))
-                            .execute(burl);
-
-                    new DownloadImageTask((ImageView) findViewById(R.id.profile_image))
-                            .execute(purl);
-
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<UserShow> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bannerImage ;
-
-        public DownloadImageTask(ImageView bannerImage ) {
-            this.bannerImage = bannerImage;
-         //   this.profileImage = profilImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("خطا در بارگیری عکس", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bannerImage.setImageBitmap(result);
-            //profileImage.setImageBitmap(result);
-        }
-    }*/
 
     private BottomNavigationView.OnNavigationItemSelectedListener bottomListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -254,12 +190,21 @@ public class MainMenu extends AppCompatActivity {
 
                             //break;
                         case R.id.item_2:
+                            if (f2){
+                                fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
+                                f2=false;
+                            }
+
                             fm.beginTransaction().hide(active).show(fragment2).commit();
                             active = fragment2;
                             return true;
                            // selectedFragment = new ExploreBottomFragment();
                            // break;
                         case R.id.item_3:
+                            if (f3){
+                                fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
+                                f3 = false;
+                            }
                             fm.beginTransaction().hide(active).show(fragment3).commit();
                             active = fragment3;
                             return true;

@@ -12,11 +12,14 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.example.crush.DbSuggest;
 import com.example.crush.R;
 
 
+import com.example.crush.models.SuggestUser;
 import com.example.crush.models.following;
 
 
@@ -31,16 +34,21 @@ import java.util.List;
 public class ExploreAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<following> ex;
+    private final List<SuggestUser> ex;
+    private final List<SuggestUser> users;
     private TwitterSession session;
 
     // 1
     public ExploreAdapter(Context context) {
         ex = new ArrayList<>();
         this.mContext = context;
+        DbSuggest suggest = new DbSuggest(context);
+        suggest.getReadableDatabase();
+        users = suggest.getItem();
+
     }
 
-    public void AddItemToList(List<following> l) {
+    public void AddItemToList(List<SuggestUser> l) {
         ex.addAll(l);
         this.notifyDataSetChanged();
 
@@ -55,7 +63,7 @@ public class ExploreAdapter extends BaseAdapter {
     // 3
     @Override
     public long getItemId(int position) {
-        return 0;
+        return ex.get(position).getId();
     }
 
     // 4
@@ -82,10 +90,8 @@ public class ExploreAdapter extends BaseAdapter {
         final TextView idname = (TextView) convertView.findViewById(R.id.profile_id);
         //final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
 
-
         String purl = ex.get(position).getProfilePictureUrl();
         String url = geturlpic(purl);
-
         textname.setText(ex.get(position).getName());
         idname.setText(ex.get(position).getScreenName());
 

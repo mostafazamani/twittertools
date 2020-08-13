@@ -22,7 +22,7 @@ public class DbSuggest extends SQLiteOpenHelper {
 
 
     private static final String CMD = "CREATE TABLE " + TB_NAME + " ("
-            + SuggestUser.Key_ID + " long PRIMARY KEY NOT NULL, "
+            + SuggestUser.Key_ID + " LONG PRIMARY KEY NOT NULL, "
             + SuggestUser.KEY_NAME + " TEXT, "
             + SuggestUser.KEY_SCREEN + " TEXT, "
             + SuggestUser.KEY_IMAGE + " TEXT " +
