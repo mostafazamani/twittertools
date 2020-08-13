@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private DbFollowers dbHelper;
 
     Switch n;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +47,13 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
 
 
-
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
 
-        if (preferences.getString("log","").equals("login")){
+        if (preferences.getString("log", "").equals("login")) {
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
             load(session, nextCursor);
-            Intent intent = new Intent(MainActivity.this, MainMenu.class);
-            startActivity(intent);
-        }else {
+
+        } else {
             loginButton.setCallback(new Callback<TwitterSession>() {
                 @Override
                 public void success(Result<TwitterSession> result) {
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                     load(session, nextCursor);
 
 
-                    loginMethod();
                 }
 
                 @Override
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     public void loginMethod() {
@@ -105,16 +102,20 @@ public class MainActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     followingmodel fol = (followingmodel) response.body();
                     if (fol.getResults() != null)
-                        for (int i = 0 ; i < fol.getResults().size() ; i++){
+                        for (int i = 0; i < fol.getResults().size(); i++) {
 
                             dbHelper.AddItem(fol.getResults().get(i));
                         }
                     dbHelper.close();
 
+                    Toast.makeText(MainActivity.this, ""+fol.getNextCursor(), Toast.LENGTH_SHORT).show();
+                    if (fol.getNextCursor() != 0) {
+                        load(twitterSession, fol.getNextCursor());
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, MainMenu.class);
+                        startActivity(intent);
+                    }
 
-
-
-                    if (fol.getNextCursor() != 0) load(twitterSession, fol.getNextCursor());
                 }
             }
 
@@ -127,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
 
 
     @Override
