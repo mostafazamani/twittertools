@@ -1,5 +1,6 @@
 package com.example.crush;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 import com.example.crush.menu.ExploreBottomFragment;
 import com.example.crush.menu.HomeBottomFragment;
 import com.example.crush.menu.TwittsBottomFragment;
+import com.example.crush.models.SuggestUser;
 import com.example.crush.models.UserShow;
+import com.example.crush.models.followingmodel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,6 +47,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,11 +59,15 @@ public class MainMenu extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private TwitterSession session;
 
+    DbFollowers db;
+    DbFollowers li;
+    DbSuggest dbSuggest;
+
 
     SwitchCompat nightswitch;
     boolean night;
-    ImageView profile , banner;
-    TextView follower_num , following_num , twitts_num;
+    ImageView profile, banner;
+    TextView follower_num, following_num, twitts_num;
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -88,10 +97,20 @@ public class MainMenu extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+        db = new DbFollowers(this);
+        li = new DbFollowers(this);
+        dbSuggest = new DbSuggest(this);
+        li.getReadableDatabase();
+        List<Long> list = li.getItem();
+
+        loadSuggest(session, -1L, 964565868, this);
 
         ////////////////////Night Mode
         Menu menu = navigationView.getMenu();
@@ -99,56 +118,58 @@ public class MainMenu extends AppCompatActivity {
         View actionView = MenuItemCompat.getActionView(menuItem);
 
         nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme);
             nightswitch.setChecked(true);
-            night=true;
-        }else {
+            night = true;
+        } else {
             setTheme(R.style.AppTheme);
-            night=false;
+            night = false;
             nightswitch.setChecked(false);
         }
         nightswitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 {
-                    if (night==true){
+                    if (night == true) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         restartApp();
-                    }else if(night==false){
+                    } else if (night == false) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         restartApp();
                     }
                 }
-               }
+            }
         });
         ////////////////////Night Mode End//////////////////////
-       navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem drawItem) {
                 int id = drawItem.getItemId();
-                switch(id)
-                {
+                switch (id) {
                     case R.id.about_us:
-                        Toast.makeText(MainMenu.this, "My Account",Toast.LENGTH_SHORT).show();break;
+                        Toast.makeText(MainMenu.this, "My Account", Toast.LENGTH_SHORT).show();
+                        break;
                     case R.id.settings:
-                        Toast.makeText(MainMenu.this,"Settings",Toast.LENGTH_SHORT).show();break;
-                    case R.id.mycart:{
-                        Toast.makeText(MainMenu.this, "My Cart",Toast.LENGTH_SHORT).show();break;
+                        Toast.makeText(MainMenu.this, "Settings", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.mycart: {
+                        Toast.makeText(MainMenu.this, "My Cart", Toast.LENGTH_SHORT).show();
+                        break;
                     }
-                    case R.id.nav_switch:{
-                                    if (night==true){
-                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                        nightswitch.setChecked(true);
-                                        restartApp();
-                                    }else if(!night){
-                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                                        nightswitch.setChecked(false);
-                                        restartApp();
-                                    }
+                    case R.id.nav_switch: {
+                        if (night == true) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            nightswitch.setChecked(true);
+                            restartApp();
+                        } else if (!night) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            nightswitch.setChecked(false);
+                            restartApp();
+                        }
                     }
 
-                         default:
+                    default:
                         return true;
                 }
                 return true;
@@ -156,20 +177,19 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
+        fm.beginTransaction().add(R.id.fragment_container, fragment1, "1").commit();
 
 
-        fm.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
-
-        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
         bottomNavigationView.setItemIconTintList(null); //baraye selectas
 
-       // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
+        // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
         //user_info(session);
 
     }
-    public void restartApp(){
-        Intent intent = new Intent(getApplicationContext(),MainMenu.class);
+
+    public void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(intent);
         finish();
     }
@@ -186,36 +206,82 @@ public class MainMenu extends AppCompatActivity {
                             fm.beginTransaction().hide(active).show(fragment1).commit();
                             active = fragment1;
                             return true;
-                            //selectedFragment = new HomeBottomFragment();
+                        //selectedFragment = new HomeBottomFragment();
 
-                            //break;
+                        //break;
                         case R.id.item_2:
-                            if (f2){
+                            if (f2) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
-                                f2=false;
+                                f2 = false;
                             }
 
                             fm.beginTransaction().hide(active).show(fragment2).commit();
                             active = fragment2;
                             return true;
-                           // selectedFragment = new ExploreBottomFragment();
-                           // break;
+                        // selectedFragment = new ExploreBottomFragment();
+                        // break;
                         case R.id.item_3:
-                            if (f3){
+                            if (f3) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
                                 f3 = false;
                             }
                             fm.beginTransaction().hide(active).show(fragment3).commit();
                             active = fragment3;
                             return true;
-                         //   selectedFragment = new TwittsBottomFragment();
-                         //   break;
+                        //   selectedFragment = new TwittsBottomFragment();
+                        //   break;
 
 
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
-                   // return false; //for 2
+                    // return false; //for 2
                 }
             };
+
+
+    public void loadSuggest(final TwitterSession twitterSession, long next, final long id, final Context context) {
+        db.getReadableDatabase();
+        dbSuggest.getWritableDatabase();
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
+        myTwitterApiClient.getCustomTwitterService().FollowersList(id, next, 200).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    followingmodel fol = (followingmodel) response.body();
+
+                    if (fol.getResults() != null)
+                        for (int i = 0; i < fol.getResults().size(); i++) {
+                            SuggestUser fl = new SuggestUser();
+                            if (!db.CheckItem(fol.getResults().get(i).getId()) && session.getId() != fol.getResults().get(i).getId()) {
+                                fl.setId(fol.getResults().get(i).getId());
+                                fl.setName(fol.getResults().get(i).getName());
+                                fl.setScreenName(fol.getResults().get(i).getScreenName());
+                                fl.setProfilePictureUrl(fol.getResults().get(i).getProfilePictureUrl());
+                                dbSuggest.AddItem(fl);
+
+
+                            }
+
+
+                        }
+
+                    Toast.makeText(context, "ok!!", Toast.LENGTH_SHORT).show();
+
+                    if (fol.getNextCursor() != 0)
+                        loadSuggest(twitterSession, fol.getNextCursor(), id, context);
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
+
+
 }

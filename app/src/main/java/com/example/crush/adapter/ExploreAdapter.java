@@ -39,8 +39,8 @@ public class ExploreAdapter extends BaseAdapter {
     private TwitterSession session;
 
     // 1
-    public ExploreAdapter(Context context) {
-        ex = new ArrayList<>();
+    public ExploreAdapter(Context context , List<SuggestUser> list) {
+        this.ex = list;
         this.mContext = context;
         DbSuggest suggest = new DbSuggest(context);
         suggest.getReadableDatabase();
@@ -48,11 +48,7 @@ public class ExploreAdapter extends BaseAdapter {
 
     }
 
-    public void AddItemToList(List<SuggestUser> l) {
-        ex.addAll(l);
-        this.notifyDataSetChanged();
 
-    }
 
     // 2
     @Override
@@ -63,13 +59,13 @@ public class ExploreAdapter extends BaseAdapter {
     // 3
     @Override
     public long getItemId(int position) {
-        return ex.get(position).getId();
+        return users.get(position).getId();
     }
 
     // 4
     @Override
     public Object getItem(int position) {
-        return ex.get(position);
+        return users.get(position);
     }
 
     // 5
