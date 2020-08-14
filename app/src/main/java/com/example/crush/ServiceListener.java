@@ -3,6 +3,7 @@ package com.example.crush;
 
 import com.example.crush.models.UserShow;
 import com.example.crush.models.followingmodel;
+import com.example.crush.models.unfollowFind;
 import com.google.gson.JsonArray;
 
 import retrofit2.Call;
@@ -19,5 +20,8 @@ public interface ServiceListener {
 
     @GET("1.1/statuses/home_timeline.json")
     Call<JsonArray> HomeTimeline(@Query("count") int count);
+
+    @GET("1.1/friendships/outgoing.json")
+    Call<unfollowFind> Unfollow();
 
 }

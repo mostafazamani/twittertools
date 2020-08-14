@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.example.crush.MainMenu;
 import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
 import com.example.crush.models.UserShow;
+import com.example.crush.models.unfollowFind;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -42,7 +44,7 @@ public class HomeBottomFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+        final View view = inflater.inflate(R.layout.home_fragment, container, false);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
@@ -55,6 +57,24 @@ public class HomeBottomFragment extends Fragment {
         // Lashi Error Mide.
         user_info(session);
 
+
+        MyTwitterApiClient twitterApiClient = new MyTwitterApiClient(session);
+        twitterApiClient.getCustomTwitterService().Unfollow().enqueue(new Callback<unfollowFind>() {
+            @Override
+            public void onResponse(Call<unfollowFind> call, Response<unfollowFind> response) {
+                if (response.body() != null) {
+                    unfollowFind find = response.body();
+                    Toast.makeText(view.getContext(), ""+find.getId(), Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<unfollowFind> call, Throwable t) {
+
+            }
+        });
 
 
 
