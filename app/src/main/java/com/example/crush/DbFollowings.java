@@ -9,25 +9,24 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.crush.models.SuggestUser;
+import com.example.crush.models.follow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbSuggest extends SQLiteOpenHelper {
+public class DbFollowings extends SQLiteOpenHelper {
     Context context;
-    private static final String DBname = "su";
-    private static final String TB_NAME = "suggest";
+    private static final String DBname = "flr";
+    private static final String TB_NAME = "following";
 
 
     private static final String CMD = "CREATE TABLE " + TB_NAME + " ("
-            + SuggestUser.Key_ID + " LONG PRIMARY KEY NOT NULL, "
-            + SuggestUser.KEY_NAME + " TEXT, "
-            + SuggestUser.KEY_SCREEN + " TEXT, "
-            + SuggestUser.KEY_IMAGE + " TEXT " +
+            + follow.Key_ID + " long PRIMARY KEY NOT NULL, "
+            + follow.KEY_NAME + " TEXT, "
+            + follow.KEY_IMAGE + " TEXT " +
             ");";
 
-    public DbSuggest(@Nullable Context context) {
+    public DbFollowings(@Nullable Context context) {
         super(context, DBname, null, 1);
         this.context = context;
     }
@@ -47,7 +46,7 @@ public class DbSuggest extends SQLiteOpenHelper {
     }
 
 
-    public void AddItem(SuggestUser items) {
+    public void AddItem(follow items) {
 
 
         SQLiteDatabase sd = this.getWritableDatabase();
@@ -62,7 +61,7 @@ public class DbSuggest extends SQLiteOpenHelper {
     public boolean CheckItem(long i) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + SuggestUser.Key_ID + "='" + i + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
 
         if (cursor.moveToFirst()) {
 
@@ -73,21 +72,17 @@ public class DbSuggest extends SQLiteOpenHelper {
     }
 
 
-    public List<SuggestUser> getItem() {
+    public List<Long> getItem() {
 
         SQLiteDatabase db = getReadableDatabase();
-        List<SuggestUser> lsl = new ArrayList<>();
+        List<Long> lsl = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME, null);
 
 
         if (cursor.moveToFirst()) {
             do {
-                SuggestUser user = new SuggestUser();
-                user.setId(cursor.getLong(cursor.getColumnIndex(SuggestUser.Key_ID)));
-                user.setName(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_NAME)));
-                user.setScreenName(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_SCREEN)));
-                user.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_IMAGE)));
-                lsl.add(user);
+
+                lsl.add(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
 
             } while (cursor.moveToNext());
         }

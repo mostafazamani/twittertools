@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class following {
+public class follow {
 
     public static final String Key_ID = "Id";
     public static final String KEY_NAME = "Item_text";

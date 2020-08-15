@@ -7,14 +7,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.crush.R;
-import com.example.crush.models.following;
+import com.example.crush.models.follow;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter extends BaseAdapter {
 
-    private List<following> list = new ArrayList<>();
+    private List<follow> list = new ArrayList<>();
     private Context context;
 
 

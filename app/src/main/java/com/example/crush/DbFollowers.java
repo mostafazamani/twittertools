@@ -9,21 +9,21 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.crush.models.following;
+import com.example.crush.models.follow;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DbFollowers extends SQLiteOpenHelper {
     Context context;
-    private static final String DBname = "usr";
-    private static final String TB_NAME = "follow";
+    private static final String DBname = "flw";
+    private static final String TB_NAME = "follower";
 
 
     private static final String CMD = "CREATE TABLE " + TB_NAME + " ("
-            + following.Key_ID + " long PRIMARY KEY NOT NULL, "
-            + following.KEY_NAME + " TEXT, "
-            + following.KEY_IMAGE + " TEXT " +
+            + follow.Key_ID + " long PRIMARY KEY NOT NULL, "
+            + follow.KEY_NAME + " TEXT, "
+            + follow.KEY_IMAGE + " TEXT " +
             ");";
 
     public DbFollowers(@Nullable Context context) {
@@ -46,7 +46,7 @@ public class DbFollowers extends SQLiteOpenHelper {
     }
 
 
-    public void AddItem(following items) {
+    public void AddItem(follow items) {
 
 
         SQLiteDatabase sd = this.getWritableDatabase();
@@ -61,7 +61,7 @@ public class DbFollowers extends SQLiteOpenHelper {
     public boolean CheckItem(long i) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + following.Key_ID + "='" + i + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
 
         if (cursor.moveToFirst()) {
 
@@ -82,7 +82,7 @@ public class DbFollowers extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
 
-                lsl.add(cursor.getLong(cursor.getColumnIndex(following.Key_ID)));
+                lsl.add(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
 
             } while (cursor.moveToNext());
         }

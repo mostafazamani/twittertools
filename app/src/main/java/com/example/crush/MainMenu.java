@@ -1,30 +1,17 @@
 package com.example.crush;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.crush.menu.ExploreBottomFragment;
 import com.example.crush.menu.HomeBottomFragment;
 import com.example.crush.menu.TwittsBottomFragment;
-import com.example.crush.models.SuggestUser;
-import com.example.crush.models.UserShow;
-import com.example.crush.models.followingmodel;
+import com.example.crush.models.followmodel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -37,21 +24,12 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Random;
-
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainMenu extends AppCompatActivity {
@@ -81,6 +59,7 @@ public class MainMenu extends AppCompatActivity {
 
     private DbFollowers dbHelper;
     public long nextCursor = -1L;
+    private DbFollowings db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +84,9 @@ public class MainMenu extends AppCompatActivity {
 
 
         dbHelper = new DbFollowers(MainMenu.this);
+        db = new DbFollowings(MainMenu.this);
         loadFollowers(session,nextCursor);
+        loadFollowings(session,nextCursor);
 
 
 
@@ -246,7 +227,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
-                    followingmodel fol = (followingmodel) response.body();
+                    followmodel fol = (followmodel) response.body();
                     if (fol.getResults() != null)
                         for (int i = 0; i < fol.getResults().size(); i++) {
 
@@ -254,9 +235,44 @@ public class MainMenu extends AppCompatActivity {
                         }
                     dbHelper.close();
 
-                    Toast.makeText(MainMenu.this, ""+fol.getNextCursor(), Toast.LENGTH_SHORT).show();
                     if (fol.getNextCursor() != 0) {
                         loadFollowers(twitterSession, fol.getNextCursor());
+                    } else {
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+
+            }
+        });
+
+
+    }
+
+
+    public void loadFollowings(final TwitterSession twitterSession, long next) {
+        db = new DbFollowings(MainMenu.this);
+        db.getWritableDatabase();
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
+        myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    followmodel fol = (followmodel) response.body();
+                    if (fol.getResults() != null)
+                        for (int i = 0; i < fol.getResults().size(); i++) {
+
+                            db.AddItem(fol.getResults().get(i));
+                        }
+                    db.close();
+
+                    if (fol.getNextCursor() != 0) {
+                        loadFollowings(twitterSession, fol.getNextCursor());
                     } else {
 
                     }

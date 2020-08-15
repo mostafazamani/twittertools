@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.example.crush.DbSuggest;
@@ -20,14 +19,12 @@ import com.example.crush.R;
 
 
 import com.example.crush.models.SuggestUser;
-import com.example.crush.models.following;
 
 
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 

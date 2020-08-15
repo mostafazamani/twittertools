@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.crush.adapter.ListAdapter;
-import com.example.crush.models.followingmodel;
+import com.example.crush.models.followmodel;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
-                    followingmodel fol = (followingmodel) response.body();
+                    followmodel fol = (followmodel) response.body();
                     if (fol.getResults() != null)
                     for (int i = 0 ; i < fol.getResults().size() ; i++){
 

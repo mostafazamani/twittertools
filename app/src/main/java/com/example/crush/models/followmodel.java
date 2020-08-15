@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class followingmodel {
+public class followmodel {
 
     @SerializedName("next_cursor_str")
     @Expose
@@ -26,7 +26,7 @@ public class followingmodel {
 
     @SerializedName("users")
     @Expose
-    private List<following> results = new ArrayList<>();
+    private List<follow> results = new ArrayList<>();
 
     public long getPreviousCursor() {
         return previousCursor;
@@ -58,11 +58,11 @@ public class followingmodel {
         this.nextCursorStr = nextCursorStr;
     }
 
-    public List<following> getResults() {
+    public List<follow> getResults() {
         return results;
     }
 
-    public void setResults(List<following> results) {
+    public void setResults(List<follow> results) {
         this.results = results;
     }
 }
