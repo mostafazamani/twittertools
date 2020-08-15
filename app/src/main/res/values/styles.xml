@@ -1,11 +1,10 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Day / Light Mode  theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="backgroundcolor">#eeeeee</item>
         <item name="cardBackground">#eeeeee</item>
         <item name="textcolor">#090909</item>
@@ -16,13 +15,12 @@
     </style>
 
     <!-- Dark / Night Mode Application theme. -->
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="DarkTheme" parent="ThemeOverlay.AppCompat.Dark">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorPrimaryDark">#0B0B0A</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="backgroundcolor">#303030</item>
+        <item name="backgroundcolor">#0C0C0C</item>
         <item name="cardBackground">#424242</item>
         <item name="textcolor">#ffffff</item>
         <item name="tintcolor">#eeeeee</item>

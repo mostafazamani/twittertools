@@ -15,6 +15,7 @@
     <include
         layout="@layout/toolsbar"
 
+
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -22,7 +23,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:background="?attr/backgroundcolor"
         >
 
 
@@ -31,6 +32,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?attr/backgroundcolor"
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_above="@+id/bottom_nav"
             android:id="@+id/fragment_container"/>
@@ -63,6 +65,7 @@
         android:layoutMode="clipBounds"
         android:animateLayoutChanges="true"
         android:animationCache="true"
+
 
         app:itemTextColor="?attr/textcolor"
         android:background="?attr/backgroundcolor"

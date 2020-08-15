@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,7 @@ public class HomeBottomFragment extends Fragment {
 
     MainMenu m;
     ImageView profile , banner;
-    TextView follower_num , following_num , twitts_num;
+    Button follower_num , following_num , twitts_num;
 
     private TwitterSession session;
 

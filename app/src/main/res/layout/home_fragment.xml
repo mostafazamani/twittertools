@@ -64,13 +64,15 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    android:layout_margin="@dimen/follow_card_margin"
-                    android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                android:layout_margin="@dimen/follow_card_margin"
+                android:layout_gravity="center"
+
+                app:cardBackgroundColor="?attr/cardBackground"
+                android:elevation="8dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -79,6 +81,7 @@
                         android:textColor="?attr/textcolor"
                         android:text="Follower"/>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,7 +91,7 @@
                     android:layout_gravity="center"
                     app:cardBackgroundColor="?attr/cardBackground"
                     android:elevation="8dp">
-                    <TextView
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -135,7 +138,7 @@
                     android:layout_gravity="center"
                     app:cardBackgroundColor="?attr/cardBackground"
                     android:elevation="8dp">
-                    <TextView
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -180,7 +183,7 @@
                     android:layout_gravity="center"
                     app:cardBackgroundColor="?attr/cardBackground"
                     android:elevation="8dp">
-                    <TextView
+                    <Button
                         android:layout_width="wrap_content"
                         android:textColor="?attr/textcolor"
                         android:layout_height="wrap_content"

@@ -63,7 +63,6 @@ public class MainMenu extends AppCompatActivity {
     DbFollowers li;
     DbSuggest dbSuggest;
 
-
     SwitchCompat nightswitch;
     boolean night;
     ImageView profile, banner;

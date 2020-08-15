@@ -8,8 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/cardBackground"
+        app:titleTextColor="?attr/textcolor"
+        app:subtitleTextColor="?attr/textcolor"
+
         android:id="@+id/m_toolbar"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:elevation="8dp"
+        app:navigationIcon="@drawable/ic_twitter_tweet"
+        >
 
     </androidx.appcompat.widget.Toolbar>
 
