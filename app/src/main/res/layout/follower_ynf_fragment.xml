@@ -2,9 +2,34 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#124234"
+    android:background="?attr/backgroundcolor"
     android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="?attr/cardBackground"
+    android:orientation="horizontal"
+    >
+ <ImageButton
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:id="@+id/fynf_back"
+     android:src="@drawable/ic_back_24"
+    />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/shape_follow_btn"
+        android:text="Follow All"
+        android:paddingRight="5dp"
+        android:layout_marginLeft="5dp" />
+</LinearLayout>
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

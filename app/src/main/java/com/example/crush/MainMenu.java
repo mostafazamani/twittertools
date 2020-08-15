@@ -98,6 +98,7 @@ public class MainMenu extends AppCompatActivity {
         nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme);
+            
             nightswitch.setChecked(true);
             night = true;
         } else {

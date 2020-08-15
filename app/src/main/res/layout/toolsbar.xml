@@ -10,9 +10,9 @@
         android:background="?attr/cardBackground"
         app:titleTextColor="?attr/textcolor"
         app:subtitleTextColor="?attr/textcolor"
-
         android:id="@+id/m_toolbar"
         android:elevation="8dp"
+
         app:navigationIcon="@drawable/ic_twitter_tweet"
         >
 
