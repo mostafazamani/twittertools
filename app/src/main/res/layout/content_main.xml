@@ -45,6 +45,7 @@
             android:layout_alignParentBottom="true"
             android:animateLayoutChanges="true"
 
+
             android:animationCache="true"
             android:background="?attr/backgroundcolor"
             android:elevation="8dp"
@@ -52,7 +53,6 @@
 
             app:itemBackground="?attr/backgroundcolor"
             app:itemHorizontalTranslationEnabled="true"
-
             app:itemTextColor="?attr/textcolor"
             app:labelVisibilityMode="selected"
             app:menu="@menu/bottom_item" />
@@ -65,8 +65,6 @@
         android:layoutMode="clipBounds"
         android:animateLayoutChanges="true"
         android:animationCache="true"
-
-
         app:itemTextColor="?attr/textcolor"
         android:background="?attr/backgroundcolor"
         app:menu="@menu/navigation_menu"

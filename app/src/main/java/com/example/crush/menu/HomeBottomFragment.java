@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.crush.MainMenu;
 import com.example.crush.MyTwitterApiClient;
@@ -78,6 +79,22 @@ public class HomeBottomFragment extends Fragment {
         });
 
 
+        follower_num.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*NextFragment nextFrag= new NextFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.Layout_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();*/
+
+                Fragment followerYouNotFollow = new FollowerYouNotFollow();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, followerYouNotFollow ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
+            }
+        });
 
         return view;
        // return inflater.inflate(R.layout.home_fragment,container,false);
