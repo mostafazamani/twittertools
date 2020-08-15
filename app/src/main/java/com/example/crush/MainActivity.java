@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (preferences.getString("log", "").equals("login")) {
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-            load(session, nextCursor);
+            loginMethod();
 
         } else {
             loginButton.setCallback(new Callback<TwitterSession>() {
@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     //  String secret = authToken.secret;
 
 
-                    load(session, nextCursor);
-
+                    loginMethod();
 
                 }
 
@@ -91,43 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void load(final TwitterSession twitterSession, long next) {
-        dbHelper = new DbFollowers(MainActivity.this);
-        dbHelper.getWritableDatabase();
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    followingmodel fol = (followingmodel) response.body();
-                    if (fol.getResults() != null)
-                        for (int i = 0; i < fol.getResults().size(); i++) {
-
-                            dbHelper.AddItem(fol.getResults().get(i));
-                        }
-                    dbHelper.close();
-
-                    Toast.makeText(MainActivity.this, ""+fol.getNextCursor(), Toast.LENGTH_SHORT).show();
-                    if (fol.getNextCursor() != 0) {
-                        load(twitterSession, fol.getNextCursor());
-                    } else {
-                        Intent intent = new Intent(MainActivity.this, MainMenu.class);
-                        startActivity(intent);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-
-            }
-        });
-
-
-    }
 
 
     @Override

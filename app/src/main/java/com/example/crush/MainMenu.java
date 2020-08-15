@@ -59,14 +59,11 @@ public class MainMenu extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private TwitterSession session;
 
-    DbFollowers db;
-    DbFollowers li;
-    DbSuggest dbSuggest;
+
 
     SwitchCompat nightswitch;
     boolean night;
-    ImageView profile, banner;
-    TextView follower_num, following_num, twitts_num;
+
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -81,6 +78,9 @@ public class MainMenu extends AppCompatActivity {
 
     boolean f2 = true;
     boolean f3 = true;
+
+    private DbFollowers dbHelper;
+    public long nextCursor = -1L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +103,11 @@ public class MainMenu extends AppCompatActivity {
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-        db = new DbFollowers(this);
-        li = new DbFollowers(this);
-        dbSuggest = new DbSuggest(this);
-        li.getReadableDatabase();
-        List<Long> list = li.getItem();
 
-        loadSuggest(session, -1L, 964565868, this);
+        dbHelper = new DbFollowers(MainMenu.this);
+        loadFollowers(session,nextCursor);
+
+
 
         ////////////////////Night Mode
         Menu menu = navigationView.getMenu();
@@ -239,48 +237,43 @@ public class MainMenu extends AppCompatActivity {
             };
 
 
-    public void loadSuggest(final TwitterSession twitterSession, long next, final long id, final Context context) {
-        db.getReadableDatabase();
-        dbSuggest.getWritableDatabase();
+
+    public void loadFollowers(final TwitterSession twitterSession, long next) {
+        dbHelper = new DbFollowers(MainMenu.this);
+        dbHelper.getWritableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowersList(id, next, 200).enqueue(new retrofit2.Callback() {
+        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
                     followingmodel fol = (followingmodel) response.body();
-
                     if (fol.getResults() != null)
                         for (int i = 0; i < fol.getResults().size(); i++) {
-                            SuggestUser fl = new SuggestUser();
-                            if (!db.CheckItem(fol.getResults().get(i).getId()) && session.getId() != fol.getResults().get(i).getId()) {
-                                fl.setId(fol.getResults().get(i).getId());
-                                fl.setName(fol.getResults().get(i).getName());
-                                fl.setScreenName(fol.getResults().get(i).getScreenName());
-                                fl.setProfilePictureUrl(fol.getResults().get(i).getProfilePictureUrl());
-                                dbSuggest.AddItem(fl);
 
-
-                            }
-
-
+                            dbHelper.AddItem(fol.getResults().get(i));
                         }
+                    dbHelper.close();
 
-                    Toast.makeText(context, "ok!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainMenu.this, ""+fol.getNextCursor(), Toast.LENGTH_SHORT).show();
+                    if (fol.getNextCursor() != 0) {
+                        loadFollowers(twitterSession, fol.getNextCursor());
+                    } else {
 
-                    if (fol.getNextCursor() != 0)
-                        loadSuggest(twitterSession, fol.getNextCursor(), id, context);
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+
 
             }
         });
 
 
     }
+
 
 
 }

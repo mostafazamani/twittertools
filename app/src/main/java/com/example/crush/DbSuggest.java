@@ -87,7 +87,7 @@ public class DbSuggest extends SQLiteOpenHelper {
                 user.setId(cursor.getLong(cursor.getColumnIndex(SuggestUser.Key_ID)));
                 user.setName(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_NAME)));
                 user.setScreenName(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_SCREEN)));
-                user.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_NAME)));
+                user.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(SuggestUser.KEY_IMAGE)));
                 lsl.add(user);
 
             } while (cursor.moveToNext());
