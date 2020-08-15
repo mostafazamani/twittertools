@@ -36,7 +36,7 @@ public class HomeBottomFragment extends Fragment {
 
     MainMenu m;
     ImageView profile , banner;
-    Button follower_num , following_num , twitts_num;
+    Button follower_num , following_num ;
 
     private TwitterSession session;
 
@@ -54,9 +54,7 @@ public class HomeBottomFragment extends Fragment {
         profile = view.findViewById(R.id.profile_image);
         follower_num = view.findViewById(R.id.follower_num);
         following_num = view.findViewById(R.id.following_num);
-        twitts_num = view.findViewById(R.id.twitt_num);
 
-        // Lashi Error Mide.
         user_info(session);
 
 
@@ -93,6 +91,7 @@ public class HomeBottomFragment extends Fragment {
                 transaction.replace(R.id.fragment_container, followerYouNotFollow ); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();
+
             }
         });
 
@@ -115,8 +114,8 @@ public class HomeBottomFragment extends Fragment {
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
-                    follower_num.setText(String.valueOf(show.getFollowers_count()));
-                    following_num.setText(String.valueOf(show.getFollowings_count()));
+                    follower_num.setText("Follower\n"+String.valueOf(show.getFollowers_count()));
+                    following_num.setText("Following\n"+String.valueOf(show.getFollowings_count()));
                     String url = geturlpic(purl);
                     new HomeBottomFragment.DownloadImageTask(banner)
                             .execute(burl);

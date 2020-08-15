@@ -12,11 +12,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-    <include
-        layout="@layout/toolsbar"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 
     <RelativeLayout
@@ -25,6 +21,25 @@
         android:background="?attr/backgroundcolor"
         >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/toolbar_lin"
+            android:elevation="8dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_twitter_tweet"
+                android:scaleType="fitXY"
+                android:id="@+id/hamberger_btn"
+                android:layout_marginLeft="4dp">
+
+            </ImageButton>
+
+        </LinearLayout>
 
 
 
@@ -32,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/backgroundcolor"
-            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_below="@+id/toolbar_lin"
             android:layout_above="@+id/bottom_nav"
             android:id="@+id/fragment_container"/>
 
@@ -43,13 +58,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:animateLayoutChanges="true"
-
-
             android:animationCache="true"
             android:background="?attr/backgroundcolor"
             android:elevation="8dp"
             app:elevation="8dp"
 
+            android:theme="@style/AppTheme"
             app:itemBackground="?attr/backgroundcolor"
             app:itemHorizontalTranslationEnabled="true"
             app:itemTextColor="?attr/textcolor"
@@ -64,6 +78,7 @@
         android:layoutMode="clipBounds"
         android:animateLayoutChanges="true"
         android:animationCache="true"
+        android:theme="@style/AppTheme"
         app:itemTextColor="?attr/textcolor"
         android:background="?attr/backgroundcolor"
         app:menu="@menu/navigation_menu"

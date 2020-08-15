@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.crush.menu.ExploreBottomFragment;
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,6 +41,8 @@ public class MainMenu extends AppCompatActivity {
     private TwitterSession session;
 
 
+    ImageButton hamberger;
+    LinearLayout bar;
 
     SwitchCompat nightswitch;
     boolean night;
@@ -68,9 +73,11 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.content_main);
 
 
+        hamberger = findViewById(R.id.hamberger_btn);
+        bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
-        toolbar = findViewById(R.id.m_toolbar);
-        setSupportActionBar(toolbar);
+       // toolbar = findViewById(R.id.m_toolbar);
+      //  setSupportActionBar(toolbar); //toolbar
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -78,7 +85,14 @@ public class MainMenu extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
+
+        hamberger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout. openDrawer(GravityCompat.START);
+            }
+        });
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
@@ -167,6 +181,18 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
+    // open drawer for toolbar icon
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.hamberger_btn:
+                drawerLayout. openDrawer(GravityCompat.START); ;  // OPEN DRAWER
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
+
     public void restartApp() {
         Intent intent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(intent);
@@ -183,6 +209,7 @@ public class MainMenu extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
                             fm.beginTransaction().hide(active).show(fragment1).commit();
+                            bar.setVisibility(View.VISIBLE);
                             active = fragment1;
                             return true;
                         //selectedFragment = new HomeBottomFragment();

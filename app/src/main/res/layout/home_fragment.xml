@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
-
-    android:background="?attr/backgroundcolor"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    android:background="?attr/backgroundcolor">
 
 
     <ImageView
+        android:id="@+id/banner_profile"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:scaleType="centerCrop"
         android:layout_alignParentTop="true"
-        android:id="@+id/banner_profile"/>
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,31 +20,31 @@
         android:layout_marginTop="75dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal">
+
         <androidx.cardview.widget.CardView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_margin="3dp"
-            app:cardCornerRadius="50dp"
             android:background="@color/lightBlue"
             app:cardBackgroundColor="@color/lightBlue"
-            >
+            app:cardCornerRadius="50dp">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="97dp"
                 android:layout_height="97dp"
                 android:layout_gravity="center"
                 android:layout_margin="3dp"
 
-                app:cardCornerRadius="50dp"
                 android:background="@color/whiteSmoke"
                 app:cardBackgroundColor="?attr/cardBackground"
-                >
+                app:cardCornerRadius="50dp">
 
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/profile_image"/>
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
 
@@ -54,150 +53,45 @@
             android:layout_height="match_parent"
 
             android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="vertical">
-
-                <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                android:layout_margin="@dimen/follow_card_margin"
-                android:layout_gravity="center"
-
-                app:cardBackgroundColor="?attr/cardBackground"
-                android:elevation="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColor="?attr/textcolor"
-                        android:text="Follower"/>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    android:layout_margin="@dimen/follow_card_margin"
-
-                    android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="..."
-                        android:textColor="?attr/textcolor"
-                        android:id="@+id/follower_num"/>
-                </androidx.cardview.widget.CardView>
 
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    android:layout_margin="@dimen/follow_card_margin"
 
-                    android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColor="?attr/textcolor"
-                        android:text="Following"/>
-                </androidx.cardview.widget.CardView>
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    android:layout_margin="@dimen/follow_card_margin"
-
-                    android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="..."
-                        android:textColor="?attr/textcolor"
-                        android:id="@+id/following_num"/>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="vertical">
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
+                <Button
+                    android:id="@+id/follower_num"
+                    android:layout_width="wrap_content"
 
                     android:layout_margin="@dimen/follow_card_margin"
 
-                    android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColor="?attr/textcolor"
-                        android:text="Twitts"/>
-                </androidx.cardview.widget.CardView>
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:elevation="8dp"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    android:layout_margin="@dimen/follow_card_margin"
-
+                    android:background="@drawable/shape_info_follower_wing"
                     android:layout_gravity="center"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    android:elevation="8dp">
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:textColor="?attr/textcolor"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="..."
-                        android:id="@+id/twitt_num"/>
-                </androidx.cardview.widget.CardView>
+                    android:gravity="center"
+                    android:text="..."
+                    android:textColor="?attr/textcolor"
+                    android:textSize="@dimen/text_size_homefragment_info" />
+
+                <Button
+                    android:id="@+id/following_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_margin="@dimen/follow_card_margin"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:elevation="8dp"
+                    android:background="@drawable/shape_info_follower_wing"
+                    android:text="..."
+                    android:textColor="?attr/textcolor"
+                    android:textSize="@dimen/text_size_homefragment_info" />
 
 
-            </LinearLayout>
+
+
         </LinearLayout>
-
-
-
     </LinearLayout>
 </RelativeLayout>
