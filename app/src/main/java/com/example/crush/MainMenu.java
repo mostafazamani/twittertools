@@ -1,6 +1,7 @@
 package com.example.crush;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -249,7 +250,8 @@ public class MainMenu extends AppCompatActivity {
 
     public void loadFollowers(final TwitterSession twitterSession, long next) {
         dbHelper = new DbFollowers(MainMenu.this);
-        dbHelper.getWritableDatabase();
+         dbHelper.getWritableDatabase();
+         dbHelper.getReadableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
@@ -286,6 +288,7 @@ public class MainMenu extends AppCompatActivity {
     public void loadFollowings(final TwitterSession twitterSession, long next) {
         db = new DbFollowings(MainMenu.this);
         db.getWritableDatabase();
+        db.getReadableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
@@ -297,6 +300,7 @@ public class MainMenu extends AppCompatActivity {
 
                             db.AddItem(fol.getResults().get(i));
                         }
+
                     db.close();
 
                     if (fol.getNextCursor() != 0) {

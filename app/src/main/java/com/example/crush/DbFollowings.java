@@ -40,7 +40,7 @@ public class DbFollowings extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF NOT EXISTS " + TB_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TB_NAME);
         onCreate(db);
 
     }
@@ -50,26 +50,27 @@ public class DbFollowings extends SQLiteOpenHelper {
 
 
         SQLiteDatabase sd = this.getWritableDatabase();
+        sd.beginTransaction();
         if (!CheckItem(items.getId())) {
             long insertId = sd.insert(TB_NAME, null, items.getContentValues());
 //            Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
         }
-        if (sd.isOpen()) sd.close();
+        if (sd.isOpen()){
+            sd.setTransactionSuccessful();
+            sd.endTransaction();
+            sd.close();
+        }
 
     }
 
     public boolean CheckItem(long i) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
+        Cursor c = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
 
-        if (cursor.moveToFirst()) {
-            cursor.close();
-            if (db.isOpen()) db.close();
+        if (c.moveToFirst()) {
             return true;
         } else {
-            cursor.close();
-            if (db.isOpen()) db.close();
             return false;
         }
 
