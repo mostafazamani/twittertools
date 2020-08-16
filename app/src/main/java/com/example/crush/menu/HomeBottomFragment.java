@@ -1,5 +1,6 @@
 package com.example.crush.menu;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -23,6 +24,7 @@ import com.example.crush.MyTwitterApiClient;
 import com.example.crush.R;
 import com.example.crush.models.UserShow;
 import com.example.crush.models.unfollowFind;
+import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -55,7 +57,7 @@ public class HomeBottomFragment extends Fragment {
         follower_num = view.findViewById(R.id.follower_num);
         following_num = view.findViewById(R.id.following_num);
 
-        user_info(session);
+        user_info(session,view.getContext());
 
 
         MyTwitterApiClient twitterApiClient = new MyTwitterApiClient(session);
@@ -99,7 +101,7 @@ public class HomeBottomFragment extends Fragment {
        // return inflater.inflate(R.layout.home_fragment,container,false);
     }
 
-    public void user_info(TwitterSession session){
+    public void user_info(TwitterSession session, final Context context){
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
         myTwitterApiClient.getCustomTwitterService().User(session.getUserId() , session.getUserName()).enqueue(new Callback<UserShow>() {
@@ -117,11 +119,11 @@ public class HomeBottomFragment extends Fragment {
                     follower_num.setText("Follower\n"+String.valueOf(show.getFollowers_count()));
                     following_num.setText("Following\n"+String.valueOf(show.getFollowings_count()));
                     String url = geturlpic(purl);
-                    new HomeBottomFragment.DownloadImageTask(banner)
-                            .execute(burl);
 
-                    new HomeBottomFragment.DownloadImageTask(profile)
-                            .execute(url);
+
+                    Picasso.with(context).load(burl).into(banner);
+                    Picasso.with(context).load(url).into(profile);
+
 
                 }
 
@@ -148,30 +150,4 @@ public class HomeBottomFragment extends Fragment {
         return url;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bannerImage ;
-
-        public DownloadImageTask(ImageView bannerImage ) {
-            this.bannerImage = bannerImage;
-            //   this.profileImage = profilImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("خطا در بارگیری عکس", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bannerImage.setImageBitmap(result);
-            //profileImage.setImageBitmap(result);
-        }
-    }
 }

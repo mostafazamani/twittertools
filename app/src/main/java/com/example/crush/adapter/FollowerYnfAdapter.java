@@ -17,6 +17,7 @@ import com.example.crush.DbSuggest;
 import com.example.crush.R;
 import com.example.crush.models.SuggestUser;
 import com.example.crush.models.follow;
+import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -88,8 +89,7 @@ public class FollowerYnfAdapter extends BaseAdapter {
         textname.setText(ex.get(position).getName());
         idname.setText(ex.get(position).getScreenName());
 
-        new DownloadImageTask(profilePic)
-                .execute(url);
+        Picasso.with(convertView.getContext()).load(url).into(profilePic);
 
 
         return convertView;
@@ -107,32 +107,6 @@ public class FollowerYnfAdapter extends BaseAdapter {
         return url;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bannerImage;
-
-        public DownloadImageTask(ImageView bannerImage) {
-            this.bannerImage = bannerImage;
-            //   this.profileImage = profilImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("خطا در بارگیری عکس", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bannerImage.setImageBitmap(result);
-            //profileImage.setImageBitmap(result);
-        }
-    }
 
 }
 

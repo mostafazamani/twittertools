@@ -97,29 +97,7 @@ public class ExploreBottomFragment extends Fragment {
     }
 
 
-    public boolean cheklist(List<follow> list, long id) {
-        boolean b = false;
 
-        for (int i = 0; i < list.size(); i++) {
-
-            if (list.get(i).getId() == id) {
-                b = false;
-            } else {
-                b = true;
-            }
-
-        }
-
-        return b;
-    }
-
-    public List<SuggestUser> getSl(List<SuggestUser> sl, int x) {
-        List<SuggestUser> list = new ArrayList<>();
-        for (int i = x; i < x + 30; i++)
-            list.add(sl.get(i));
-
-        return list;
-    }
 
 
 }
