@@ -64,11 +64,15 @@ public class DbFollowings extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
 
         if (cursor.moveToFirst()) {
-
+            cursor.close();
+            if (db.isOpen()) db.close();
             return true;
         } else {
+            cursor.close();
+            if (db.isOpen()) db.close();
             return false;
         }
+
     }
 
 

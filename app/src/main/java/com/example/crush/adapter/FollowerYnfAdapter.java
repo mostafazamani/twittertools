@@ -12,32 +12,38 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.crush.DbSuggest;
 import com.example.crush.R;
 import com.example.crush.models.SuggestUser;
+import com.example.crush.models.follow;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
+
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class FollowerYnfAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<SuggestUser> ex;
-    private final List<SuggestUser> users;
+    private final List<follow> ex;
+
     private TwitterSession session;
 
     // 1
-    public FollowerYnfAdapter (Context context , List<SuggestUser> list) {
-        this.ex = list;
+    public FollowerYnfAdapter(Context context) {
+        ex = new ArrayList<>();
         this.mContext = context;
-        DbSuggest suggest = new DbSuggest(context);
-        suggest.getReadableDatabase();
-        users = suggest.getItem();
+
 
     }
 
+    public void AddToList(List<follow> list){
+        ex.addAll(list);
+
+    }
 
 
     // 2
@@ -49,13 +55,13 @@ public class FollowerYnfAdapter extends BaseAdapter {
     // 3
     @Override
     public long getItemId(int position) {
-        return users.get(position).getId();
+        return ex.get(position).getId();
     }
 
     // 4
     @Override
     public Object getItem(int position) {
-        return users.get(position);
+        return ex.get(position);
     }
 
     // 5
