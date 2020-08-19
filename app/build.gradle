@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.0"
 
     defaultConfig {
-        applicationId "com.example.crush"
+        applicationId "com.op.crush"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
