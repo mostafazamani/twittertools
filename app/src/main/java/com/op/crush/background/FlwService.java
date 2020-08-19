@@ -14,6 +14,7 @@ import com.op.crush.DbFollowings;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.models.followmodel;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -37,18 +38,22 @@ public class FlwService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        onTaskRemoved(intent);
-        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        dbHelper = new DbFollowers(FlwService.this);
-//        db = new DbFollowings(FlwService.this);
-        db = DbFollowings.getInstance(FlwService.this);
-        //      loadFollowers(session,nextCursor);
-        db.getWritableDatabase();
-        db.getReadableDatabase();
+        super.onStartCommand(intent, flags, startId);
+        Log.i("onStartCommand", "c");
+        return START_STICKY;
+    }
 
+    @Override
+    public void onCreate() {
+        Log.i("create", "c");
+        Twitter.initialize(this);
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+        dbHelper = new DbFollowers(getApplicationContext());
+        db = new DbFollowings(this);
+        loadFollowers(session, nextCursor);
         loadFollowings(session, nextCursor);
 
-        return START_STICKY;
+
     }
 
     @Override
@@ -61,7 +66,7 @@ public class FlwService extends Service {
     }
 
     public void loadFollowers(final TwitterSession twitterSession, long next) {
-        dbHelper = new DbFollowers(getApplicationContext());
+
         dbHelper.getWritableDatabase();
         dbHelper.getReadableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
@@ -100,43 +105,39 @@ public class FlwService extends Service {
 
     public void loadFollowings(final TwitterSession twitterSession, long next) {
 
-try {
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
+        myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    followmodel fol = (followmodel) response.body();
+                    if (fol.getResults() != null)
+                        for (int i = 0; i < fol.getResults().size(); i++) {
+                            if (fol.getResults().get(i) != null)
+                                db.AddItem(fol.getResults().get(i));
+                        }
 
+                    db.close();
 
-    MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-    myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-        @Override
-        public void onResponse(Call call, @NonNull Response response) {
-            if (response.body() != null) {
-                followmodel fol = (followmodel) response.body();
-                if (fol.getResults() != null)
-                    for (int i = 0; i < fol.getResults().size(); i++) {
+                    countFollowing++;
+                    Log.i("following", String.valueOf(countFollowing));
 
-                        db.AddItem(fol.getResults().get(i));
+                    if (fol.getNextCursor() != 0) {
+                        loadFollowings(twitterSession, fol.getNextCursor());
+                    } else {
+
                     }
 
+                }
+            }
 
-                countFollowing++;
+            @Override
+            public void onFailure(Call call, Throwable t) {
                 Log.i("following", String.valueOf(countFollowing));
 
-                if (fol.getNextCursor() != 0) {
-                    loadFollowings(twitterSession, fol.getNextCursor());
-                } else {
-
-                }
-
             }
-        }
+        });
 
-        @Override
-        public void onFailure(Call call, Throwable t) {
-
-
-        }
-    });
-}catch (OutOfMemoryError e){
-    Log.i("error",e.getMessage());
-}
 
     }
 
