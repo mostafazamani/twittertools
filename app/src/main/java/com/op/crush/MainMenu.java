@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.op.crush.background.FlwService;
 import com.op.crush.menu.ExploreBottomFragment;
 import com.op.crush.menu.HomeBottomFragment;
 import com.op.crush.menu.TwittsBottomFragment;
@@ -97,10 +98,10 @@ public class MainMenu extends AppCompatActivity {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
 
-        dbHelper = new DbFollowers(MainMenu.this);
-        db = new DbFollowings(MainMenu.this);
-        loadFollowers(session,nextCursor);
-        loadFollowings(session,nextCursor);
+
+      //  loadFollowers(session,nextCursor);
+      //  loadFollowings(session,nextCursor);
+
 
 
 
@@ -256,6 +257,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
+
                     followmodel fol = (followmodel) response.body();
                     if (fol.getResults() != null)
                         for (int i = 0; i < fol.getResults().size(); i++) {

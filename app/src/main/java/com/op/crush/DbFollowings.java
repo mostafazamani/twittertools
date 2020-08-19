@@ -18,6 +18,7 @@ public class DbFollowings extends SQLiteOpenHelper {
     Context context;
     private static final String DBname = "flr";
     private static final String TB_NAME = "following";
+    private static DbFollowings mInstance = null;
 
 
     private static final String CMD = "CREATE TABLE " + TB_NAME + " ("
@@ -26,6 +27,13 @@ public class DbFollowings extends SQLiteOpenHelper {
             + follow.KEY_IMAGE + " TEXT " +
             ");";
 
+
+    public static DbFollowings getInstance(Context context){
+        if (mInstance == null) {
+            mInstance = new DbFollowings(context.getApplicationContext());
+        }
+        return mInstance;
+    }
     public DbFollowings(@Nullable Context context) {
         super(context, DBname, null, 1);
         this.context = context;

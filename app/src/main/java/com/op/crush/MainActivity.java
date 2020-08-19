@@ -2,6 +2,7 @@ package com.op.crush;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.op.crush.background.FlwService;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (preferences.getString("log", "").equals("login")) {
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+            startService(new Intent(MainActivity.this, FlwService.class));
             loginMethod();
 
         } else {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     loggedUserTwitterId = session.getId();
                     //String token = authToken.token;
                     //  String secret = authToken.secret;
-
+                    startService(new Intent(MainActivity.this, FlwService.class));
 
                     loginMethod();
 
