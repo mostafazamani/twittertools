@@ -4,15 +4,23 @@
     android:background="?attr/backgroundcolor"
     android:layout_height="match_parent">
 
- <androidx.recyclerview.widget.RecyclerView
-     android:id="@+id/timeline_item"
-     android:layout_width="0dp"
-     android:layout_height="match_parent"/>
+ <HorizontalScrollView
+     android:layout_width="match_parent"
+     android:layout_height="100dp"
+  android:id="@+id/scrollView_sugest">
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="50dp"
+   android:text="Add Your Id to Other"
+   android:id="@+id/add_to_sugest"/>
+ </HorizontalScrollView>
+
  <GridView
      android:id="@+id/gridview"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:gravity="center"
+     android:layout_below="@+id/scrollView_sugest"
      android:layout_marginEnd="1dp"
      android:layout_marginStart="1dp"
      android:stretchMode="columnWidth"

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.op.crush.MainMenu;
@@ -32,6 +33,7 @@ public class HomeBottomFragment extends Fragment {
     MainMenu m;
     ImageView profile , banner;
     Button follower_num , following_num ;
+
 
     private TwitterSession session;
 
@@ -83,6 +85,7 @@ public class HomeBottomFragment extends Fragment {
 
                 Fragment followerYouNotFollow = new FollowerYouNotFollow();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                //FragmentManager.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
                 transaction.replace(R.id.fragment_container, followerYouNotFollow ); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();

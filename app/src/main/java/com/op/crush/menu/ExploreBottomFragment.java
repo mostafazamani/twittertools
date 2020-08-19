@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class ExploreBottomFragment extends Fragment {
     int j = 0;
     List<SuggestUser> sl;
 
+    Button add_to_sugest;
 
     DbSuggest dbSuggest;
 
@@ -52,6 +54,13 @@ public class ExploreBottomFragment extends Fragment {
 
         sl = dbSuggest.getItem();
 
+        add_to_sugest = view.findViewById(R.id.add_to_sugest);
+        add_to_sugest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         ////////////////GridView//////////////////////////
         gridView = view.findViewById(R.id.gridview);
