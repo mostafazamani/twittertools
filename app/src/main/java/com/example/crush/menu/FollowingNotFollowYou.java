@@ -1,5 +1,6 @@
 package com.example.crush.menu;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +26,10 @@ import com.example.crush.models.follow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FollowerYouNotFollow  extends Fragment {
+public class FollowingNotFollowYou  extends Fragment {
 
     ImageButton back_to_homefrag;
-    Button follow_all;
+    Button unfollow_all;
     DbFollowers dbFollowers;
     DbFollowings dbFollowings;
     List<follow> followList;
@@ -41,13 +42,12 @@ public class FollowerYouNotFollow  extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.follower_ynf_fragment, container, false);
+        final View view = inflater.inflate(R.layout.following_nfy_fragment, container, false);
 
-       // ((MainMenu)getActivity()).getSupportActionBar().hide();//Toolbar hidden
-
+        // ((MainMenu)getActivity()).getSupportActionBar().hide();//Toolbar hidden
 
         back_to_homefrag = view.findViewById(R.id.fynf_back);
-        follow_all = view.findViewById(R.id.follow_all);
+        unfollow_all = view.findViewById(R.id.follow_all);
         list = view.findViewById(R.id.list_fynf);
 
 
@@ -79,16 +79,15 @@ public class FollowerYouNotFollow  extends Fragment {
                 fo.add(dbFollowers.getOneItem(followList.get(i).getId()));
 
             }
+
             if (i == followList.size() -1) {
                 ynfAdapter.AddToList(fo);
                 ynfAdapter.notifyDataSetChanged();
             }
+
+
         }
-
-
-
-
-
         return view;
     }
-    }
+}
+

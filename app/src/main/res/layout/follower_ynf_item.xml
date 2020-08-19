@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="82dp"
+    android:layout_height="72dp"
     android:background="?attr/cardBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
     <androidx.cardview.widget.CardView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_margin="1dp"
-
-        app:cardCornerRadius="40dp"
+        app:cardCornerRadius="30dp"
         android:padding="2dp"
         app:cardBackgroundColor="@color/lightBlue"
        >
@@ -22,7 +20,6 @@
             android:background="@color/whiteSmoke"
             android:id="@+id/profile_image_fynf"
             />
-
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -36,6 +33,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_id_fynf"
@@ -44,21 +45,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_name_fynf"
             android:layout_gravity="start|top"
-            android:gravity="start"/>
+            android:gravity="start"
+            />
     </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:text="Follow"
         android:layout_gravity="center"
         android:background="@drawable/shape_follow_btn"
         android:gravity="center"
-        android:layout_margin="2dp"
+        android:padding="4dp"
+        android:layout_margin="5dp"
         android:id="@+id/follow_btn_fynf"/>
 
 </LinearLayout>
