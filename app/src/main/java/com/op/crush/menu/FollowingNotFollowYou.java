@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.op.crush.DbFollowers;
 import com.op.crush.DbFollowings;
 import com.op.crush.R;
+import com.op.crush.adapter.FolloweingNfyAdapter;
 import com.op.crush.adapter.FollowerYnfAdapter;
 import com.op.crush.models.follow;
 
@@ -31,7 +32,7 @@ public class FollowingNotFollowYou  extends Fragment {
     DbFollowings dbFollowings;
     List<follow> followList;
     List<follow> fo;
-    FollowerYnfAdapter ynfAdapter;
+    FolloweingNfyAdapter ynfAdapter;
     private ListView list;
 
 
@@ -43,9 +44,9 @@ public class FollowingNotFollowYou  extends Fragment {
 
         // ((MainMenu)getActivity()).getSupportActionBar().hide();//Toolbar hidden
 
-        back_to_homefrag = view.findViewById(R.id.fynf_back);
-        unfollow_all = view.findViewById(R.id.follow_all);
-        list = view.findViewById(R.id.list_fynf);
+        back_to_homefrag = view.findViewById(R.id.fnfy_back);
+        unfollow_all = view.findViewById(R.id.unfollow_all);
+        list = view.findViewById(R.id.list_fnfy);
 
 
         back_to_homefrag.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +60,7 @@ public class FollowingNotFollowYou  extends Fragment {
             }
         });
 
-        ynfAdapter = new FollowerYnfAdapter(view.getContext());
+        ynfAdapter = new FolloweingNfyAdapter(view.getContext());
         list.setAdapter(ynfAdapter);
 
         dbFollowers = new DbFollowers(view.getContext());
@@ -68,12 +69,12 @@ public class FollowingNotFollowYou  extends Fragment {
         dbFollowers.getReadableDatabase();
         fo = new ArrayList<>();
 
-        followList = dbFollowers.getItem();
+        followList = dbFollowings.getItem();
 
         for (int i = 0 ; i < followList.size() ; i++){
 
-            if (!dbFollowings.CheckItem(followList.get(i).getId())){
-                fo.add(dbFollowers.getOneItem(followList.get(i).getId()));
+            if (!dbFollowers.CheckItem(followList.get(i).getId())){
+                fo.add(dbFollowings.getOneItem(followList.get(i).getId()));
 
             }
 

@@ -83,19 +83,45 @@ public class DbFollowings extends SQLiteOpenHelper {
         }
 
     }
+    public follow getOneItem(long i) {
+        SQLiteDatabase db = getReadableDatabase();
 
 
-    public List<Long> getItem() {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE " + follow.Key_ID + "='" + i + "'", null);
+        follow f = new follow();
+        if (cursor.moveToFirst()) {
+            do {
+
+                f.setId(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
+                f.setName(cursor.getString(cursor.getColumnIndex(follow.KEY_NAME)));
+                f.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(follow.KEY_IMAGE)));
+
+
+            } while (cursor.moveToNext());
+
+        }
+        cursor.close();
+        if (db.isOpen()) db.close();
+        return f;
+    }
+
+
+    public List<follow> getItem() {
 
         SQLiteDatabase db = getReadableDatabase();
-        List<Long> lsl = new ArrayList<>();
+        List<follow> lsl = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TB_NAME, null);
 
 
         if (cursor.moveToFirst()) {
             do {
+                follow f = new follow();
 
-                lsl.add(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
+                f.setId(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
+                f.setName(cursor.getString(cursor.getColumnIndex(follow.KEY_NAME)));
+                f.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(follow.KEY_IMAGE)));
+
+                lsl.add(f);
 
             } while (cursor.moveToNext());
         }

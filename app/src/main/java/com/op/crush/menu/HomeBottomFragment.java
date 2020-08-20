@@ -93,6 +93,19 @@ public class HomeBottomFragment extends Fragment {
             }
         });
 
+        following_num.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new FollowingNotFollowYou();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment );
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            }
+        });
+
+
         return view;
        // return inflater.inflate(R.layout.home_fragment,container,false);
     }
