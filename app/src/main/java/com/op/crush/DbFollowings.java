@@ -131,4 +131,18 @@ public class DbFollowings extends SQLiteOpenHelper {
 
     }
 
+
+    public void DeleteItem(long id) {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        db.delete(TB_NAME, follow.Key_ID + " = " + id + ";", null);
+
+
+        if (db.isOpen()) db.close();
+
+
+    }
+
+
 }

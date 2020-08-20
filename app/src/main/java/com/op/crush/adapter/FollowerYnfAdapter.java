@@ -1,6 +1,7 @@
 package com.op.crush.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 import android.view.View;
@@ -9,8 +10,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.op.crush.DbFollowings;
+import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.follow;
+import com.op.crush.models.followmodel;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -18,18 +24,22 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class FollowerYnfAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<follow> ex;
-
+    DbFollowings dbFollowings;
     private TwitterSession session;
 
     // 1
     public FollowerYnfAdapter(Context context) {
         ex = new ArrayList<>();
         this.mContext = context;
+        dbFollowings = new DbFollowings(context);
 
 
     }
@@ -83,6 +93,35 @@ public class FollowerYnfAdapter extends BaseAdapter {
         idname.setText(ex.get(position).getScreenName());
 
         Picasso.with(convertView.getContext()).load(url).into(profilePic);
+
+        follow_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
+                apiClient.getCustomTwitterService().CreateFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
+                    @Override
+                    public void onResponse(Call call, @NonNull Response response) {
+                        if (response.body() != null) {
+                            ex.remove(position);
+                            dbFollowings.getWritableDatabase();
+                            dbFollowings.AddItem(ex.get(position));
+
+                            notifyDataSetChanged();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+
+                    }
+                });
+
+
+            }
+        });
+
 
 
         return convertView;

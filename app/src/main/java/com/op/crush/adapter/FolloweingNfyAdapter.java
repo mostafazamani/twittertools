@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.op.crush.DbFollowers;
+import com.op.crush.DbFollowings;
+import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.follow;
 import com.squareup.picasso.Picasso;
@@ -18,17 +23,22 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class FolloweingNfyAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<follow> ex;
 
     private TwitterSession session;
+    private DbFollowings dbFollowings;
 
     // 1
     public FolloweingNfyAdapter(Context context) {
         ex = new ArrayList<>();
         this.mContext = context;
+        dbFollowings = new DbFollowings(context);
 
 
     }
@@ -73,7 +83,7 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fnfy);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fnfy);
         final TextView idname = (TextView) convertView.findViewById(R.id.profile_id_fnfy);
-        final Button follow_btn = (Button) convertView.findViewById(R.id.unfollow_btn_fnfy);
+        final Button unfollow_btn = (Button) convertView.findViewById(R.id.unfollow_btn_fnfy);
         //final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
 
         String purl = ex.get(position).getProfilePictureUrl();
@@ -82,6 +92,36 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         idname.setText(ex.get(position).getScreenName());
 
         Picasso.with(convertView.getContext()).load(url).into(profilePic);
+
+        unfollow_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
+                apiClient.getCustomTwitterService().DestroyFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
+                    @Override
+                    public void onResponse(Call call, @NonNull Response response) {
+                        if (response.body() != null) {
+                            ex.remove(position);
+                            dbFollowings.getWritableDatabase();
+                            dbFollowings.getReadableDatabase();
+                            dbFollowings.DeleteItem(ex.get(position).getId());
+
+                            notifyDataSetChanged();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+
+                    }
+                });
+
+            }
+        });
+
 
 
         return convertView;

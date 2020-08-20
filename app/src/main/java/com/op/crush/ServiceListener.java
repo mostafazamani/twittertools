@@ -27,4 +27,11 @@ public interface ServiceListener {
     @GET("1.1/friendships/outgoing.json")
     Call<unfollowFind> Unfollow();
 
+    @GET("1.1/friendships/create.json")
+    Call<JsonArray> CreateFollow(@Query("user_id") long id);
+
+    @GET("1.1/friendships/destroy.json")
+    Call<JsonArray> DestroyFollow(@Query("user_id") long id);
+
+
 }
