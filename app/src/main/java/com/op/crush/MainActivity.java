@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     TwitterLoginButton loginButton;
     TwitterSession session;
-    TwitterAuthClient twitterAuthClient;
-    private DbFollowers dbHelper;
 
     Switch n;
 

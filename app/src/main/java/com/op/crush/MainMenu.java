@@ -63,10 +63,6 @@ public class MainMenu extends AppCompatActivity {
     boolean f2 = true;
     boolean f3 = true;
 
-    private DbFollowers dbHelper;
-    public long nextCursor = -1L;
-    private DbFollowings db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,82 +242,6 @@ public class MainMenu extends AppCompatActivity {
                 }
             };
 
-
-
-    public void loadFollowers(final TwitterSession twitterSession, long next) {
-        dbHelper = new DbFollowers(MainMenu.this);
-         dbHelper.getWritableDatabase();
-         dbHelper.getReadableDatabase();
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-
-                    followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null)
-                        for (int i = 0; i < fol.getResults().size(); i++) {
-
-                            dbHelper.AddItem(fol.getResults().get(i));
-                        }
-                    dbHelper.close();
-
-                    if (fol.getNextCursor() != 0) {
-                        loadFollowers(twitterSession, fol.getNextCursor());
-                    } else {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-
-            }
-        });
-
-
-    }
-
-
-    public void loadFollowings(final TwitterSession twitterSession, long next) {
-        db = new DbFollowings(MainMenu.this);
-        db.getWritableDatabase();
-        db.getReadableDatabase();
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null)
-                        for (int i = 0; i < fol.getResults().size(); i++) {
-
-                            db.AddItem(fol.getResults().get(i));
-                        }
-
-                    db.close();
-
-                    if (fol.getNextCursor() != 0) {
-                        loadFollowings(twitterSession, fol.getNextCursor());
-                    } else {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-
-            }
-        });
-
-
-    }
 
 
 

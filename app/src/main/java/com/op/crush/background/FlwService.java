@@ -4,14 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.op.crush.DbFollowers;
-import com.op.crush.DbFollowings;
-import com.op.crush.MainMenu;
+import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.models.followmodel;
 import com.twitter.sdk.android.core.Twitter;
@@ -20,12 +17,10 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class FlwService extends Service {
     private TwitterSession session;
-    private DbFollowers dbHelper;
-    private DbFollowings db;
+    private DbFollow db;
     public long nextCursor = -1L;
     private int countFollower = 0;
     private int countFollowing = 0;
@@ -48,8 +43,7 @@ public class FlwService extends Service {
         Log.i("create", "c");
         Twitter.initialize(this);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        dbHelper = new DbFollowers(getApplicationContext());
-        db = new DbFollowings(this);
+
         loadFollowers(session, nextCursor);
         loadFollowings(session, nextCursor);
 
@@ -66,22 +60,25 @@ public class FlwService extends Service {
     }
 
     public void loadFollowers(final TwitterSession twitterSession, long next) {
+        db = DbFollow.getInstance(this);
+        db.getWritableDatabase();
 
-        dbHelper.getWritableDatabase();
-        dbHelper.getReadableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
                     followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null)
+                    if (fol.getResults() != null) {
+
                         for (int i = 0; i < fol.getResults().size(); i++) {
 
-                            dbHelper.AddItem(fol.getResults().get(i));
-                        }
-                    dbHelper.close();
+                            db.AddItem(fol.getResults().get(i), DbFollow.TB_FOLLOWER);
 
+                        }
+                    }
+
+                    db.close();
                     countFollower++;
                     Log.i("follwer", String.valueOf(countFollower));
                     if (fol.getNextCursor() != 0) {
@@ -104,21 +101,24 @@ public class FlwService extends Service {
     }
 
     public void loadFollowings(final TwitterSession twitterSession, long next) {
-
+        db = DbFollow.getInstance(this);
+        db.getWritableDatabase();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
         myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
                 if (response.body() != null) {
+
                     followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null)
+                    if (fol.getResults() != null) {
+
                         for (int i = 0; i < fol.getResults().size(); i++) {
                             if (fol.getResults().get(i) != null)
-                                db.AddItem(fol.getResults().get(i));
+                                db.AddItem(fol.getResults().get(i), DbFollow.TB_FOLLOWING);
                         }
+                    }
 
                     db.close();
-
                     countFollowing++;
                     Log.i("following", String.valueOf(countFollowing));
 

@@ -1,7 +1,6 @@
 package com.op.crush.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 import android.view.View;
@@ -12,11 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.op.crush.DbFollowings;
+import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.follow;
-import com.op.crush.models.followmodel;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -32,14 +30,13 @@ public class FollowerYnfAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<follow> ex;
-    DbFollowings dbFollowings;
+    DbFollow dbFollowings;
     private TwitterSession session;
 
     // 1
     public FollowerYnfAdapter(Context context) {
         ex = new ArrayList<>();
         this.mContext = context;
-        dbFollowings = new DbFollowings(context);
 
 
     }
@@ -81,6 +78,8 @@ public class FollowerYnfAdapter extends BaseAdapter {
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
+
+
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fynf);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fynf);
         final TextView idname = (TextView) convertView.findViewById(R.id.profile_id_fynf);
@@ -103,10 +102,11 @@ public class FollowerYnfAdapter extends BaseAdapter {
                     public void onResponse(Call call, @NonNull Response response) {
                         if (response.body() != null) {
                             ex.remove(position);
-                            dbFollowings.getWritableDatabase();
-                            dbFollowings.AddItem(ex.get(position));
-
                             notifyDataSetChanged();
+                            dbFollowings = DbFollow.getInstance(mContext);
+                            dbFollowings.getWritableDatabase();
+                            dbFollowings.AddItem(ex.get(position),DbFollow.TB_FOLLOWING);
+                            dbFollowings.close();
 
                         }
                     }
@@ -128,14 +128,15 @@ public class FollowerYnfAdapter extends BaseAdapter {
     }
 
     public String geturlpic(String s) {
-        char[] chars = s.toCharArray();
         String url = "";
-        for (int i = 0; i < chars.length - 11; i++) {
-            url += chars[i];
-        }
+        if (s !=null) {
+            char[] chars = s.toCharArray();
+            for (int i = 0; i < chars.length - 11; i++) {
+                url += chars[i];
+            }
 
-        url += ".jpg";
-
+            url += ".jpg";
+        }else url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
 

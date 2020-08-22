@@ -11,8 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.op.crush.DbFollowers;
-import com.op.crush.DbFollowings;
+import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.follow;
@@ -32,15 +31,12 @@ public class FolloweingNfyAdapter extends BaseAdapter {
     private final List<follow> ex;
 
     private TwitterSession session;
-    private DbFollowings dbFollowings;
+    private DbFollow dbFollowings;
 
     // 1
     public FolloweingNfyAdapter(Context context) {
         ex = new ArrayList<>();
         this.mContext = context;
-        dbFollowings = new DbFollowings(context);
-
-
     }
 
     public void AddToList(List<follow> list){
@@ -61,6 +57,7 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         return ex.get(position).getId();
     }
 
+
     // 4
     @Override
     public Object getItem(int position) {
@@ -80,6 +77,8 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
+        dbFollowings = DbFollow.getInstance(convertView.getContext());
+
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fnfy);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fnfy);
         final TextView idname = (TextView) convertView.findViewById(R.id.profile_id_fnfy);
@@ -90,26 +89,26 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         String url = geturlpic(purl);
         textname.setText(ex.get(position).getName());
         idname.setText(ex.get(position).getScreenName());
-
+        unfollow_btn.setTag(position);
         Picasso.with(convertView.getContext()).load(url).into(profilePic);
 
         unfollow_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                final Integer i = (int) view.getTag();
                 MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
                 apiClient.getCustomTwitterService().DestroyFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
                     @Override
                     public void onResponse(Call call, @NonNull Response response) {
-                        if (response.body() != null) {
-                            ex.remove(position);
-                            dbFollowings.getWritableDatabase();
+                            ex.remove(i.intValue());
+
+                             notifyDataSetChanged();
                             dbFollowings.getReadableDatabase();
-                            dbFollowings.DeleteItem(ex.get(position).getId());
+                            dbFollowings.DeleteItem(ex.get(position).getId(),DbFollow.TB_FOLLOWING);
 
-                            notifyDataSetChanged();
 
-                        }
+
+
                     }
 
                     @Override
@@ -128,14 +127,15 @@ public class FolloweingNfyAdapter extends BaseAdapter {
     }
 
     public String geturlpic(String s) {
-        char[] chars = s.toCharArray();
         String url = "";
-        for (int i = 0; i < chars.length - 11; i++) {
-            url += chars[i];
-        }
+        if (s !=null) {
+            char[] chars = s.toCharArray();
+            for (int i = 0; i < chars.length - 11; i++) {
+                url += chars[i];
+            }
 
-        url += ".jpg";
-
+            url += ".jpg";
+        }else url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
 

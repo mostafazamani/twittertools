@@ -14,11 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.op.crush.DbFollowers;
-import com.op.crush.DbFollowings;
+import com.op.crush.DbFollow;
 import com.op.crush.R;
 import com.op.crush.adapter.FolloweingNfyAdapter;
-import com.op.crush.adapter.FollowerYnfAdapter;
 import com.op.crush.models.follow;
 
 import java.util.ArrayList;
@@ -28,8 +26,7 @@ public class FollowingNotFollowYou  extends Fragment {
 
     ImageButton back_to_homefrag;
     Button unfollow_all;
-    DbFollowers dbFollowers;
-    DbFollowings dbFollowings;
+    DbFollow db;
     List<follow> followList;
     List<follow> fo;
     FolloweingNfyAdapter ynfAdapter;
@@ -63,18 +60,17 @@ public class FollowingNotFollowYou  extends Fragment {
         ynfAdapter = new FolloweingNfyAdapter(view.getContext());
         list.setAdapter(ynfAdapter);
 
-        dbFollowers = new DbFollowers(view.getContext());
-        dbFollowings = new DbFollowings(view.getContext());
-        dbFollowings.getReadableDatabase();
-        dbFollowers.getReadableDatabase();
+        db = DbFollow.getInstance(view.getContext());
+        db.getReadableDatabase();
+
         fo = new ArrayList<>();
 
-        followList = dbFollowings.getItem();
+        followList = db.getItem(DbFollow.TB_FOLLOWING);
 
         for (int i = 0 ; i < followList.size() ; i++){
 
-            if (!dbFollowers.CheckItem(followList.get(i).getId())){
-                fo.add(dbFollowings.getOneItem(followList.get(i).getId()));
+            if (!db.CheckItem(followList.get(i).getId(),DbFollow.TB_FOLLOWER)){
+                fo.add(db.getOneItem(followList.get(i).getId(),DbFollow.TB_FOLLOWING));
 
             }
 
