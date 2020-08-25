@@ -39,7 +39,7 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         this.mContext = context;
     }
 
-    public void AddToList(List<follow> list){
+    public void AddToList(List<follow> list) {
         ex.addAll(list);
 
     }
@@ -77,7 +77,6 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-        dbFollowings = DbFollow.getInstance(convertView.getContext());
 
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fnfy);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fnfy);
@@ -100,13 +99,12 @@ public class FolloweingNfyAdapter extends BaseAdapter {
                 apiClient.getCustomTwitterService().DestroyFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
                     @Override
                     public void onResponse(Call call, @NonNull Response response) {
-                            ex.remove(i.intValue());
-
-                             notifyDataSetChanged();
-                            dbFollowings.getReadableDatabase();
-                            dbFollowings.DeleteItem(ex.get(position).getId(),DbFollow.TB_FOLLOWING);
-
-
+                        ex.remove(i.intValue());
+                        notifyDataSetChanged();
+                        dbFollowings = DbFollow.getInstance(mContext);
+                        dbFollowings.getReadableDatabase();
+                        dbFollowings.DeleteItem(ex.get(position).getId(), DbFollow.TB_FOLLOWING);
+                        dbFollowings.close();
 
 
                     }
@@ -122,20 +120,20 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         });
 
 
-
         return convertView;
     }
 
     public String geturlpic(String s) {
         String url = "";
-        if (s !=null) {
+        if (s != null) {
             char[] chars = s.toCharArray();
             for (int i = 0; i < chars.length - 11; i++) {
                 url += chars[i];
             }
 
             url += ".jpg";
-        }else url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
+        } else
+            url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
 

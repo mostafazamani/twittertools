@@ -1,10 +1,13 @@
 package com.op.crush;
 
 
+import com.google.gson.JsonObject;
 import com.op.crush.models.UserShow;
 import com.op.crush.models.followmodel;
 import com.op.crush.models.unfollowFind;
 import com.google.gson.JsonArray;
+
+
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -29,10 +32,10 @@ public interface ServiceListener {
     Call<unfollowFind> Unfollow();
 
     @POST("1.1/friendships/create.json")
-    Call<JsonArray> CreateFollow(@Query("user_id") long id);
+    Call<JsonObject> CreateFollow(@Query("user_id") long id);
 
     @POST("1.1/friendships/destroy.json")
-    Call<JsonArray> DestroyFollow(@Query("user_id") long id);
+    Call<JsonObject> DestroyFollow(@Query("user_id") long id);
 
 
 }
