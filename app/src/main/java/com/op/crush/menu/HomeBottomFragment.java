@@ -55,23 +55,6 @@ public class HomeBottomFragment extends Fragment {
         user_info(session,view.getContext());
 
 
-        MyTwitterApiClient twitterApiClient = new MyTwitterApiClient(session);
-        twitterApiClient.getCustomTwitterService().Unfollow().enqueue(new Callback<unfollowFind>() {
-            @Override
-            public void onResponse(Call<unfollowFind> call, Response<unfollowFind> response) {
-                if (response.body() != null) {
-                    unfollowFind find = response.body();
-                    Toast.makeText(view.getContext(), ""+find.getId(), Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<unfollowFind> call, Throwable t) {
-
-            }
-        });
 
 
         follower_num.setOnClickListener(new View.OnClickListener() {

@@ -49,7 +49,6 @@ public class DbFollow extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CMD1);
         db.execSQL(CMD2);
-        Toast.makeText(context, "created", Toast.LENGTH_SHORT).show();
 
     }
 

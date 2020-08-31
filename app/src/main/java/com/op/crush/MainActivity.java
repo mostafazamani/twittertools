@@ -10,7 +10,6 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import android.content.Context;
@@ -45,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (preferences.getString("log", "").equals("login")) {
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-            startService(new Intent(MainActivity.this, FlwService.class));
+//            startService(new Intent(MainActivity.this, FlwService.class));
+
+
+
             loginMethod();
 
         } else {

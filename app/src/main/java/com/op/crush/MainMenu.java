@@ -1,19 +1,29 @@
 package com.op.crush;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.op.crush.background.FlwService;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.op.crush.Room.ProgressState;
+import com.op.crush.Room.ProgressViewModel;
+import com.op.crush.background.LoadFollower;
+import com.op.crush.background.LoadFollowing;
 import com.op.crush.menu.ExploreBottomFragment;
 import com.op.crush.menu.HomeBottomFragment;
 import com.op.crush.menu.TwittsBottomFragment;
-import com.op.crush.models.followmodel;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.twitter.sdk.android.core.Twitter;
@@ -28,19 +38,25 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.ui.AppBarConfiguration;
+import androidx.lifecycle.Observer;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class MainMenu extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
-    private TwitterSession session;
 
+    private TwitterSession session;
 
     ImageButton hamberger;
     LinearLayout bar;
@@ -49,7 +65,6 @@ public class MainMenu extends AppCompatActivity {
     boolean night;
 
     BottomNavigationView bottomNavigationView;
-    Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -62,19 +77,24 @@ public class MainMenu extends AppCompatActivity {
 
     boolean f2 = true;
     boolean f3 = true;
+    TextView text;
+
+    private ProgressViewModel progressViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
         setContentView(R.layout.content_main);
+        progressViewModel = new ViewModelProvider(this).get(ProgressViewModel.class);
 
 
         hamberger = findViewById(R.id.hamberger_btn);
         bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
-       // toolbar = findViewById(R.id.m_toolbar);
-      //  setSupportActionBar(toolbar); //toolbar
+        text = findViewById(R.id.txt_status);
+        // toolbar = findViewById(R.id.m_toolbar);
+        //  setSupportActionBar(toolbar); //toolbar
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -82,22 +102,40 @@ public class MainMenu extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
+
 
         hamberger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout. openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
+
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
+                .build();
+
+        WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS)
+                .build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+        WorkManager.getInstance(this).enqueue(workRequest1);
+
+        progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
+            @Override
+            public void onChanged(List<ProgressState> progressStates) {
+                if (progressStates !=null && progressStates.size()>0) {
+                    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
+                    Log.i("vm", String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
+                }
+            }
+        });
+
+
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
-
-
-      //  loadFollowers(session,nextCursor);
-      //  loadFollowings(session,nextCursor);
-
 
 
 
@@ -109,7 +147,7 @@ public class MainMenu extends AppCompatActivity {
         nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme);
-            
+
             nightswitch.setChecked(true);
             night = true;
         } else {
@@ -241,8 +279,6 @@ public class MainMenu extends AppCompatActivity {
                     // return false; //for 2
                 }
             };
-
-
 
 
 }

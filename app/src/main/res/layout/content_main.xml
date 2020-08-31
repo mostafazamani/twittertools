@@ -41,6 +41,10 @@
                 android:layout_marginLeft="4dp">
 
             </ImageButton>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txt_status"/>
 
         </LinearLayout>
 
