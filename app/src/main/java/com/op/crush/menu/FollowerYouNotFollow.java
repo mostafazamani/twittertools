@@ -1,6 +1,6 @@
 package com.op.crush.menu;
 
-import android.database.sqlite.SQLiteDatabase;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +80,7 @@ public class FollowerYouNotFollow extends Fragment {
                 stat = progressStates.get(progressStates.size() - 1).getState();
                 progressBar.setProgress(stat);
                 txtProgress.setText(String.valueOf(stat)+"%");
-                if (stat == 60){
+                if (stat == 100){
                     progressBar.setVisibility(View.INVISIBLE);
                     ynfAdapter = new FollowerYnfAdapter(view.getContext());
                     list.setAdapter(ynfAdapter);

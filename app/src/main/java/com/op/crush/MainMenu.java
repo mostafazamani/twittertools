@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +50,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -112,22 +114,33 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
+        new CountDownTimer(3000, 10000) {
 
-        WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
-                .build();
+            @Override
+            public void onTick(long l) {
 
-        WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                TimeUnit.MILLISECONDS)
-                .build();
-        WorkManager.getInstance(this).enqueue(workRequest);
-        WorkManager.getInstance(this).enqueue(workRequest1);
+            }
+
+            @Override
+            public void onFinish() {
+                WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
+                        .build();
+
+                WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
+                        BackoffPolicy.LINEAR,
+                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                        TimeUnit.MILLISECONDS)
+                        .build();
+                WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
+                WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
+            }
+        }.start();
+
 
         progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
             @Override
             public void onChanged(List<ProgressState> progressStates) {
-                if (progressStates !=null && progressStates.size()>0) {
+                if (progressStates != null && progressStates.size() > 0) {
                     text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                     Log.i("vm", String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                 }
@@ -136,7 +149,6 @@ public class MainMenu extends AppCompatActivity {
 
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
 
 
         ////////////////////Night Mode

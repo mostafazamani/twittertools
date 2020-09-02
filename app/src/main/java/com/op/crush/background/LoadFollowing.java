@@ -44,6 +44,7 @@ import static java.util.jar.Pack200.Packer.PROGRESS;
 
 public class LoadFollowing extends Worker {
 
+    private final int pc;
     private TwitterSession session;
     private DbFollow db;
     public long nextCursor = -1L;
@@ -57,9 +58,9 @@ public class LoadFollowing extends Worker {
     public LoadFollowing(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        setProgressAsync(new Data.Builder().putInt("key", 0).build());
+        pc = 100 / (preferences.getInt("CP", 0) / 200);
         database = ProgressDatabase.getInstance(context);
-        database.progressDao().insert(new ProgressState(0));
+
     }
 
     @NonNull
@@ -69,7 +70,19 @@ public class LoadFollowing extends Worker {
         Log.i("foll", "start1");
         nextCursor = preferences.getLong("FollowingC", -1L);
         countFollowing = preferences.getInt("FIC", 0);
-        loadFollowings(session, nextCursor);
+        new CountDownTimer(2000, 1000) {
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                loadFollowings(session, nextCursor);
+            }
+        }.start();
+
         return Result.success();
     }
 
@@ -93,14 +106,14 @@ public class LoadFollowing extends Worker {
 
                     db.close();
 
-                    prog += 10;
-
+                    prog += pc;
+                    countFollowing++;
                     new progress(database).execute(new ProgressState(prog));
                     preferences.edit().putLong("FollowingC", fol.getNextCursor()).apply();
                     preferences.edit().putInt("FIC", countFollowing).apply();
 
                     if (countFollowing == 15) {
-                        new CountDownTimer(30000, 1000) {
+                        new CountDownTimer(900000, 1000) {
                             @Override
                             public void onTick(long l) {
 
@@ -114,12 +127,12 @@ public class LoadFollowing extends Worker {
                                     loadFollowings(twitterSession, fol.getNextCursor());
                                 } else {
                                     preferences.edit().putLong("FollowingC", -1L).apply();
-
+                                    new progress(database).execute(new ProgressState(100));
                                 }
                             }
                         }.start();
                     } else {
-                        countFollowing++;
+
 
                         Log.i("following", String.valueOf(countFollowing));
 
@@ -129,8 +142,7 @@ public class LoadFollowing extends Worker {
                             countFollowing = 0;
                             preferences.edit().putLong("FollowingC", -1L).apply();
                             preferences.edit().putInt("FIC", countFollowing).apply();
-
-
+                            new progress(database).execute(new ProgressState(100));
                         }
                     }
 
@@ -147,7 +159,7 @@ public class LoadFollowing extends Worker {
 
     }
 
-    public static class progress extends AsyncTask<ProgressState,Void,Void>{
+    public static class progress extends AsyncTask<ProgressState, Void, Void> {
 
         ProgressDatabase database;
 

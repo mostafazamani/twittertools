@@ -2,6 +2,7 @@ package com.op.crush.background;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 
@@ -16,6 +17,8 @@ import androidx.work.impl.WorkDatabase;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
+import com.op.crush.Room.ProgressDatabase;
+import com.op.crush.Room.ProgressState;
 import com.op.crush.models.followmodel;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -27,16 +30,22 @@ import retrofit2.Response;
 
 public class LoadFollower extends Worker {
 
+    private final ProgressDatabase database;
     private TwitterSession session;
     private DbFollow db;
     public long nextCursor = -1L;
     private int countFollower = 0;
+    int pc;
     SharedPreferences preferences;
+    private int prog = 0;
 
 
     public LoadFollower(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        pc = 100 / (preferences.getInt("CP", 0) / 200);
+        database = ProgressDatabase.getInstance(context);
+
 
     }
 
@@ -47,6 +56,18 @@ public class LoadFollower extends Worker {
         Log.i("foll", "start2");
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
+        new CountDownTimer(2000, 1000) {
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                loadFollowers(session, nextCursor);
+            }
+        }.start();
         loadFollowers(session, nextCursor);
 
 
@@ -74,11 +95,14 @@ public class LoadFollower extends Worker {
 
                     db.close();
 
+                    prog += pc;
+                    countFollower++;
+                    new progress(database).execute(new ProgressState(prog));
                     preferences.edit().putLong("FollowerC", fol.getNextCursor()).apply();
                     preferences.edit().putInt("FRC", countFollower).apply();
 
                     if (countFollower == 15) {
-                        new CountDownTimer(30000, 1000) {
+                        new CountDownTimer(900000, 1000) {
                             @Override
                             public void onTick(long l) {
 
@@ -92,12 +116,12 @@ public class LoadFollower extends Worker {
                                     loadFollowers(twitterSession, fol.getNextCursor());
                                 } else {
                                     preferences.edit().putLong("FollowerC", -1L).apply();
+                                    new progress(database).execute(new ProgressState(100));
                                 }
                             }
                         }.start();
                     } else {
 
-                        countFollower++;
 
                         Log.i("follwer", String.valueOf(countFollower));
                         if (fol.getNextCursor() != 0) {
@@ -106,6 +130,7 @@ public class LoadFollower extends Worker {
                             countFollower = 0;
                             preferences.edit().putLong("FollowerC", -1L).apply();
                             preferences.edit().putInt("FIC", countFollower).apply();
+                            new progress(database).execute(new ProgressState(100));
                         }
                     }
 
@@ -122,5 +147,19 @@ public class LoadFollower extends Worker {
 
     }
 
+    public static class progress extends AsyncTask<ProgressState, Void, Void> {
+
+        ProgressDatabase database;
+
+        public progress(ProgressDatabase database) {
+            this.database = database;
+        }
+
+        @Override
+        protected Void doInBackground(ProgressState... progressStates) {
+            database.progressDao().insert(progressStates[0]);
+            return null;
+        }
+    }
 
 }

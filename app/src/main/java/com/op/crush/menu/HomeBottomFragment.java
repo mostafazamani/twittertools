@@ -1,6 +1,7 @@
 package com.op.crush.menu;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +34,8 @@ public class HomeBottomFragment extends Fragment {
     MainMenu m;
     ImageView profile , banner;
     Button follower_num , following_num ;
-
-
-    private TwitterSession session;
+    SharedPreferences preferences;
+    TwitterSession session;
 
 
 
@@ -44,7 +44,7 @@ public class HomeBottomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.home_fragment, container, false);
-
+        preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
         banner  = view.findViewById(R.id.banner_profile);
@@ -105,6 +105,8 @@ public class HomeBottomFragment extends Fragment {
                     UserShow show = response.body();
                     /*Toast.makeText(HomeBottomFragment.this, ""+show.getProfile_name() + "\n"
                             +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();*/
+                    int cf = show.getFollowers_count()+show.getFollowings_count();
+                    preferences.edit().putInt("CP",cf ).apply();
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
