@@ -70,18 +70,7 @@ public class LoadFollowing extends Worker {
         Log.i("foll", "start1");
         nextCursor = preferences.getLong("FollowingC", -1L);
         countFollowing = preferences.getInt("FIC", 0);
-        new CountDownTimer(2000, 1000) {
-
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                loadFollowings(session, nextCursor);
-            }
-        }.start();
+        loadFollowings(session, nextCursor);
 
         return Result.success();
     }

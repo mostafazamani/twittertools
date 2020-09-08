@@ -44,6 +44,11 @@ public class FolloweingNfyAdapter extends BaseAdapter {
 
     }
 
+    public void RemoveList(int pos){
+        ex.remove(pos);
+        notifyDataSetChanged();
+    }
+
 
     // 2
     @Override

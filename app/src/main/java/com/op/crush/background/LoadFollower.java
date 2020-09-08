@@ -56,18 +56,7 @@ public class LoadFollower extends Worker {
         Log.i("foll", "start2");
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
-        new CountDownTimer(2000, 1000) {
 
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                loadFollowers(session, nextCursor);
-            }
-        }.start();
         loadFollowers(session, nextCursor);
 
 

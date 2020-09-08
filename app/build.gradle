@@ -63,6 +63,9 @@ dependencies {
     implementation 'androidx.work:work-gcm:2.4.0'
 
 
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+
+
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'

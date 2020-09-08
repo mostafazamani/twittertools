@@ -45,6 +45,10 @@ public class FollowerYnfAdapter extends BaseAdapter {
         ex.addAll(list);
 
     }
+    public void RemoveList(int pos){
+        ex.remove(pos);
+        notifyDataSetChanged();
+    }
 
 
     // 2
