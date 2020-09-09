@@ -22,6 +22,7 @@ import com.op.crush.Room.ProgressViewModel;
 import com.op.crush.background.LoadFollower;
 import com.op.crush.background.LoadFollowing;
 import com.op.crush.menu.ExploreBottomFragment;
+import com.op.crush.menu.FollowBottomFragment;
 import com.op.crush.menu.HomeBottomFragment;
 import com.op.crush.menu.TwittsBottomFragment;
 
@@ -74,11 +75,13 @@ public class MainMenu extends AppCompatActivity {
     Fragment fragment1 = new HomeBottomFragment();
     Fragment fragment2 = new ExploreBottomFragment();
     Fragment fragment3 = new TwittsBottomFragment();
+    Fragment fragment4 = new FollowBottomFragment();
     FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
 
     boolean f2 = true;
     boolean f3 = true;
+    boolean f4 = true;
     TextView text;
 
     private ProgressViewModel progressViewModel;
@@ -273,6 +276,11 @@ public class MainMenu extends AppCompatActivity {
                             return true;
                         // selectedFragment = new ExploreBottomFragment();
                         // break;
+                        case R.id.item_4:
+                            if (f4) {
+                                fm.beginTransaction().add(R.id.fragment_container, fragment4, "4").hide(fragment4).commit();
+                                f4 = false;
+                            }
                         case R.id.item_3:
                             if (f3) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
