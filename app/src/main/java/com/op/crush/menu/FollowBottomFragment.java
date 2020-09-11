@@ -27,17 +27,17 @@ public class FollowBottomFragment extends Fragment {
 
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.follow_fragment, container, false);
 
 
+
         tabLayout = view.findViewById(R.id.follow_tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
-    //    tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.addTab(tabLayout.newTab().setText("Follower"));
+        tabLayout.addTab(tabLayout.newTab().setText("Following"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         final ViewPager viewPager = view.findViewById(R.id.follow_view_pager);
         final FollowTabsAdapter adapter = new FollowTabsAdapter
                 ( getFragmentManager(), tabLayout.getTabCount());
@@ -51,7 +51,9 @@ public class FollowBottomFragment extends Fragment {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-FragmentManager fragManager = myContext.getSupportFragmentManager();            }
+
+               // FragmentManager fragManager = myContext.getSupportFragmentManager();
+                }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
@@ -65,14 +67,7 @@ FragmentManager fragManager = myContext.getSupportFragmentManager();            
 
 
 
-        /*viewPager = view.findViewById(R.id.follow_view_pager);
 
-        tabLayout = view.findViewById(R.id.follow_tab_layout);adapter = new FollowTabsAdapter(getFragmentManager());
-        adapter.
-        adapter.addFragment(new Tab1Fragment(), "Tab 1");
-        adapter.addFragment(new Tab2Fragment(), "Tab 2");
-        adapter.addFragment(new Tab3Fragment(), "Tab 3");viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);*/
 
         return view;
     }

@@ -2,13 +2,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#423443">
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/follow_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tool_bar"
         android:background="@color/whiteSmoke"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
@@ -17,7 +23,7 @@
         android:id="@+id/follow_view_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:background="#5439"
+        android:background="#556A4DFF"
         android:layout_below="@id/follow_tab_layout"/>
-
+    </RelativeLayout>
 </LinearLayout>

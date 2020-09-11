@@ -281,6 +281,9 @@ public class MainMenu extends AppCompatActivity {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment4, "4").hide(fragment4).commit();
                                 f4 = false;
                             }
+                            fm.beginTransaction().hide(active).show(fragment4).commit();
+                            active = fragment4;
+                            return true;
                         case R.id.item_3:
                             if (f3) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
