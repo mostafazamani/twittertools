@@ -15,15 +15,14 @@
         android:id="@+id/follow_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/whiteSmoke"
+        android:background="?attr/cardBackground"
         android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/follow_view_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:background="#556A4DFF"
+        android:background="?attr/backgroundcolor"
         android:layout_below="@id/follow_tab_layout"/>
     </RelativeLayout>
 </LinearLayout>

@@ -11,9 +11,9 @@
         android:id="@+id/item_2"
         android:icon="@drawable/explore_selector"/>
     <item
-        android:title="Tweets"
+        android:title="Users"
         android:id="@+id/item_4"
-        android:icon="@drawable/twitts_selector"/>
+        android:icon="@drawable/ic_user"/>
 
     <item
         android:title="Tweets"
