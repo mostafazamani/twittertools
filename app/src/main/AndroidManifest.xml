@@ -18,6 +18,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6353098097853332~3028901753"/>
 
+
         <activity
             android:name="com.op.crush.MainMenu"
             android:label="@string/title_activity_main_menu"

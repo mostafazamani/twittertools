@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,12 @@ import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.JsonObject;
+import com.mopub.common.MoPub;
+import com.mopub.common.MoPubReward;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubRewardedVideoListener;
+import com.mopub.mobileads.MoPubRewardedVideos;
 import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
@@ -43,10 +50,13 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.mopub.common.logging.MoPubLog.LogLevel.INFO;
 
 public class FollowerYouNotFollow extends Fragment {
 
@@ -100,6 +110,9 @@ public class FollowerYouNotFollow extends Fragment {
         MobileAds.initialize(view.getContext(), "ca-app-pub-6353098097853332~3028901753");
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(view.getContext());
 
+
+
+
 //        List<String> testDeviceIds = Arrays.asList("33BE2250B43518CCDA7DE426D04EE231");
 //        RequestConfiguration configuration =
 //                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
@@ -145,6 +158,8 @@ public class FollowerYouNotFollow extends Fragment {
         follow_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
 
                 mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                     @Override
@@ -244,7 +259,7 @@ public class FollowerYouNotFollow extends Fragment {
                         db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
                         db.close();
                         j += 1;
-                        if (j <= 5)
+                        if (j <= 1)
                             follow();
                     }
                 }

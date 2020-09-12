@@ -4,16 +4,25 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.op.crush"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -64,6 +73,9 @@ dependencies {
 
 
     implementation 'com.google.android.gms:play-services-ads:19.3.0'
+    implementation('com.mopub:mopub-sdk:5.13.1@aar') {
+        transitive = true
+    }
 
 
 

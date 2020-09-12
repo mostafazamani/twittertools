@@ -7,14 +7,10 @@ import android.os.CountDownTimer;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.ProgressUpdater;
-import androidx.work.WorkQuery;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-import androidx.work.impl.WorkDatabase;
 
-import com.google.common.util.concurrent.ListenableFuture;
+
 import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.Room.ProgressDatabase;
@@ -23,7 +19,6 @@ import com.op.crush.models.followmodel;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -33,11 +28,12 @@ public class LoadFollower extends Worker {
     private final ProgressDatabase database;
     private TwitterSession session;
     private DbFollow db;
-    public long nextCursor = -1L;
-    private int countFollower = 0;
+    public long nextCursor;
+    private int countFollower;
     int pc;
     SharedPreferences preferences;
     private int prog = 0;
+    long min;
 
 
     public LoadFollower(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -45,8 +41,10 @@ public class LoadFollower extends Worker {
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
         pc = 100 / (preferences.getInt("CP", 0) / 200);
         database = ProgressDatabase.getInstance(context);
-
-
+        nextCursor = preferences.getLong("FollowerC", -1L);
+        countFollower = preferences.getInt("FRC", 0);
+        min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollower", 16L)) / 60000;
+        Log.i("followr", "constructor");
     }
 
     @NonNull
@@ -54,8 +52,6 @@ public class LoadFollower extends Worker {
     public Result doWork() {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start2");
-        nextCursor = preferences.getLong("FollowerC", -1L);
-        countFollower = preferences.getInt("FRC", 0);
 
         loadFollowers(session, nextCursor);
 
@@ -84,13 +80,14 @@ public class LoadFollower extends Worker {
 
                     db.close();
 
+
                     prog += pc;
                     countFollower++;
                     new progress(database).execute(new ProgressState(prog));
                     preferences.edit().putLong("FollowerC", fol.getNextCursor()).apply();
                     preferences.edit().putInt("FRC", countFollower).apply();
-
-                    if (countFollower == 15) {
+                    preferences.edit().putLong("timeRFollower", System.currentTimeMillis()).apply();
+                    if (countFollower == 15 && min < 15) {
                         new CountDownTimer(900000, 1000) {
                             @Override
                             public void onTick(long l) {
@@ -112,13 +109,13 @@ public class LoadFollower extends Worker {
                     } else {
 
 
-                        Log.i("follwer", String.valueOf(countFollower));
+                        Log.i("follower", String.valueOf(countFollower));
                         if (fol.getNextCursor() != 0) {
                             loadFollowers(twitterSession, fol.getNextCursor());
                         } else {
                             countFollower = 0;
                             preferences.edit().putLong("FollowerC", -1L).apply();
-                            preferences.edit().putInt("FIC", countFollower).apply();
+                            preferences.edit().putInt("FRC", countFollower).apply();
                             new progress(database).execute(new ProgressState(100));
                         }
                     }

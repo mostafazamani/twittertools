@@ -117,15 +117,7 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        new CountDownTimer(3000, 10000) {
 
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
                 WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
                         .build();
 
@@ -136,8 +128,6 @@ public class MainMenu extends AppCompatActivity {
                         .build();
                 WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
                 WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
-            }
-        }.start();
 
 
         progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
