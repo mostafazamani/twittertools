@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "908252809968",
+    "firebase_url": "https://twittercrushfinder.firebaseio.com",
+    "project_id": "twittercrushfinder",
+    "storage_bucket": "twittercrushfinder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908252809968:android:4ca5d52da7486f93591035",
+        "android_client_info": {
+          "package_name": "com.op.crush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908252809968-ho3g3p8aqo6lt97epvlcmj6b4m7j5bme.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.op.crush",
+            "certificate_hash": "02b66e33b71d0e15088dd7128b03592ef666d43e"
+          }
+        },
+        {
+          "client_id": "908252809968-hkf759ijsh9uceve145iuca8qhv0cg9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.op.crush",
+            "certificate_hash": "d99e2ad5559725e3907801f313dbee63963ac1a1"
+          }
+        },
+        {
+          "client_id": "908252809968-967cpqrrshb736duie6jde7kg6spd2q1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC79OWGPe48JSYri2npX9bY7EvSROLuBKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908252809968-967cpqrrshb736duie6jde7kg6spd2q1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
