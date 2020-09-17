@@ -3,27 +3,32 @@ package com.op.crush.menu;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.UserShow;
-import com.op.crush.models.unfollowFind;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +41,10 @@ public class HomeBottomFragment extends Fragment {
     Button follower_num , following_num ;
     SharedPreferences preferences;
     TwitterSession session;
+
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
 
 
@@ -53,6 +62,22 @@ public class HomeBottomFragment extends Fragment {
         following_num = view.findViewById(R.id.following_num);
 
         user_info(session,view.getContext());
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("id1",555555);
+        map.put("id2",666666);
+        db.collection("crush").document("user").set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("firebase","saved");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("firebase","not saved"+e.getMessage());
+
+            }
+        });
 
 
 

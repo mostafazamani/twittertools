@@ -118,16 +118,16 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-                WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
-                        .build();
-
-                WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
-                        BackoffPolicy.LINEAR,
-                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                        TimeUnit.MILLISECONDS)
-                        .build();
-                WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
-                WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
+//                WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
+//                        .build();
+//
+//                WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
+//                        BackoffPolicy.LINEAR,
+//                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+//                        TimeUnit.MILLISECONDS)
+//                        .build();
+//                WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
+//                WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
 
 
         progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
