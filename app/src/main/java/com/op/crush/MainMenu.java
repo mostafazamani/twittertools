@@ -124,6 +124,7 @@ public class MainMenu extends AppCompatActivity {
         banner = findViewById(R.id.profile_banner);
         profile = findViewById(R.id.nav_profile);
 
+
         hamberger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
