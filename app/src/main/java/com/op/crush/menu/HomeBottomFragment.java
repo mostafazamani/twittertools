@@ -2,6 +2,11 @@ package com.op.crush.menu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +27,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
+import com.lukedeighton.wheelview.WheelView;
+import com.lukedeighton.wheelview.adapter.WheelAdapter;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
@@ -30,6 +39,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +55,9 @@ public class HomeBottomFragment extends Fragment {
     SharedPreferences preferences;
     TwitterSession session;
 
-
+    private WheelView wheelView;
+    private String[] colors = {"#123456 , #654321 , #908765,#142524"};
+    int size = 6;
     private FirebaseFirestore firestore;
 
 
@@ -67,6 +79,8 @@ public class HomeBottomFragment extends Fragment {
         profile = view.findViewById(R.id.profile_image);
         follower_num = view.findViewById(R.id.follower_num);
         following_num = view.findViewById(R.id.following_num);
+
+        wheelView = view.findViewById(R.id.wheelview);
 
         user_info(session, view.getContext());
 
@@ -118,10 +132,36 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });
+        // return inflater.inflate(R.layout.home_fragment,container,false);
 
+
+        wheelView.setWheelItemCount(size);
+        ShapeDrawable[] shapeDrawables = new ShapeDrawable[size];
+
+        for(int i=0 ; i<size ; i++){
+            shapeDrawables[i] = new ShapeDrawable(new OvalShape());
+          //  shapeDrawables[i].getPaint().setColor(Color.parseColor(color[i]));
+        }
+        wheelView.setAdapter(new WheelAdapter() {
+            @Override
+            public Drawable getDrawable(int position) {
+                return shapeDrawables[position];
+            }
+
+            @Override
+            public int getCount() {
+                return size;
+            }
+        });
+
+        wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
+            @Override
+            public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
+
+            }
+        });
 
         return view;
-        // return inflater.inflate(R.layout.home_fragment,container,false);
     }
 
     public void user_info(TwitterSession session, final Context context) {

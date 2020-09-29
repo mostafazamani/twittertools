@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,8 @@ import com.op.crush.menu.TwittsBottomFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.op.crush.models.UserShow;
+import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -55,6 +59,10 @@ import androidx.work.WorkRequest;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MainMenu extends AppCompatActivity {
 
@@ -67,7 +75,10 @@ public class MainMenu extends AppCompatActivity {
     SwitchCompat nightswitch;
     boolean night;
 
+
+    SharedPreferences preferences;
     BottomNavigationView bottomNavigationView;
+    ImageView profile, banner;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -110,6 +121,9 @@ public class MainMenu extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
 
 
+        banner = findViewById(R.id.profile_banner);
+        profile = findViewById(R.id.nav_profile);
+
         hamberger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +158,7 @@ public class MainMenu extends AppCompatActivity {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
 
+        user_info(session, MainMenu.this);
         ////////////////////Night Mode
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
@@ -210,7 +225,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-        fm.beginTransaction().add(R.id.fragment_container, fragment1, "1").commit();
+        fm.beginTransaction().add(R.id.fragment_container, fragment1, "4").commit();
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
@@ -293,5 +308,54 @@ public class MainMenu extends AppCompatActivity {
                 }
             };
 
+   public void user_info(TwitterSession session, final Context context) {
+
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+        myTwitterApiClient.getCustomTwitterService().User(session.getUserId(), session.getUserName()).enqueue(new Callback<UserShow>() {
+            @Override
+            public void onResponse(Call<UserShow> call, Response<UserShow> response) {
+
+
+                if (response.body() != null) {
+                    UserShow show = response.body();
+                    Toast.makeText(MainMenu.this, ""+show.getProfile_name() + "\n"
+                            +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
+                    int cf = show.getFollowers_count() + show.getFollowings_count();
+                    preferences.edit().putInt("CP", cf).apply();
+
+                    String purl = show.getProfile_image_url();
+                    String burl = show.getProfile_banner_url();
+                   // follower_num.setText("Follower\n" + String.valueOf(show.getFollowers_count()));
+                  //  following_num.setText("Following\n" + String.valueOf(show.getFollowings_count()));
+                    String url = geturlpic(purl);
+
+
+                    Picasso.with(context).load(burl).into(banner);
+                    Picasso.with(context).load(url).into(profile);
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<UserShow> call, Throwable t) {
+
+            }
+        });
+
+    }
+    public String geturlpic(String s) {
+        char[] chars = s.toCharArray();
+        String url = "";
+        for (int i = 0; i < chars.length - 11; i++) {
+            url += chars[i];
+        }
+
+        url += ".jpg";
+
+        return url;
+    }
 
 }

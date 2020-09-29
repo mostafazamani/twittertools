@@ -17,6 +17,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:id="@+id/home_lin"
         android:layout_marginTop="75dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal">
@@ -93,5 +94,43 @@
 
 
         </LinearLayout>
+
+
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:cardCornerRadius="75dp">
+
+        </androidx.cardview.widget.CardView>
+
+    <com.lukedeighton.wheelview.WheelView
+        android:id="@+id/wheelview"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/whiteSmoke"
+        app:wheelColor="@color/whiteSmoke"
+        app:rotatableWheelDrawable="false"
+        app:selectionAngle="0.0"
+        app:wheelPosition="top"
+        app:wheelOffsetY="160dp"
+        app:repeatItems="true"
+        app:wheelRadius="170dp"
+        app:wheelItemCount="14"
+        app:wheelPadding="13dp"
+
+        app:wheelItemRadius="43dp"/>
+
+    </RelativeLayout>
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="add"
+        android:id="@+id/add_btn"
+        />
 </RelativeLayout>
