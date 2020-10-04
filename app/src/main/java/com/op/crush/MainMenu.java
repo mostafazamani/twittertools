@@ -112,6 +112,8 @@ public class MainMenu extends AppCompatActivity {
         // toolbar = findViewById(R.id.m_toolbar);
         //  setSupportActionBar(toolbar); //toolbar
 
+        preferences = getSharedPreferences("Courser", Context.MODE_PRIVATE);
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
@@ -121,8 +123,8 @@ public class MainMenu extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
 
 
-        banner = findViewById(R.id.profile_banner);
-        profile = findViewById(R.id.nav_profile);
+        banner = navigationView.getHeaderView(0).findViewById(R.id.profile_banner);
+        profile = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
 
 
         hamberger.setOnClickListener(new View.OnClickListener() {

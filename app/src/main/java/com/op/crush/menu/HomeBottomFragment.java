@@ -9,6 +9,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,10 @@ public class HomeBottomFragment extends Fragment {
                 .build();
         firestore.setFirestoreSettings(settings);
 
+
+        TelephonyManager telephoneManager = (TelephonyManager)view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String countryCode = telephoneManager.getNetworkCountryIso();
+
         banner = view.findViewById(R.id.banner_profile);
         profile = view.findViewById(R.id.profile_image);
         follower_num = view.findViewById(R.id.follower_num);
@@ -85,8 +90,7 @@ public class HomeBottomFragment extends Fragment {
         user_info(session, view.getContext());
 
         Map<String, Object> map = new HashMap<>();
-        map.put("id1", 555555);
-        map.put("id2", 666666);
+        map.put("id1", countryCode);
         firestore.collection("cr").document().set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
