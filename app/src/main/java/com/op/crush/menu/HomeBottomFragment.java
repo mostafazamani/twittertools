@@ -26,9 +26,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import com.google.firebase.firestore.QuerySnapshot;
 import com.lukedeighton.wheelview.WheelView;
 import com.lukedeighton.wheelview.adapter.WheelAdapter;
 import com.op.crush.MainMenu;
@@ -42,6 +45,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -58,8 +62,11 @@ public class HomeBottomFragment extends Fragment {
 
     private WheelView wheelView;
     private String[] colors = {"#123456 , #654321 , #908765,#142524"};
-    int size = 6;
-    private FirebaseFirestore firestore;
+    int size ;
+    public FirebaseFirestore firestore;
+    private CollectionReference collectionReference;
+    private List<DocumentSnapshot> querySnapshots;
+
 
 
 
@@ -70,12 +77,11 @@ public class HomeBottomFragment extends Fragment {
         final View view = inflater.inflate(R.layout.home_fragment, container, false);
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         firestore.setFirestoreSettings(settings);
-
 
         TelephonyManager telephoneManager = (TelephonyManager)view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
@@ -91,19 +97,9 @@ public class HomeBottomFragment extends Fragment {
 
         Map<String, Object> map = new HashMap<>();
         map.put("id1", countryCode);
-        firestore.collection("cr").document().set(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i("firebase", "saved");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("firebase", "not saved" + e.getMessage());
 
-            }
-        });
+        add_crush(map);
+        read_crushs();
 
 
         follower_num.setOnClickListener(new View.OnClickListener() {
@@ -139,33 +135,74 @@ public class HomeBottomFragment extends Fragment {
         // return inflater.inflate(R.layout.home_fragment,container,false);
 
 
-        wheelView.setWheelItemCount(size);
-        ShapeDrawable[] shapeDrawables = new ShapeDrawable[size];
 
-        for(int i=0 ; i<size ; i++){
-            shapeDrawables[i] = new ShapeDrawable(new OvalShape());
-          //  shapeDrawables[i].getPaint().setColor(Color.parseColor(color[i]));
-        }
-        wheelView.setAdapter(new WheelAdapter() {
-            @Override
-            public Drawable getDrawable(int position) {
-                return shapeDrawables[position];
-            }
 
-            @Override
-            public int getCount() {
-                return size;
-            }
-        });
-
-        wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
-            @Override
-            public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
-
-            }
-        });
 
         return view;
+    }
+
+
+    public void add_crush(Map<String,Object> map){
+        firestore.collection("crush")
+                .document(String.valueOf(session.getId())).collection("cr").document().set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("firebase", "saved");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("firebase", "not saved" + e.getMessage());
+
+            }
+        });
+    }
+
+    public void read_crushs(){
+        collectionReference = firestore.collection("crush").
+                document(String.valueOf(session.getId())).collection("cr");
+
+        collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                querySnapshots = queryDocumentSnapshots.getDocuments();
+                size = querySnapshots.size();
+                wheelView.setWheelItemCount(size);
+                ShapeDrawable[] shapeDrawables = new ShapeDrawable[size];
+                for(int i=0 ; i<size ; i++){
+                    shapeDrawables[i] = new ShapeDrawable(new OvalShape());
+                    //  shapeDrawables[i].getPaint().setColor(Color.parseColor(color[i]));
+                }
+                wheelView.setAdapter(new WheelAdapter() {
+                    @Override
+                    public Drawable getDrawable(int position) {
+                        return shapeDrawables[position];
+                    }
+
+                    @Override
+                    public int getCount() {
+                        return size;
+                    }
+                });
+
+                wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
+                    @Override
+                    public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
+
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     public void user_info(TwitterSession session, final Context context) {
