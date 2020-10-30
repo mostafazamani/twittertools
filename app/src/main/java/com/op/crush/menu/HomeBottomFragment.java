@@ -2,18 +2,12 @@ package com.op.crush.menu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Picture;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 
+import android.os.CountDownTimer;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -38,11 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import com.google.firebase.firestore.QuerySnapshot;
-import com.lukedeighton.wheelview.WheelView;
-import com.lukedeighton.wheelview.adapter.WheelAdapter;
+import com.jh.circularlist.CircularListView;
+import com.jh.circularlist.CircularTouchListener;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
+import com.op.crush.adapter.CircularItemAdapter;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -51,12 +46,10 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,12 +63,12 @@ public class HomeBottomFragment extends Fragment {
     SharedPreferences preferences;
     TwitterSession session;
 
-    private WheelView wheelView;
     private String[] colors = {"#123456 , #654321 , #908765,#142524"};
     int size;
     public FirebaseFirestore firestore;
     private CollectionReference collectionReference;
     private List<DocumentSnapshot> querySnapshots;
+    private CircularItemAdapter adapter;
 
 
     @Nullable
@@ -99,16 +92,47 @@ public class HomeBottomFragment extends Fragment {
         follower_num = view.findViewById(R.id.follower_num);
         following_num = view.findViewById(R.id.following_num);
 
-        wheelView = view.findViewById(R.id.wheelview);
-        wheelView.setEmptyItemDrawable(R.drawable.avatar);
 
         user_info(session, view.getContext());
+
+
+        ArrayList<Bitmap> itemTitles = new ArrayList<>();
+//        for(int i = 0 ; i < 6 ; i ++){
+//            itemTitles.add(String.valueOf(i));
+//        }
+        itemTitles.add(BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+
+
+        // usage sample
+        final CircularListView circularListView = view.findViewById(R.id.my_circular_list);
+        adapter = new CircularItemAdapter(getLayoutInflater(), itemTitles);
+        circularListView.setAdapter(adapter);
+        circularListView.setRadius(100);
+        circularListView.setOnItemClickListener(new CircularTouchListener.CircularItemClickListener() {
+            @Override
+            public void onItemClick(View view, int index) {
+                Toast.makeText(view.getContext(),
+                        "view at index " + index + " is clicked!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("id1", countryCode);
 
         add_crush(map);
         read_crushs();
+        Button button = view.findViewById(R.id.add_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] strin = {"https://i.stack.imgur.com/vgGRo.png","https://i.stack.imgur.com/vgGRo.png",
+                        "https://i.stack.imgur.com/vgGRo.png","https://i.stack.imgur.com/vgGRo.png"};
+                lod_circle(strin, 0);
+
+            }
+        });
 
 
         follower_num.setOnClickListener(new View.OnClickListener() {
@@ -177,52 +201,6 @@ public class HomeBottomFragment extends Fragment {
 
                 querySnapshots = queryDocumentSnapshots.getDocuments();
                 size = querySnapshots.size();
-
-                ShapeDrawable[] shapeDrawables = new ShapeDrawable[size];
-                for (int i = 0; i < size; i++) {
-                    shapeDrawables[i] = new ShapeDrawable(new OvalShape());
-                    //  shapeDrawables[i].getPaint().setColor(Color.parseColor(color[i]));
-                }
-
-                Picasso.with(getContext()).load("https://etc.usf.edu/techease/wp-content/uploads/2017/12/Robot-73-Juggler-C.jpg")
-                        .into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                wheelView.setWheelItemCount(size);
-                                wheelView.setAdapter(new WheelAdapter() {
-                                    @Override
-                                    public Drawable getDrawable(int position) {
-                                        Resources res = getContext().getResources();
-                                        Drawable myImage = ResourcesCompat.getDrawable(res, R.drawable.avatar, null);
-                                        Drawable drawable = new BitmapDrawable(bitmap);
-                                        return drawable;
-                                    }
-
-                                    @Override
-                                    public int getCount() {
-                                        return size;
-                                    }
-                                });
-                                wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
-                                    @Override
-                                    public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
-
-                                    }
-                                });
-
-                            }
-
-                            @Override
-                            public void onBitmapFailed(Drawable errorDrawable) {
-
-                            }
-
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                            }
-                        });
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -230,6 +208,33 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });
+    }
+
+    public void lod_circle(String[] url, int f) {
+
+        Picasso.with(getContext()).load(url[f]).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
+                ImageView itemView = v.findViewById(R.id.img_item);
+                itemView.setImageBitmap(bitmap);
+                Log.i("ciecle_list", "bit");
+                adapter.addItem(v);
+
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+
+
     }
 
     public void user_info(TwitterSession session, final Context context) {
@@ -257,27 +262,6 @@ public class HomeBottomFragment extends Fragment {
                     Picasso.with(context).load(burl).into(banner);
                     RequestCreator d = Picasso.with(context).load(url);
                     d.into(profile);
-                  d.into(new Target() {
-                      @Override
-                      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-
-
-                      }
-
-                      @Override
-                      public void onBitmapFailed(Drawable errorDrawable) {
-
-                      }
-
-                      @Override
-                      public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                      }
-                  });
-                   
-
-
                 }
 
 

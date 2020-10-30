@@ -109,22 +109,10 @@
 
         </androidx.cardview.widget.CardView>
 
-    <com.lukedeighton.wheelview.WheelView
-        android:id="@+id/wheelview"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="@color/whiteSmoke"
-        app:wheelColor="@color/whiteSmoke"
-        app:rotatableWheelDrawable="false"
-        app:selectionAngle="0.0"
-        app:wheelPosition="top"
-        app:wheelOffsetY="160dp"
-        app:repeatItems="true"
-        app:wheelRadius="170dp"
-        app:wheelItemCount="14"
-        app:wheelPadding="13dp"
-
-        app:wheelItemRadius="43dp"/>
+        <com.jh.circularlist.CircularListView
+            android:id="@+id/my_circular_list"
+            android:layout_width="300dp"
+            android:layout_height="300dp"/>
 
     </RelativeLayout>
     <Button
