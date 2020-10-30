@@ -40,6 +40,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -103,6 +104,32 @@ public class MainMenu extends AppCompatActivity {
         Twitter.initialize(this);
         setContentView(R.layout.content_main);
         progressViewModel = new ViewModelProvider(this).get(ProgressViewModel.class);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final MotionLayout motionLayout = findViewById(R.id.view);
+
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                motionLayout.setProgress(slideOffset/2);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
 
         hamberger = findViewById(R.id.hamberger_btn);

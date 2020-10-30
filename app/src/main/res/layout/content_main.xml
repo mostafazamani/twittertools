@@ -14,10 +14,17 @@
 
 
 
-
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#020202"
+        android:foregroundGravity="center"
+        app:layoutDescription="@xml/scene">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/rv"
         android:background="?attr/backgroundcolor"
         >
 
@@ -77,21 +84,25 @@
             app:labelVisibilityMode="selected"
             app:menu="@menu/bottom_item" />
     </RelativeLayout>
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="end|right"
-        app:itemBackground="?attr/backgroundcolor"
-        android:layoutMode="clipBounds"
-        android:animateLayoutChanges="true"
-        android:animationCache="true"
-        android:theme="@style/AppTheme"
-        app:headerLayout="@layout/nav_header"
-        app:itemTextColor="?attr/textcolor"
-        android:background="?attr/backgroundcolor"
-        app:menu="@menu/navigation_menu"
-        android:fitsSystemWindows="true"
-        android:id="@+id/navigation_view"/>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|right"
+            android:animateLayoutChanges="true"
+            android:animationCache="true"
+            android:background="?attr/backgroundcolor"
+            android:fitsSystemWindows="true"
+            android:layoutMode="clipBounds"
+            android:theme="@style/AppTheme"
+            app:headerLayout="@layout/nav_header"
+            app:itemBackground="?attr/backgroundcolor"
+            app:itemTextColor="?attr/textcolor"
+            app:menu="@menu/navigation_menu" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
