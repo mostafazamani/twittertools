@@ -58,8 +58,8 @@ import retrofit2.Response;
 public class HomeBottomFragment extends Fragment {
 
     MainMenu m;
-    ImageView profile, banner;
-    Button follower_num, following_num;
+    ImageView profile;
+
     SharedPreferences preferences;
     TwitterSession session;
 
@@ -87,10 +87,8 @@ public class HomeBottomFragment extends Fragment {
         TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
 
-        banner = view.findViewById(R.id.banner_profile);
         profile = view.findViewById(R.id.profile_image);
-        follower_num = view.findViewById(R.id.follower_num);
-        following_num = view.findViewById(R.id.following_num);
+
 
 
         user_info(session, view.getContext());
@@ -135,25 +133,8 @@ public class HomeBottomFragment extends Fragment {
         });
 
 
-        follower_num.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*NextFragment nextFrag= new NextFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.Layout_container, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();*/
 
-                Fragment followerYouNotFollow = new FollowerYouNotFollow();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                //FragmentManager.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
-                transaction.replace(R.id.fragment_container, followerYouNotFollow); // give your fragment container id in first parameter
-                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                transaction.commit();
-
-            }
-        });
-
+/*
         following_num.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,7 +145,7 @@ public class HomeBottomFragment extends Fragment {
                 transaction.commit();
 
             }
-        });
+        });*/
         // return inflater.inflate(R.layout.home_fragment,container,false);
 
 
@@ -254,12 +235,7 @@ public class HomeBottomFragment extends Fragment {
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
-                    follower_num.setText("Follower\n" + String.valueOf(show.getFollowers_count()));
-                    following_num.setText("Following\n" + String.valueOf(show.getFollowings_count()));
                     String url = geturlpic(purl);
-
-
-                    Picasso.with(context).load(burl).into(banner);
                     RequestCreator d = Picasso.with(context).load(url);
                     d.into(profile);
                 }
