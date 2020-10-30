@@ -2,8 +2,13 @@ package com.op.crush.menu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Picture;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -39,14 +45,18 @@ import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,12 +72,10 @@ public class HomeBottomFragment extends Fragment {
 
     private WheelView wheelView;
     private String[] colors = {"#123456 , #654321 , #908765,#142524"};
-    int size ;
+    int size;
     public FirebaseFirestore firestore;
     private CollectionReference collectionReference;
     private List<DocumentSnapshot> querySnapshots;
-
-
 
 
     @Nullable
@@ -83,7 +91,7 @@ public class HomeBottomFragment extends Fragment {
                 .build();
         firestore.setFirestoreSettings(settings);
 
-        TelephonyManager telephoneManager = (TelephonyManager)view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
 
         banner = view.findViewById(R.id.banner_profile);
@@ -92,6 +100,7 @@ public class HomeBottomFragment extends Fragment {
         following_num = view.findViewById(R.id.following_num);
 
         wheelView = view.findViewById(R.id.wheelview);
+        wheelView.setEmptyItemDrawable(R.drawable.avatar);
 
         user_info(session, view.getContext());
 
@@ -135,14 +144,11 @@ public class HomeBottomFragment extends Fragment {
         // return inflater.inflate(R.layout.home_fragment,container,false);
 
 
-
-
-
         return view;
     }
 
 
-    public void add_crush(Map<String,Object> map){
+    public void add_crush(Map<String, Object> map) {
         firestore.collection("crush")
                 .document(String.valueOf(session.getId())).collection("cr").document().set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -159,7 +165,7 @@ public class HomeBottomFragment extends Fragment {
         });
     }
 
-    public void read_crushs(){
+    public void read_crushs() {
         collectionReference = firestore.collection("crush").
                 document(String.valueOf(session.getId())).collection("cr");
 
@@ -171,30 +177,51 @@ public class HomeBottomFragment extends Fragment {
 
                 querySnapshots = queryDocumentSnapshots.getDocuments();
                 size = querySnapshots.size();
-                wheelView.setWheelItemCount(size);
+
                 ShapeDrawable[] shapeDrawables = new ShapeDrawable[size];
-                for(int i=0 ; i<size ; i++){
+                for (int i = 0; i < size; i++) {
                     shapeDrawables[i] = new ShapeDrawable(new OvalShape());
                     //  shapeDrawables[i].getPaint().setColor(Color.parseColor(color[i]));
                 }
-                wheelView.setAdapter(new WheelAdapter() {
-                    @Override
-                    public Drawable getDrawable(int position) {
-                        return shapeDrawables[position];
-                    }
 
-                    @Override
-                    public int getCount() {
-                        return size;
-                    }
-                });
+                Picasso.with(getContext()).load("https://etc.usf.edu/techease/wp-content/uploads/2017/12/Robot-73-Juggler-C.jpg")
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                wheelView.setWheelItemCount(size);
+                                wheelView.setAdapter(new WheelAdapter() {
+                                    @Override
+                                    public Drawable getDrawable(int position) {
+                                        Resources res = getContext().getResources();
+                                        Drawable myImage = ResourcesCompat.getDrawable(res, R.drawable.avatar, null);
+                                        Drawable drawable = new BitmapDrawable(bitmap);
+                                        return drawable;
+                                    }
 
-                wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
-                    @Override
-                    public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
+                                    @Override
+                                    public int getCount() {
+                                        return size;
+                                    }
+                                });
+                                wheelView.setOnWheelItemClickListener(new WheelView.OnWheelItemClickListener() {
+                                    @Override
+                                    public void onWheelItemClick(WheelView parent, int position, boolean isSelected) {
 
-                    }
-                });
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -228,7 +255,27 @@ public class HomeBottomFragment extends Fragment {
 
 
                     Picasso.with(context).load(burl).into(banner);
-                    Picasso.with(context).load(url).into(profile);
+                    RequestCreator d = Picasso.with(context).load(url);
+                    d.into(profile);
+                  d.into(new Target() {
+                      @Override
+                      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+
+
+                      }
+
+                      @Override
+                      public void onBitmapFailed(Drawable errorDrawable) {
+
+                      }
+
+                      @Override
+                      public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                      }
+                  });
+                   
 
 
                 }
