@@ -8,7 +8,6 @@ import com.op.crush.models.unfollowFind;
 import com.google.gson.JsonArray;
 
 
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -36,6 +35,9 @@ public interface ServiceListener {
 
     @POST("1.1/friendships/destroy.json")
     Call<JsonObject> DestroyFollow(@Query("user_id") long id);
+
+    @GET("1.1/users/lookup.json")
+    Call<JsonArray> SeeUserInfo(@Query("user_id") long id);
 
 
 }

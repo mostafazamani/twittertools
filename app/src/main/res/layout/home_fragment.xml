@@ -52,4 +52,11 @@
         android:text="add"
         android:id="@+id/add_btn"
         />
+    <Button
+        android:layout_below="@id/add_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="remove"
+        android:id="@+id/remove"
+        />
 </RelativeLayout>

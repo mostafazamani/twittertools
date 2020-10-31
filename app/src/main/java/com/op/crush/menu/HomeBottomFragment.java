@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.os.CountDownTimer;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,11 +34,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.jh.circularlist.CircularListView;
 import com.jh.circularlist.CircularTouchListener;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
+import com.op.crush.Room.CircleCrush.UserCrush;
+import com.op.crush.Room.CircleCrush.UserCrushDatabase;
+import com.op.crush.Room.CircleCrush.UserCrushViewModel;
+import com.op.crush.adapter.CircularAdapter;
 import com.op.crush.adapter.CircularItemAdapter;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
@@ -55,11 +64,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class HomeBottomFragment extends Fragment {
 
     MainMenu m;
     ImageView profile;
-
+    UserCrushDatabase database;
     SharedPreferences preferences;
     TwitterSession session;
 
@@ -69,7 +79,8 @@ public class HomeBottomFragment extends Fragment {
     private CollectionReference collectionReference;
     private List<DocumentSnapshot> querySnapshots;
     private CircularItemAdapter adapter;
-
+    ArrayList<Bitmap> itemTitles;
+    int step = 0;
 
     @Nullable
     @Override
@@ -84,21 +95,21 @@ public class HomeBottomFragment extends Fragment {
                 .build();
         firestore.setFirestoreSettings(settings);
 
+        database = UserCrushDatabase.getInstance(view.getContext());
+
         TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
 
         profile = view.findViewById(R.id.profile_image);
 
 
-
         user_info(session, view.getContext());
 
 
-        ArrayList<Bitmap> itemTitles = new ArrayList<>();
+        itemTitles = new ArrayList<>();
 //        for(int i = 0 ; i < 6 ; i ++){
 //            itemTitles.add(String.valueOf(i));
 //        }
-        itemTitles.add(BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
 
 
         // usage sample
@@ -112,9 +123,12 @@ public class HomeBottomFragment extends Fragment {
                 Toast.makeText(view.getContext(),
                         "view at index " + index + " is clicked!",
                         Toast.LENGTH_SHORT).show();
+                new Remove(database).execute(index);
+                adapter.removeItemAt(index);
+
             }
         });
-
+        new ListOfCrush(view.getContext(), database, session, adapter).execute();
 
         Map<String, Object> map = new HashMap<>();
         map.put("id1", countryCode);
@@ -125,13 +139,21 @@ public class HomeBottomFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] strin = {"https://i.stack.imgur.com/vgGRo.png","https://i.stack.imgur.com/vgGRo.png",
-                        "https://i.stack.imgur.com/vgGRo.png","https://i.stack.imgur.com/vgGRo.png"};
-                lod_circle(strin, 0);
-
+                Long[] strin = {3095002318L, 897347999537483776L, 1241093018947588097L, 1315701730798194688L,
+                        1087319947754258433L, 1287308424137539584L, 1293861594355695616L, 1300485434078830592L};
+//                for (Long s : strin)
+                if (step < 8)
+                    lod_circle(strin[step]);
+                step++;
             }
         });
-
+        Button button1 = view.findViewById(R.id.remove);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DeleteAll(database).execute();
+            }
+        });
 
 
 /*
@@ -191,32 +213,63 @@ public class HomeBottomFragment extends Fragment {
         });
     }
 
-    public void lod_circle(String[] url, int f) {
+    public void lod_circle(long url) {
 
-        Picasso.with(getContext()).load(url[f]).into(new Target() {
+        new Ins(database).execute(new UserCrush(url));
+
+        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+        myTwitterApiClient.getCustomTwitterService().SeeUserInfo(url).enqueue(new Callback<JsonArray>() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
-                ImageView itemView = v.findViewById(R.id.img_item);
-                itemView.setImageBitmap(bitmap);
-                Log.i("ciecle_list", "bit");
-                adapter.addItem(v);
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                if (response.body() != null) {
+
+
+                    try {
+                        JsonArray elements = (JsonArray) response.body();
+
+
+                        JsonObject jsonObject = (JsonObject) elements.get(0);
+                        JsonElement f = jsonObject.get("profile_image_url");
+                        Picasso.with(getContext()).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
+                                ImageView itemView = v.findViewById(R.id.img_item);
+                                itemView.setImageBitmap(bitmap);
+                                Log.i("ciecle_list", "bit");
+                                adapter.addItem(v);
+
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+
+
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "seeUserInfo :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
 
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            public void onFailure(Call<JsonArray> call, Throwable t) {
 
             }
         });
 
 
     }
+
 
     public void user_info(TwitterSession session, final Context context) {
 
@@ -234,10 +287,9 @@ public class HomeBottomFragment extends Fragment {
                     preferences.edit().putInt("CP", cf).apply();
 
                     String purl = show.getProfile_image_url();
-                    String burl = show.getProfile_banner_url();
                     String url = geturlpic(purl);
-                    RequestCreator d = Picasso.with(context).load(url);
-                    d.into(profile);
+                    Picasso.with(context).load(url).into(profile);
+
                 }
 
 
@@ -261,6 +313,155 @@ public class HomeBottomFragment extends Fragment {
         url += ".jpg";
 
         return url;
+    }
+
+    public class ListOfCrush extends AsyncTask<Void, Void, Void> {
+
+        Context context;
+        UserCrushDatabase database;
+        TwitterSession session;
+
+        CircularItemAdapter adapter;
+
+        public ListOfCrush(Context context, UserCrushDatabase database, TwitterSession session, CircularItemAdapter adapter) {
+            this.context = context;
+            this.database = database;
+            this.session = session;
+            this.adapter = adapter;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            f_circle();
+            return null;
+        }
+
+        public void f_circle() {
+
+            List<UserCrush> list = database.userCrushDao().getUserCrush();
+
+            if (list.size() > 0)
+                for (int i = 0; i < list.size(); i++) {
+
+                    MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+                    myTwitterApiClient.getCustomTwitterService().SeeUserInfo(list.get(i).getUser_id()).enqueue(new Callback<JsonArray>() {
+                        @Override
+                        public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                            if (response.body() != null) {
+
+
+                                try {
+                                    JsonArray elements = (JsonArray) response.body();
+
+
+                                    JsonObject jsonObject = (JsonObject) elements.get(0);
+                                    JsonElement f = jsonObject.get("profile_image_url");
+                                    Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
+
+
+                                                @Override
+                                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                                    View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
+                                                    ImageView itemView = v.findViewById(R.id.img_item);
+                                                    itemView.setImageBitmap(bitmap);
+                                                    Log.i("ciecle_list", "bit");
+                                                    adapter.addItem(v);
+
+                                                }
+
+                                                @Override
+                                                public void onBitmapFailed(Drawable errorDrawable) {
+
+                                                }
+
+                                                @Override
+                                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                                }
+                                            });
+
+
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                        }
+                                    });
+
+
+                                } catch (Exception e) {
+                                    Toast.makeText(context, "seeUserInfo :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonArray> call, Throwable t) {
+
+                        }
+                    });
+
+
+                }
+
+        }
+
+    }
+
+    public class DeleteAll extends AsyncTask<Void, Void, Void> {
+        UserCrushDatabase database;
+
+        public DeleteAll(UserCrushDatabase database) {
+            this.database = database;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            database.userCrushDao().deleteAll();
+            return null;
+        }
+    }
+
+    public static class Ins extends AsyncTask<UserCrush, Void, Void> {
+        UserCrushDatabase database;
+
+        public Ins(UserCrushDatabase database) {
+            this.database = database;
+        }
+
+        @Override
+        protected Void doInBackground(UserCrush... userCrushes) {
+            database.userCrushDao().insert(userCrushes[0]);
+            return null;
+        }
+    }
+
+    public static class Remove extends AsyncTask<Integer, Void, Void> {
+        UserCrushDatabase database;
+
+        public Remove(UserCrushDatabase database) {
+            this.database = database;
+        }
+
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(integers[0]));
+            Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().size()));
+
+            return null;
+        }
     }
 
 }
