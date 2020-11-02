@@ -24,7 +24,7 @@
         android:layout_centerInParent="true"
         android:background="@color/lightBlue"
         app:cardBackgroundColor="@color/lightBlue"
-        app:cardCornerRadius="50dp">
+        app:cardCornerRadius="40dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="77dp"
@@ -34,7 +34,7 @@
 
             android:background="@color/whiteSmoke"
             app:cardBackgroundColor="?attr/cardBackground"
-            app:cardCornerRadius="50dp">
+            app:cardCornerRadius="390dp">
 
 
             <ImageView

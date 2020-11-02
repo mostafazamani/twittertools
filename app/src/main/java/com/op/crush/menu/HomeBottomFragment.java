@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -72,6 +73,7 @@ public class HomeBottomFragment extends Fragment {
     UserCrushDatabase database;
     SharedPreferences preferences;
     TwitterSession session;
+    FloatingActionButton searchFAB;
 
     private String[] colors = {"#123456 , #654321 , #908765,#142524"};
     int size;
@@ -101,6 +103,7 @@ public class HomeBottomFragment extends Fragment {
         String countryCode = telephoneManager.getNetworkCountryIso();
 
         profile = view.findViewById(R.id.profile_image);
+        searchFAB = view.findViewById(R.id.search_fab);
 
 
         user_info(session, view.getContext());
@@ -168,6 +171,16 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });*/
+    searchFAB.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Fragment fragment = new CrushSearch();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    });
         // return inflater.inflate(R.layout.home_fragment,container,false);
 
 
