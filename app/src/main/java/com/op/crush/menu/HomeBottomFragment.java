@@ -432,7 +432,7 @@ public class HomeBottomFragment extends Fragment {
 
     }
 
-    public class DeleteAll extends AsyncTask<Void, Void, Void> {
+    public static class DeleteAll extends AsyncTask<Void, Void, Void> {
         UserCrushDatabase database;
 
         public DeleteAll(UserCrushDatabase database) {

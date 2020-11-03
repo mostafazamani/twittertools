@@ -39,5 +39,8 @@ public interface ServiceListener {
     @GET("1.1/users/lookup.json")
     Call<JsonArray> SeeUserInfo(@Query("user_id") long id);
 
+    @GET("1.1/users/search.json")
+    Call<JsonArray> SearchUser(@Query("q") String query);
+
 
 }
