@@ -43,6 +43,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -257,7 +258,7 @@ public class MainMenu extends AppCompatActivity {
 
         fm.beginTransaction().add(R.id.fragment_container, fragment1, "4").commit();
 
-
+        ViewCompat.setLayoutDirection(bottomNavigationView, ViewCompat.LAYOUT_DIRECTION_RTL);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
         bottomNavigationView.setItemIconTintList(null); //baraye selectas
 

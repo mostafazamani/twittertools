@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -174,11 +175,20 @@ public class HomeBottomFragment extends Fragment {
     searchFAB.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Fragment fragment = new CrushSearch();
+           /* Fragment fragment = new CrushSearch();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
-            transaction.commit();
+            transaction.commit();*/
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            DialogFragment dialogFragment = new CrushSearch();
+            dialogFragment.show(ft, "dialog");
         }
     });
         // return inflater.inflate(R.layout.home_fragment,container,false);
