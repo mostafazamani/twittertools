@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ import com.op.crush.Room.CircleCrush.UserCrushDatabase;
 import com.op.crush.Room.CircleCrush.UserCrushViewModel;
 import com.op.crush.adapter.CircularAdapter;
 import com.op.crush.adapter.CircularItemAdapter;
+import com.op.crush.adapter.CrushsAdapter;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -82,6 +84,9 @@ public class HomeBottomFragment extends Fragment {
     private CollectionReference collectionReference;
     private List<DocumentSnapshot> querySnapshots;
     private CircularItemAdapter adapter;
+    public TextView txt_crushs;
+     ListView list_crushs;
+    public Button btn_crushs;
     ArrayList<Bitmap> itemTitles;
     int step = 0;
 
@@ -107,15 +112,16 @@ public class HomeBottomFragment extends Fragment {
         searchFAB = view.findViewById(R.id.search_fab);
 
 
+        txt_crushs = view.findViewById(R.id.txt_crushs);
+        list_crushs = view.findViewById(R.id.crushs);
+        btn_crushs = view.findViewById(R.id.btn_refresh_crushs);
+
+
+
         user_info(session, view.getContext());
 
 
         itemTitles = new ArrayList<>();
-//        for(int i = 0 ; i < 6 ; i ++){
-//            itemTitles.add(String.valueOf(i));
-//        }
-
-
         // usage sample
         final CircularListView circularListView = view.findViewById(R.id.my_circular_list);
         adapter = new CircularItemAdapter(getLayoutInflater(), itemTitles);
@@ -134,23 +140,31 @@ public class HomeBottomFragment extends Fragment {
         });
         new ListOfCrush(view.getContext(), database, session, adapter).execute();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("id1", countryCode);
 
-        add_crush(map);
-        read_crushs();
-        Button button = view.findViewById(R.id.add_btn);
-        button.setOnClickListener(new View.OnClickListener() {
+        btn_crushs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long[] strin = {3095002318L, 897347999537483776L, 1241093018947588097L, 1315701730798194688L,
-                        1087319947754258433L, 1287308424137539584L, 1293861594355695616L, 1300485434078830592L};
-//                for (Long s : strin)
-                if (step < 8)
-                    lod_circle(strin[step]);
-                step++;
+
+            new ListCrushs(database,session,firestore,view.getContext()).execute();
+            btn_crushs.setVisibility(View.GONE);
             }
         });
+
+
+
+//        Button button = view.findViewById(R.id.add_btn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Long[] strin = {3095002318L, 897347999537483776L, 1241093018947588097L, 1315701730798194688L,
+//                        1087319947754258433L, 1287308424137539584L, 1293861594355695616L, 1300485434078830592L};
+////                for (Long s : strin)
+//                if (step < 8)
+//                    lod_circle(strin[step]);
+//                step++;
+//            }
+//        });
+
         Button button1 = view.findViewById(R.id.remove);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,29 +212,13 @@ public class HomeBottomFragment extends Fragment {
     }
 
 
-    public void add_crush(Map<String, Object> map) {
-        firestore.collection("crush")
-                .document(String.valueOf(session.getId())).collection("cr").document().set(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i("firebase", "saved");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("firebase", "not saved" + e.getMessage());
 
-            }
-        });
-    }
 
     public void read_crushs() {
         collectionReference = firestore.collection("crush").
                 document(String.valueOf(session.getId())).collection("cr");
 
         collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-
 
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -336,6 +334,60 @@ public class HomeBottomFragment extends Fragment {
         url += ".jpg";
 
         return url;
+    }
+
+
+    public class ListCrushs extends AsyncTask<Void,Void,Void>{
+        UserCrushDatabase database;
+
+        TwitterSession session;
+        FirebaseFirestore firestore;
+        private List<DocumentSnapshot> qs;
+        Context context;
+
+        public ListCrushs(UserCrushDatabase database,TwitterSession session,FirebaseFirestore firestore
+                ,Context context) {
+            this.database = database;
+            this.session = session;
+            this.firestore = firestore;
+            this.context = context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            List<UserCrush> list = database.userCrushDao().getUserCrush();
+           firestore.collection("crush").document(String.valueOf(session.getId()))
+                   .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+               @Override
+               public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        List<Long> list1 = new ArrayList<>();
+                        List<String> stringList = new ArrayList<>();
+                   for (String s:documentSnapshot.getData().keySet()) {
+                       stringList.add(s);
+                   }
+                   for (int i = 0 ; i <stringList.size();i++) {
+                       for (int j = 0 ; j < list.size() ; j++) {
+                           if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))){
+                               list1.add(list.get(j).getUser_id());
+                           }
+                       }
+                   }
+                   Log.i("crushslist", String.valueOf(list1.size()));
+                   Log.i("crushslist", String.valueOf(stringList.size()));
+
+                   CrushsAdapter crushsAdapter = new CrushsAdapter(list1,context);
+                   list_crushs.setAdapter(crushsAdapter);
+
+
+               }
+           }).addOnFailureListener(new OnFailureListener() {
+               @Override
+               public void onFailure(@NonNull Exception e) {
+                   Log.i("crushslist", "onFailure");
+               }
+           });
+            return null;
+        }
     }
 
     public class ListOfCrush extends AsyncTask<Void, Void, Void> {

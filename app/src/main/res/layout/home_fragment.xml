@@ -1,67 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundcolor">
 
 
+    <com.jh.circularlist.CircularListView
+        android:id="@+id/my_circular_list"
+        android:layout_width="match_parent"
+        android:layout_height="350dp">
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="3dp"
+            android:background="@color/lightBlue"
+            app:cardBackgroundColor="@color/lightBlue"
+            app:cardCornerRadius="50dp">
 
-        <com.jh.circularlist.CircularListView
-            android:id="@+id/my_circular_list"
-            android:layout_width="match_parent"
-
-            android:layout_height="320dp">
             <androidx.cardview.widget.CardView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="97dp"
+                android:layout_height="97dp"
                 android:layout_gravity="center"
                 android:layout_margin="3dp"
-                android:layout_centerInParent="true"
-                android:background="@color/lightBlue"
-                app:cardBackgroundColor="@color/lightBlue"
+                android:background="@color/whiteSmoke"
+                app:cardBackgroundColor="?attr/cardBackground"
                 app:cardCornerRadius="50dp">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="97dp"
-                    android:layout_height="97dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="3dp"
 
-                    android:background="@color/whiteSmoke"
-                    app:cardBackgroundColor="?attr/cardBackground"
-                    app:cardCornerRadius="50dp">
-
-
-                    <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp" />
-                </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
             </androidx.cardview.widget.CardView>
-        </com.jh.circularlist.CircularListView>
+        </androidx.cardview.widget.CardView>
+    </com.jh.circularlist.CircularListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/search_fab"
+        android:layout_below="@+id/my_circular_list"
+        android:layout_margin="20dp"
+        android:padding="30dp">
+
+        <TextView
+            android:id="@+id/txt_crushs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Sorry!!!!!!!!!!"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_refresh_crushs"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:text="refresh" />
+
+        <ListView
+            android:id="@+id/crushs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/search_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp" />
+
     <Button
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="add"
         android:id="@+id/add_btn"
-        />
-    <Button
-        android:layout_below="@id/add_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:text="remove"
+        android:text="add" />
+
+    <Button
         android:id="@+id/remove"
-        />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/add_btn"
+        android:text="remove" />
 </RelativeLayout>

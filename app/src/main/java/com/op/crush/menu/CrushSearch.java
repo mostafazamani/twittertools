@@ -1,6 +1,6 @@
 package com.op.crush.menu;
 
-import android.app.Dialog;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -50,6 +50,7 @@ public class CrushSearch extends DialogFragment {
     private CircularItemAdapter adapte;
     private LayoutInflater inflate;
 
+
     public CrushSearch(CircularItemAdapter adapter,LayoutInflater inflater) {
         this.adapte = adapter;
         this.inflate = inflater;
@@ -69,6 +70,8 @@ public class CrushSearch extends DialogFragment {
         txt_search = v.findViewById(R.id.crush_search_edittext);
         btn_search = v.findViewById(R.id.crush_search_button);
         listView = v.findViewById(R.id.crush_search_listview);
+
+
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
@@ -96,7 +99,7 @@ public class CrushSearch extends DialogFragment {
                                     crushSearchList.add(users);
 //                                    Log.i("search",String.valueOf(i));
                                 }
-                                ListSearchAdapter adapter = new ListSearchAdapter(v.getContext(), crushSearchList, adapte,inflate);
+                                ListSearchAdapter adapter = new ListSearchAdapter(v.getContext(), crushSearchList, adapte,inflate,getDialog());
                                 listView.setAdapter(adapter);
 //                                Log.i("search","end");
 
