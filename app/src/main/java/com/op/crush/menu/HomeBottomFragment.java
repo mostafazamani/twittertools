@@ -187,7 +187,7 @@ public class HomeBottomFragment extends Fragment {
                 ft.remove(prev);
             }
             ft.addToBackStack(null);
-            DialogFragment dialogFragment = new CrushSearch();
+            DialogFragment dialogFragment = new CrushSearch(adapter,getLayoutInflater());
             dialogFragment.show(ft, "dialog");
         }
     });
