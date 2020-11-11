@@ -136,19 +136,20 @@ public class FollowerYouNotFollow extends Fragment {
 
                     fo = new ArrayList<>();
 
-                    followList = db.getItem(DbFollow.TB_FOLLOWER);
-
-                    for (int i = 0; i < followList.size(); i++) {
-
-                        if (!db.CheckItem(followList.get(i).getId(), DbFollow.TB_FOLLOWING)) {
-                            fo.add(db.getOneItem(followList.get(i).getId(), DbFollow.TB_FOLLOWER));
-
-                        }
-                        if (i == followList.size() - 1) {
-                            ynfAdapter.AddToList(fo);
-                            ynfAdapter.notifyDataSetChanged();
-                        }
-                    }
+                    followList = db.getExpectItem(DbFollow.TB_FOLLOWER,DbFollow.TB_FOLLOWING);
+                    ynfAdapter.AddToList(followList);
+                    ynfAdapter.notifyDataSetChanged();
+//                    for (int i = 0; i < followList.size(); i++) {
+//
+//                        if (!db.CheckItem(followList.get(i).getId(), DbFollow.TB_FOLLOWING)) {
+//                            fo.add(db.getOneItem(followList.get(i).getId(), DbFollow.TB_FOLLOWER));
+//
+//                        }
+//                        if (i == followList.size() - 1) {
+//                            ynfAdapter.AddToList(fo);
+//                            ynfAdapter.notifyDataSetChanged();
+//                        }
+//                    }
 
                 }
 

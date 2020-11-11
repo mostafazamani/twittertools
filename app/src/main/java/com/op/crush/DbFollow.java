@@ -159,6 +159,37 @@ public class DbFollow extends SQLiteOpenHelper {
         return lsl;
 
     }
+    public List<follow> getExpectItem(String tb_name1,String tb_name2) {
+
+        SQLiteDatabase db = DbFollow.getInstance(context).getReadableDatabase();
+        List<follow> lsl = new ArrayList<>();
+//        db.beginTransaction();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + tb_name1 +" EXCEPT SELECT * FROM " + tb_name2, null);
+
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                follow f = new follow();
+
+                f.setId(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
+                f.setName(cursor.getString(cursor.getColumnIndex(follow.KEY_NAME)));
+                f.setProfilePictureUrl(cursor.getString(cursor.getColumnIndex(follow.KEY_IMAGE)));
+
+                lsl.add(f);
+
+            }
+        }
+        cursor.close();
+//        if (db.isOpen()) {
+//            db.setTransactionSuccessful();
+//            db.endTransaction();
+//            db.close();
+//            cursor.close();
+//        }
+        return lsl;
+
+    }
 
     public void DeleteItem(long id,String tb_name) {
 
