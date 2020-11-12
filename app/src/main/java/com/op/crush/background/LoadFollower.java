@@ -20,6 +20,8 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
+import java.util.Calendar;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -54,7 +56,6 @@ public class LoadFollower extends Worker {
         Log.i("foll", "start2");
 
         loadFollowers(session, nextCursor);
-
 
         return Result.success();
     }

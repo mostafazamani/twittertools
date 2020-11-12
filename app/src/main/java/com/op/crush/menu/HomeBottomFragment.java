@@ -3,12 +3,10 @@ package com.op.crush.menu;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.os.CountDownTimer;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,22 +44,18 @@ import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.Room.CircleCrush.UserCrush;
 import com.op.crush.Room.CircleCrush.UserCrushDatabase;
-import com.op.crush.Room.CircleCrush.UserCrushViewModel;
-import com.op.crush.adapter.CircularAdapter;
 import com.op.crush.adapter.CircularItemAdapter;
 import com.op.crush.adapter.CrushsAdapter;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +83,8 @@ public class HomeBottomFragment extends Fragment {
     ArrayList<Bitmap> itemTitles;
     int step = 0;
 
+    public Context context;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,6 +102,8 @@ public class HomeBottomFragment extends Fragment {
 
         TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
+
+        context = view.getContext();
 
         profile = view.findViewById(R.id.profile_image);
         searchFAB = view.findViewById(R.id.search_fab);
@@ -210,7 +207,6 @@ public class HomeBottomFragment extends Fragment {
 
         return view;
     }
-
 
 
 
@@ -360,9 +356,10 @@ public class HomeBottomFragment extends Fragment {
                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                @Override
                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                   Set<String> ma = documentSnapshot.getData().keySet();
                         List<Long> list1 = new ArrayList<>();
                         List<String> stringList = new ArrayList<>();
-                   for (String s:documentSnapshot.getData().keySet()) {
+                   for (String s:ma) {
                        stringList.add(s);
                    }
                    for (int i = 0 ; i <stringList.size();i++) {
@@ -436,7 +433,6 @@ public class HomeBottomFragment extends Fragment {
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                             Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
 
-
                                                 @Override
                                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                                     View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
@@ -444,6 +440,7 @@ public class HomeBottomFragment extends Fragment {
                                                     itemView.setImageBitmap(bitmap);
                                                     Log.i("ciecle_list", "bit");
                                                     adapter.addItem(v);
+
 
                                                 }
 

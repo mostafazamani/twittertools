@@ -22,6 +22,8 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
+import java.util.Calendar;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -38,7 +40,6 @@ public class LoadFollowing extends Worker {
     ProgressDatabase database;
     long min;
 
-
     public LoadFollowing(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
@@ -46,7 +47,8 @@ public class LoadFollowing extends Worker {
         database = ProgressDatabase.getInstance(context);
         nextCursor = preferences.getLong("FollowingC", -1L);
         countFollowing = preferences.getInt("FIC", 0);
-        min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollowing", System.currentTimeMillis()))/60000;
+        min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollowing", System.currentTimeMillis())) / 60000;
+
         Log.i("following", "constructor" + pc);
     }
 

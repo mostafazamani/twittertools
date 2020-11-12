@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
     android:background="?attr/backgroundcolor"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
-
+    tools:openDrawer="start">
 
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -21,88 +18,99 @@
         android:background="#020202"
         android:foregroundGravity="center"
         app:layoutDescription="@xml/scene">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rv"
-        android:background="?attr/backgroundcolor"
-        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/toolbar_lin"
-            android:background="?attr/backgroundcolor"
-            android:elevation="8dp"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="4dp"
-                android:background="@android:color/transparent"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_twitter_tweet"
-                android:scaleType="fitXY"
-                android:id="@+id/hamberger_btn"
-                android:layout_marginLeft="4dp">
-
-            </ImageButton>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:id="@+id/txt_status"/>
-
-        </LinearLayout>
-
-
-
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/backgroundcolor"
-            android:layout_below="@+id/toolbar_lin"
-            android:layout_above="@+id/bottom_nav"
-            android:id="@+id/fragment_container"/>
+            android:background="?attr/backgroundcolor">
+
+            <LinearLayout
+                android:id="@+id/toolbar_lin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="?attr/backgroundcolor"
+                android:elevation="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/hamberger_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_twitter_tweet">
+
+                </ImageButton>
+
+                <TextView
+                    android:id="@+id/txt_status"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/txt_sta"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/btn_open_nav"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="100dp"
+                    android:background="@drawable/open_nav" />
+
+            </LinearLayout>
 
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:animateLayoutChanges="true"
-            android:animationCache="true"
-            android:background="?attr/backgroundcolor"
-            android:elevation="8dp"
-            app:elevation="8dp"
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottom_nav"
+                android:layout_below="@+id/toolbar_lin"
+                android:background="?attr/backgroundcolor" />
 
-            android:theme="@style/AppTheme"
-            app:itemBackground="?attr/backgroundcolor"
-            app:itemHorizontalTranslationEnabled="true"
-            app:itemTextColor="?attr/textcolor"
-            app:labelVisibilityMode="selected"
-            app:menu="@menu/bottom_item" />
-    </RelativeLayout>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:animateLayoutChanges="true"
+                android:animationCache="true"
+                android:background="?attr/backgroundcolor"
+                android:elevation="8dp"
+                android:theme="@style/AppTheme"
+
+                app:elevation="8dp"
+                app:itemBackground="?attr/backgroundcolor"
+                app:itemHorizontalTranslationEnabled="true"
+                app:itemTextColor="?attr/textcolor"
+                app:labelVisibilityMode="selected"
+                app:menu="@menu/bottom_item" />
+        </RelativeLayout>
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
 
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end|right"
-            android:animateLayoutChanges="true"
-            android:animationCache="true"
-            android:background="?attr/backgroundcolor"
-            android:fitsSystemWindows="true"
-            android:layoutMode="clipBounds"
-            android:theme="@style/AppTheme"
-            app:headerLayout="@layout/nav_header"
-            app:itemBackground="?attr/backgroundcolor"
-            app:itemTextColor="?attr/textcolor"
-            app:menu="@menu/navigation_menu" />
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|right"
+        android:animateLayoutChanges="true"
+        android:animationCache="true"
+        android:background="?attr/backgroundcolor"
+        android:fitsSystemWindows="true"
+        android:layoutMode="clipBounds"
+        android:theme="@style/AppTheme"
+        app:headerLayout="@layout/nav_header"
+        app:itemBackground="?attr/backgroundcolor"
+        app:itemTextColor="?attr/textcolor"
+        app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

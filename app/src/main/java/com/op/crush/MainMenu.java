@@ -1,12 +1,9 @@
 package com.op.crush;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.op.crush.Room.ProgressState;
 import com.op.crush.Room.ProgressViewModel;
 import com.op.crush.background.LoadFollower;
@@ -49,12 +45,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.BackoffPolicy;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
@@ -96,6 +89,7 @@ public class MainMenu extends AppCompatActivity {
     boolean f3 = true;
     boolean f4 = true;
     TextView text;
+    TextView t;
 
     private ProgressViewModel progressViewModel;
 
@@ -113,7 +107,7 @@ public class MainMenu extends AppCompatActivity {
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                motionLayout.setProgress(slideOffset/2);
+                motionLayout.setProgress(slideOffset / 2);
             }
 
             @Override
@@ -137,6 +131,7 @@ public class MainMenu extends AppCompatActivity {
         bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
         text = findViewById(R.id.txt_status);
+        t = findViewById(R.id.txt_sta);
         // toolbar = findViewById(R.id.m_toolbar);
         //  setSupportActionBar(toolbar); //toolbar
 
@@ -163,16 +158,19 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-                WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
-                        .build();
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
+                .build();
 
-                WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
-                        BackoffPolicy.LINEAR,
-                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                        TimeUnit.MILLISECONDS)
-                        .build();
-                WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
-                WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
+        WorkRequest workRequest1 = new OneTimeWorkRequest.Builder(LoadFollower.class).addTag("ab").setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS)
+                .build();
+
+
+        WorkManager.getInstance(MainMenu.this).enqueue(workRequest);
+
+        WorkManager.getInstance(MainMenu.this).enqueue(workRequest1);
 
 
         progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
@@ -190,6 +188,11 @@ public class MainMenu extends AppCompatActivity {
 
 
         user_info(session, MainMenu.this);
+
+
+
+
+
         ////////////////////Night Mode
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
@@ -339,7 +342,7 @@ public class MainMenu extends AppCompatActivity {
                 }
             };
 
-   public void user_info(TwitterSession session, final Context context) {
+    public void user_info(TwitterSession session, final Context context) {
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
         myTwitterApiClient.getCustomTwitterService().User(session.getUserId(), session.getUserName()).enqueue(new Callback<UserShow>() {
@@ -349,15 +352,15 @@ public class MainMenu extends AppCompatActivity {
 
                 if (response.body() != null) {
                     UserShow show = response.body();
-                    Toast.makeText(MainMenu.this, ""+show.getProfile_name() + "\n"
-                            +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainMenu.this, "" + show.getProfile_name() + "\n"
+                            + show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
                     int cf = show.getFollowers_count() + show.getFollowings_count();
                     preferences.edit().putInt("CP", cf).apply();
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
-                   // follower_num.setText("Follower\n" + String.valueOf(show.getFollowers_count()));
-                  //  following_num.setText("Following\n" + String.valueOf(show.getFollowings_count()));
+                    // follower_num.setText("Follower\n" + String.valueOf(show.getFollowers_count()));
+                    //  following_num.setText("Following\n" + String.valueOf(show.getFollowings_count()));
                     String url = geturlpic(purl);
 
 
@@ -377,6 +380,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
     }
+
     public String geturlpic(String s) {
         char[] chars = s.toCharArray();
         String url = "";
@@ -388,5 +392,7 @@ public class MainMenu extends AppCompatActivity {
 
         return url;
     }
+
+
 
 }
