@@ -3,6 +3,7 @@ package com.op.crush.menu;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.Inflater;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +80,7 @@ public class HomeBottomFragment extends Fragment {
     private List<DocumentSnapshot> querySnapshots;
     private CircularItemAdapter adapter;
     public TextView txt_crushs;
-     ListView list_crushs;
+    ListView list_crushs;
     public Button btn_crushs;
     ArrayList<Bitmap> itemTitles;
     int step = 0;
@@ -114,11 +116,11 @@ public class HomeBottomFragment extends Fragment {
         btn_crushs = view.findViewById(R.id.btn_refresh_crushs);
 
 
-
         user_info(session, view.getContext());
 
 
         itemTitles = new ArrayList<>();
+//        itemTitles.add(BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
         // usage sample
         final CircularListView circularListView = view.findViewById(R.id.my_circular_list);
         adapter = new CircularItemAdapter(getLayoutInflater(), itemTitles);
@@ -135,18 +137,17 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });
-        new ListOfCrush(view.getContext(), database, session, adapter).execute();
+        new ListOfCrush(view.getContext(), database, session, adapter,getLayoutInflater()).execute();
 
 
         btn_crushs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-            new ListCrushs(database,session,firestore,view.getContext()).execute();
-            btn_crushs.setVisibility(View.GONE);
+                new ListCrushs(database, session, firestore, view.getContext()).execute();
+                btn_crushs.setVisibility(View.GONE);
             }
         });
-
 
 
 //        Button button = view.findViewById(R.id.add_btn);
@@ -183,31 +184,30 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });*/
-    searchFAB.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        searchFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
            /* Fragment fragment = new CrushSearch();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
             transaction.commit();*/
 
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-            if (prev != null) {
-                ft.remove(prev);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                DialogFragment dialogFragment = new CrushSearch(adapter, getLayoutInflater());
+                dialogFragment.show(ft, "dialog");
             }
-            ft.addToBackStack(null);
-            DialogFragment dialogFragment = new CrushSearch(adapter,getLayoutInflater());
-            dialogFragment.show(ft, "dialog");
-        }
-    });
+        });
         // return inflater.inflate(R.layout.home_fragment,container,false);
 
 
         return view;
     }
-
 
 
     public void read_crushs() {
@@ -333,7 +333,7 @@ public class HomeBottomFragment extends Fragment {
     }
 
 
-    public class ListCrushs extends AsyncTask<Void,Void,Void>{
+    public class ListCrushs extends AsyncTask<Void, Void, Void> {
         UserCrushDatabase database;
 
         TwitterSession session;
@@ -341,8 +341,8 @@ public class HomeBottomFragment extends Fragment {
         private List<DocumentSnapshot> qs;
         Context context;
 
-        public ListCrushs(UserCrushDatabase database,TwitterSession session,FirebaseFirestore firestore
-                ,Context context) {
+        public ListCrushs(UserCrushDatabase database, TwitterSession session, FirebaseFirestore firestore
+                , Context context) {
             this.database = database;
             this.session = session;
             this.firestore = firestore;
@@ -352,54 +352,56 @@ public class HomeBottomFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             List<UserCrush> list = database.userCrushDao().getUserCrush();
-           firestore.collection("crush").document(String.valueOf(session.getId()))
-                   .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-               @Override
-               public void onSuccess(DocumentSnapshot documentSnapshot) {
-                   Set<String> ma = documentSnapshot.getData().keySet();
-                        List<Long> list1 = new ArrayList<>();
-                        List<String> stringList = new ArrayList<>();
-                   for (String s:ma) {
-                       stringList.add(s);
-                   }
-                   for (int i = 0 ; i <stringList.size();i++) {
-                       for (int j = 0 ; j < list.size() ; j++) {
-                           if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))){
-                               list1.add(list.get(j).getUser_id());
-                           }
-                       }
-                   }
-                   Log.i("crushslist", String.valueOf(list1.size()));
-                   Log.i("crushslist", String.valueOf(stringList.size()));
+            firestore.collection("crush").document(String.valueOf(session.getId()))
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Set<String> ma = documentSnapshot.getData().keySet();
+                    List<Long> list1 = new ArrayList<>();
+                    List<String> stringList = new ArrayList<>();
+                    for (String s : ma) {
+                        stringList.add(s);
+                    }
+                    for (int i = 0; i < stringList.size(); i++) {
+                        for (int j = 0; j < list.size(); j++) {
+                            if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
+                                list1.add(list.get(j).getUser_id());
+                            }
+                        }
+                    }
+                    Log.i("crushslist", String.valueOf(list1.size()));
+                    Log.i("crushslist", String.valueOf(stringList.size()));
 
-                   CrushsAdapter crushsAdapter = new CrushsAdapter(list1,context);
-                   list_crushs.setAdapter(crushsAdapter);
+                    CrushsAdapter crushsAdapter = new CrushsAdapter(list1, context);
+                    list_crushs.setAdapter(crushsAdapter);
 
 
-               }
-           }).addOnFailureListener(new OnFailureListener() {
-               @Override
-               public void onFailure(@NonNull Exception e) {
-                   Log.i("crushslist", "onFailure");
-               }
-           });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("crushslist", "onFailure");
+                }
+            });
             return null;
         }
     }
 
-    public class ListOfCrush extends AsyncTask<Void, Void, Void> {
+    public static class ListOfCrush extends AsyncTask<Void, Void, Void> {
 
         Context context;
         UserCrushDatabase database;
         TwitterSession session;
-
+        LayoutInflater minf;
         CircularItemAdapter adapter;
 
-        public ListOfCrush(Context context, UserCrushDatabase database, TwitterSession session, CircularItemAdapter adapter) {
+        public ListOfCrush(Context context, UserCrushDatabase database, TwitterSession session,
+                           CircularItemAdapter adapter,LayoutInflater minf) {
             this.context = context;
             this.database = database;
             this.session = session;
             this.adapter = adapter;
+            this.minf = minf ;
         }
 
         @Override
@@ -427,33 +429,15 @@ public class HomeBottomFragment extends Fragment {
 
 
                                     JsonObject jsonObject = (JsonObject) elements.get(0);
-                                    JsonElement f = jsonObject.get("profile_image_url");
                                     Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
                                         @Override
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                            Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
 
-                                                @Override
-                                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                                    View v = getLayoutInflater().inflate(R.layout.circular_adapter, null);
-                                                    ImageView itemView = v.findViewById(R.id.img_item);
-                                                    itemView.setImageBitmap(bitmap);
-                                                    Log.i("ciecle_list", "bit");
-                                                    adapter.addItem(v);
-
-
-                                                }
-
-                                                @Override
-                                                public void onBitmapFailed(Drawable errorDrawable) {
-
-                                                }
-
-                                                @Override
-                                                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                                                }
-                                            });
+                                            View v = minf.inflate(R.layout.circular_adapter, null);
+                                            ImageView itemView = v.findViewById(R.id.img_item);
+                                            itemView.setImageBitmap(bitmap);
+                                            Log.i("ciecle_list", "bit");
+                                            adapter.addItem(v);
 
 
                                         }

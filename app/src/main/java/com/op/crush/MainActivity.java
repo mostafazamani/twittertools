@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 //            startService(new Intent(MainActivity.this, FlwService.class));
 
 
-
             loginMethod();
 
         } else {
@@ -83,10 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, MainMenu.class);
         startActivity(intent);
-
+        finish();
 
     }
-
 
 
     @Override

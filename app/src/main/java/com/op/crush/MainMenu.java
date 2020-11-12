@@ -263,10 +263,10 @@ public class MainMenu extends AppCompatActivity {
 
         ViewCompat.setLayoutDirection(bottomNavigationView, ViewCompat.LAYOUT_DIRECTION_RTL);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
+        bottomNavigationView.setSelectedItemId(R.id.item_1);
         bottomNavigationView.setItemIconTintList(null); //baraye selectas
 
-        // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeBottomFragment()).commit();
-        //user_info(session);
+
 
     }
 
@@ -293,7 +293,7 @@ public class MainMenu extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                    Fragment selectedFragment = null;
+
 
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
@@ -336,7 +336,6 @@ public class MainMenu extends AppCompatActivity {
 
 
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                     // return false; //for 2
                 }
