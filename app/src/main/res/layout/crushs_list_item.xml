@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="86dp"
+    android:background="?attr/cardBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <androidx.cardview.widget.CardView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="40dp"
+            android:padding="2dp"
+            app:cardBackgroundColor="@color/lightBlue"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:background="@color/whiteSmoke"
+                android:id="@+id/profile_image_crushs_list"
+                />
+
+        </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/transparent"
+            android:textColor="?attr/textcolor"
+            android:id="@+id/profile_id_crushs_list"
+            android:gravity="start|bottom"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="Direct"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_follow_btn"
+            android:gravity="center"
+            android:padding="4dp"
+            android:layout_margin="5dp"
+            android:id="@+id/massage_btn_crushs_list"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/transparent"
+            android:textColor="?attr/textcolor"
+            android:id="@+id/profile_name_crushs_list"
+            android:layout_gravity="start|top"
+            android:gravity="start"
+            />
+    </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

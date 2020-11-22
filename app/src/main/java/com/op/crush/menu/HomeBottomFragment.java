@@ -1,6 +1,7 @@
 package com.op.crush.menu;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -129,11 +131,29 @@ public class HomeBottomFragment extends Fragment {
         circularListView.setOnItemClickListener(new CircularTouchListener.CircularItemClickListener() {
             @Override
             public void onItemClick(View view, int index) {
-                Toast.makeText(view.getContext(),
-                        "view at index " + index + " is clicked!",
-                        Toast.LENGTH_SHORT).show();
-                new Remove(database).execute(index);
-                adapter.removeItemAt(index);
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Toast.makeText(view.getContext(),
+                                        "view at index " + index + " is clicked!",
+                                        Toast.LENGTH_SHORT).show();
+                                new Remove(database).execute(index);
+                                adapter.removeItemAt(index);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Are you sure you wnat to delete this item from crush list?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+
 
             }
         });
@@ -208,6 +228,8 @@ public class HomeBottomFragment extends Fragment {
 
         return view;
     }
+
+
 
 
     public void read_crushs() {

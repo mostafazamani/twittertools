@@ -60,13 +60,13 @@ public class CrushsAdapter extends BaseAdapter {
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.crush_search_adapter, null);
+            convertView = layoutInflater.inflate(R.layout.crushs_list_item, null);
         }
-        TextView name = convertView.findViewById(R.id.search_name);
-        TextView screen_name = convertView.findViewById(R.id.search_screen_name);
-        ImageView img = convertView.findViewById(R.id.search_img);
-        Button btn = convertView.findViewById(R.id.search_crush);
-        btn.setText("Message");
+        TextView name = convertView.findViewById(R.id.profile_name_crushs_list);
+        TextView screen_name = convertView.findViewById(R.id.profile_id_crushs_list);
+        ImageView img = convertView.findViewById(R.id.profile_image_crushs_list);
+        Button btn = convertView.findViewById(R.id.massage_btn_crushs_list);
+
         Log.i("crushslist","adapter");
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
