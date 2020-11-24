@@ -82,12 +82,14 @@ public class MainMenu extends AppCompatActivity {
     Fragment fragment2 = new ExploreBottomFragment();
     Fragment fragment3 = new TwittsBottomFragment();
     Fragment fragment4 = new FollowBottomFragment();
+    Fragment fragment5 = new FollowBottomFragment(); //downloader
     FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
 
     boolean f2 = true;
     boolean f3 = true;
     boolean f4 = true;
+    boolean f5 = true;
     TextView text;
     TextView t;
 
@@ -327,6 +329,15 @@ public class MainMenu extends AppCompatActivity {
                             if (f3) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
                                 f3 = false;
+                            }
+                            fm.beginTransaction().hide(active).show(fragment3).commit();
+                            active = fragment3;
+                            return true;
+
+                        case R.id.item_5:
+                            if (f5) {
+                                fm.beginTransaction().add(R.id.fragment_container, fragment5, "5").hide(fragment5).commit();
+                                f5 = false;
                             }
                             fm.beginTransaction().hide(active).show(fragment3).commit();
                             active = fragment3;
