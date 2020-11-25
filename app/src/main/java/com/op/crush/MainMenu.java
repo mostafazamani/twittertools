@@ -19,6 +19,7 @@ import com.op.crush.Room.ProgressState;
 import com.op.crush.Room.ProgressViewModel;
 import com.op.crush.background.LoadFollower;
 import com.op.crush.background.LoadFollowing;
+import com.op.crush.menu.DownloaderBottomFragment;
 import com.op.crush.menu.ExploreBottomFragment;
 import com.op.crush.menu.FollowBottomFragment;
 import com.op.crush.menu.HomeBottomFragment;
@@ -82,7 +83,7 @@ public class MainMenu extends AppCompatActivity {
     Fragment fragment2 = new ExploreBottomFragment();
     Fragment fragment3 = new TwittsBottomFragment();
     Fragment fragment4 = new FollowBottomFragment();
-    Fragment fragment5 = new FollowBottomFragment(); //downloader
+    Fragment fragment5 = new DownloaderBottomFragment(); //downloader
     FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
 
@@ -339,8 +340,8 @@ public class MainMenu extends AppCompatActivity {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment5, "5").hide(fragment5).commit();
                                 f5 = false;
                             }
-                            fm.beginTransaction().hide(active).show(fragment3).commit();
-                            active = fragment3;
+                            fm.beginTransaction().hide(active).show(fragment5).commit();
+                            active = fragment5;
                             return true;
                         //   selectedFragment = new TwittsBottomFragment();
                         //   break;

@@ -451,29 +451,12 @@ public class HomeBottomFragment extends Fragment {
 
 
                                     JsonObject jsonObject = (JsonObject) elements.get(0);
-                                    Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    View v = minf.inflate(R.layout.circular_adapter, null);
+                                    ImageView itemView = v.findViewById(R.id.img_item);
+                                    Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(itemView);
+                                    Log.i("ciecle_list", "bit");
+                                    adapter.addItem(v);
 
-                                            View v = minf.inflate(R.layout.circular_adapter, null);
-                                            ImageView itemView = v.findViewById(R.id.img_item);
-                                            itemView.setImageBitmap(bitmap);
-                                            Log.i("ciecle_list", "bit");
-                                            adapter.addItem(v);
-
-
-                                        }
-
-                                        @Override
-                                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                                        }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                                        }
-                                    });
 
 
                                 } catch (Exception e) {

@@ -23,8 +23,12 @@
     <string name="name_app_description">Crush Finder \n
     Twitter Tools
     </string>
-
-
+    <string name="genarating_download_link">Generating download link</string>
+    <string name="select_quality">Select Quality</string>
+    <string name="downloading_des">Downloading</string>
+    <string name="don_start">Downloading Start!</string>
+    <string name="starting_download">Starting download...</string>
+    <string name="invalid_url">Invalid Video URL or Check Internet Connection</string>
 
 
 </resources>

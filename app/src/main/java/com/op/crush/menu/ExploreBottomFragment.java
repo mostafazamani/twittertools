@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.op.crush.DbSuggest;
 import com.op.crush.R;
 import com.op.crush.adapter.ExploreAdapter;
 import com.op.crush.adapter.homeTimeline;
+import com.op.crush.downloadvideo.TwitterVideoDownloader;
 import com.op.crush.models.SuggestUser;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -35,6 +37,7 @@ public class ExploreBottomFragment extends Fragment {
     Button add_to_sugest;
 
     DbSuggest dbSuggest;
+    EditText editText;
 
 
     GridView gridView;
@@ -55,12 +58,8 @@ public class ExploreBottomFragment extends Fragment {
         sl = dbSuggest.getItem();
 
         add_to_sugest = view.findViewById(R.id.add_to_sugest);
-        add_to_sugest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
+
 
         ////////////////GridView//////////////////////////
         gridView = view.findViewById(R.id.gridview);
