@@ -18,6 +18,7 @@
         android:icon="@drawable/ic_day_night"/>
 
     <item android:id="@+id/theme"
+        app:actionLayout="@layout/toggle_theme_navigation"
         android:title="Theme"
         android:icon="@drawable/ic_theme"/>
 

@@ -1,5 +1,6 @@
 package com.op.crush;
 
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -205,7 +208,6 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-
         ////////////////////Night Mode
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
@@ -239,6 +241,42 @@ public class MainMenu extends AppCompatActivity {
             }
         });
         ////////////////////Night Mode End//////////////////////
+        ///////////theme//////////
+        MenuItem menutheme = menu.findItem(R.id.theme);
+        View actiont = MenuItemCompat.getActionView(menutheme);
+
+        Button btn_theme = (Button) actiont.findViewById(R.id.set_theme);
+
+        menutheme.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(MainMenu.this, "dialog", Toast.LENGTH_SHORT).show();
+                Dialog dialog = new Dialog(MainMenu.this);
+                dialog.setTitle("select color");
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.theme_dialog);
+                dialog.show();
+                return true;
+            }
+        });
+
+        btn_theme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                ThemeDialog themeDialog = new ThemeDialog();
+
+                FragmentManager manager = MainMenu.this.getSupportFragmentManager();
+
+                themeDialog.show(manager,"dialog");
+
+
+            }
+        });
+
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem drawItem) {

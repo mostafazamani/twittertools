@@ -41,7 +41,7 @@ public class LoadFollower extends Worker {
     public LoadFollower(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CP", 0) / 200);
+        pc = 100 / (preferences.getInt("CP", 1) / 200);
         database = ProgressDatabase.getInstance(context);
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
