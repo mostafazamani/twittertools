@@ -1,5 +1,6 @@
 package com.op.crush;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import com.op.crush.menu.DownloaderBottomFragment;
 import com.op.crush.menu.ExploreBottomFragment;
 import com.op.crush.menu.FollowBottomFragment;
 import com.op.crush.menu.HomeBottomFragment;
+import com.op.crush.menu.ThemeDialog;
 import com.op.crush.menu.TwittsBottomFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,6 +43,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -66,7 +69,7 @@ public class MainMenu extends AppCompatActivity {
     private TwitterSession session;
 
     ImageButton hamberger;
-    LinearLayout bar;
+   // LinearLayout bar;
 
     SwitchCompat nightswitch;
     boolean night;
@@ -130,11 +133,16 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-        hamberger = findViewById(R.id.hamberger_btn);
-        bar = findViewById(R.id.toolbar_lin);
+      //  hamberger = findViewById(R.id.hamberger_btn);
+      //  bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
-        text = findViewById(R.id.txt_status);
-        t = findViewById(R.id.txt_sta);
+     //   text = findViewById(R.id.txt_status); //188 line
+      //  t = findViewById(R.id.txt_sta);
+
+
+
+
+
         // toolbar = findViewById(R.id.m_toolbar);
         //  setSupportActionBar(toolbar); //toolbar
 
@@ -152,6 +160,7 @@ public class MainMenu extends AppCompatActivity {
         banner = navigationView.getHeaderView(0).findViewById(R.id.profile_banner);
         profile = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
 
+/*
 
         hamberger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +168,7 @@ public class MainMenu extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+*/
 
 
         WorkRequest workRequest = new OneTimeWorkRequest.Builder(LoadFollowing.class)
@@ -180,7 +190,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onChanged(List<ProgressState> progressStates) {
                 if (progressStates != null && progressStates.size() > 0) {
-                    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
+                //    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                     Log.i("vm", String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                 }
             }
@@ -207,7 +217,7 @@ public class MainMenu extends AppCompatActivity {
 
             nightswitch.setChecked(true);
             night = true;
-        } else {
+        } else if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
             setTheme(R.style.AppTheme);
             night = false;
             nightswitch.setChecked(false);
@@ -219,9 +229,11 @@ public class MainMenu extends AppCompatActivity {
                     if (night == true) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         restartApp();
+                        setTheme(R.style.AppTheme);
                     } else if (night == false) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         restartApp();
+                        setTheme(R.style.DarkTheme);
                     }
                 }
             }
@@ -253,6 +265,10 @@ public class MainMenu extends AppCompatActivity {
                             restartApp();
                         }
                     }
+                    case R.id.theme: {
+
+                    }
+                        break;
 
                     default:
                         return true;
@@ -301,7 +317,7 @@ public class MainMenu extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
                             fm.beginTransaction().hide(active).show(fragment1).commit();
-                            bar.setVisibility(View.VISIBLE);
+                     //       bar.setVisibility(View.VISIBLE);
                             active = fragment1;
                             return true;
                         //selectedFragment = new HomeBottomFragment();
@@ -377,11 +393,7 @@ public class MainMenu extends AppCompatActivity {
 
                     Picasso.with(context).load(burl).into(banner);
                     Picasso.with(context).load(url).into(profile);
-
-
                 }
-
-
             }
 
             @Override

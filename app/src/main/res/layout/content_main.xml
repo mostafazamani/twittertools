@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:background="?attr/backgroundcolor">
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/toolbar_lin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -63,7 +63,7 @@
                     android:layout_marginLeft="100dp"
                     android:background="@drawable/open_nav" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
             <FrameLayout
@@ -71,8 +71,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/bottom_nav"
-                android:layout_below="@+id/toolbar_lin"
                 android:background="?attr/backgroundcolor" />
+                <!--android:layout_below="@+id/toolbar_lin"-->
+
+
 
 
             <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -7,4 +7,25 @@
     <color name="whiteSmoke">#eeeeee</color>
     <color name="dark">#000000</color>
 
+    <color name="ruby"> #e0115f</color>
+
+
+    <!--red set-->
+    <color name="ferrari"> #ff2800</color>
+    <color name="salmon"> #fa8072</color>
+    <color name="mahogany"> #420d09</color>
+    <color name="indianRed"> #cd5c5c</color>
+
+
+    <!--blue set-->
+    <color name="denim"> #131e3a</color>
+    <color name="babyblue"> #89cfef</color>
+    <color name="azure"> #0080fe</color>
+    <color name="space"> #1c2951</color>
+
+    <!--jjj-->
+    <color name="yellow">#FFFF00</color>
+    <color name="orange">#ff8303</color>
+    <color name="yellow2">#FFFF66</color>
+    <color name="yellow3">	#FFFF33</color>
 </resources>

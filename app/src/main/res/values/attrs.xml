@@ -8,6 +8,8 @@
         <attr name="textcolor" format="color"/>
         <attr name="tintcolor" format="color"/>
         <attr name="buttoncolor" format="color"/>
+        <attr name="buttoncolortint" format="color"/>
+        <attr name="boardcolor" format="color"/>
 
     </declare-styleable>
 </resources>
