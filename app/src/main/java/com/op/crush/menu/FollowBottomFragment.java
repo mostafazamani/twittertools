@@ -35,8 +35,8 @@ public class FollowBottomFragment extends Fragment {
 
 
         tabLayout = view.findViewById(R.id.follow_tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Follower"));
-        tabLayout.addTab(tabLayout.newTab().setText("Following"));
+        tabLayout.addTab(tabLayout.newTab().setText("UnFollow"));
+        tabLayout.addTab(tabLayout.newTab().setText("Follow"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         final ViewPager viewPager = view.findViewById(R.id.follow_view_pager);
         final FollowTabsAdapter adapter = new FollowTabsAdapter

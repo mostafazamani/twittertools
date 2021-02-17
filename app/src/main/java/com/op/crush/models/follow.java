@@ -65,7 +65,7 @@ public class follow {
         ContentValues values = new ContentValues();
 
         values.put(Key_ID, getId());
-        values.put(KEY_NAME, getScreenName());
+        values.put(KEY_NAME, getName());
         if (getProfilePictureUrl() == null) {
             values.put(KEY_IMAGE, "non");
         } else {

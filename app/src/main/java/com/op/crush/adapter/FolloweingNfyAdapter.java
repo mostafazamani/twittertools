@@ -1,5 +1,6 @@
 package com.op.crush.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -28,7 +31,7 @@ import retrofit2.Response;
 public class FolloweingNfyAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<follow> ex;
+    private List<follow> ex;
 
     private TwitterSession session;
     private DbFollow dbFollowings;
@@ -40,11 +43,11 @@ public class FolloweingNfyAdapter extends BaseAdapter {
     }
 
     public void AddToList(List<follow> list) {
-        ex.addAll(list);
+        ex = list;
 
     }
 
-    public void RemoveList(int pos){
+    public void RemoveList(int pos) {
         ex.remove(pos);
         notifyDataSetChanged();
     }
@@ -82,6 +85,9 @@ public class FolloweingNfyAdapter extends BaseAdapter {
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
+        ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setMessage("UnFollowing...");
+        dialog.setCancelable(false);
 
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fnfy);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fnfy);
@@ -100,23 +106,24 @@ public class FolloweingNfyAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 final Integer i = (int) view.getTag();
+                dialog.show();
                 MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
                 apiClient.getCustomTwitterService().DestroyFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
                     @Override
                     public void onResponse(Call call, @NonNull Response response) {
-                        ex.remove(i.intValue());
-                        notifyDataSetChanged();
+
                         dbFollowings = DbFollow.getInstance(mContext);
-                        dbFollowings.getReadableDatabase();
+                        // dbFollowings.getReadableDatabase();
                         dbFollowings.DeleteItem(ex.get(position).getId(), DbFollow.TB_FOLLOWING);
                         dbFollowings.close();
-
-
+                        ex.remove(position);
+                        notifyDataSetChanged();
+                        dialog.dismiss();
                     }
 
                     @Override
                     public void onFailure(Call call, Throwable t) {
-
+                        dialog.dismiss();
 
                     }
                 });
@@ -141,5 +148,6 @@ public class FolloweingNfyAdapter extends BaseAdapter {
             url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
+
 
 }

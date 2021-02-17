@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.op.crush.R;
 
@@ -95,6 +96,14 @@ public class downloadFile {
 
         request.allowScanningByMediaScanner();
         downloadID = downloadManager.enqueue(request);
+        if (downloadID != 0){
+            Toast.makeText(context, "download starting...", Toast.LENGTH_SHORT).show();
+            iUtils.ShowToast(context, "download starting...");
+        }else {
+            Toast.makeText(context, "something was wrong!", Toast.LENGTH_SHORT).show();
+            iUtils.ShowToast(context, "something was wrong!");
+        }
+
         Log.e("downloadFileName", cutTitle);
 
         Handler mHandler = new Handler(Looper.getMainLooper()) {

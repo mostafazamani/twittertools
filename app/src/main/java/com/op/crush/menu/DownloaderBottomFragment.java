@@ -1,7 +1,11 @@
 package com.op.crush.menu;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,51 +13,153 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 import com.op.crush.downloadvideo.ClipboardMonitor;
 import com.op.crush.downloadvideo.TwitterVideoDownloader;
+import com.op.crush.downloadvideo.downloadurl;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
 
-public class DownloaderBottomFragment   extends Fragment {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
+
+public class DownloaderBottomFragment extends Fragment {
 
     public static String STARTFOREGROUND_ACTION = "startforeground";
     public static String STOPFOREGROUND_ACTION = "stopforeground";
+    private TwitterSession session;
+    View view;
+    boolean sw;
+    private SharedPreferences prefs;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.downloader_fragment, container, false);
+        view = inflater.inflate(R.layout.downloader_fragment, container, false);
+
+        prefs = view.getContext().getSharedPreferences("PREF_CLIP", MODE_PRIVATE);
+        sw = prefs.getBoolean("csRunning",false);
+
+        ProgressDialog dialog = new ProgressDialog(view.getContext());
+        dialog.setMessage("please waite...");
+        dialog.setCancelable(false);
 
         Button button = view.findViewById(R.id.btn_download);
         EditText editText = view.findViewById(R.id.text_download);
         Switch aSwitch = view.findViewById(R.id.switch_download);
+        session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+        if (sw){
+            aSwitch.setChecked(true);
+        }else {
+            aSwitch.setChecked(false);
+        }
 
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                TwitterVideoDownloader downloader = new TwitterVideoDownloader(view.getContext(), editText.getText().toString());
-                downloader.DownloadVideo();
+            public void onClick(View vie) {
+//                TwitterVideoDownloader downloader = new TwitterVideoDownloader(view.getContext(), editText.getText().toString());
+//                downloader.DownloadVideo();
+                dialog.show();
+                MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+                myTwitterApiClient.getCustomTwitterService().getTwit(gettwitid(editText.getText().toString())).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            dialog.dismiss();
+                        if (response.body() != null) {
+                            try {
+
+                                JsonObject jsonObject = (JsonObject) response.body();
+                                JsonObject jsonObject1 = jsonObject.getAsJsonObject("extended_entities");
+                                JsonArray elements = jsonObject1.getAsJsonArray("media");
+                                JsonObject jsonObject2 = (JsonObject) elements.get(0);
+                                String type = jsonObject2.get("type").getAsString();
+                                if (jsonObject2.get("type").getAsString().contains("video")) {
+                                    JsonObject jsonObject3 = jsonObject2.getAsJsonObject("video_info");
+                                    JsonArray elements1 = jsonObject3.getAsJsonArray("variants");
+                                    JsonObject jsonObject4 = (JsonObject) elements1.get(2);
+                                    String url = jsonObject4.get("url").getAsString();
+                                    downloadurl.DL(url, gettwitid(editText.getText().toString()), ".mp4", view.getContext());
+                                    Log.i("downloadFileName", "1");
+                                } else if (type.contains("photo")) {
+                                    String url = jsonObject2.get("media_url").getAsString();
+                                    downloadurl.DL(url, gettwitid(editText.getText().toString()), ".jpg", view.getContext());
+                                    Log.i("downloadFileName", "1.5");
+                                }
+
+                                Log.i("downloadFileName", "2");
+                            } catch (Exception e) {
+                                Toast.makeText(view.getContext(), "sorry!! we can't download this", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.i("downloadFileName", "3");
+                            Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Toast.makeText(view.getContext(), "try again", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        Log.i("downloadFileName", "error");
+                    }
+                });
             }
+
+
         });
 
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b)
-                            startClipboardMonitor();
-                        else
-                            stopClipboardMonitor();
+                if (b)
+                    startClipboardMonitor();
+                else
+                    stopClipboardMonitor();
             }
         });
 
 
         return view;
     }
+
+
+    public long gettwitid(String t) {
+
+        if (t.contains("https://twitter.com")) {
+            if (t.contains("?")) {
+                int f = t.lastIndexOf("status");
+                int e = t.lastIndexOf("?");
+                String g = t.substring(f + 7, e);
+                Log.i("downloadFileName1", g);
+                long r = Long.parseLong(g);
+                return r;
+            } else {
+                int f = t.lastIndexOf("status");
+                String g = t.substring(f + 7);
+                Log.i("downloadFileName2", g);
+                long r = Long.parseLong(g);
+                return r;
+            }
+
+        } else {
+            return 0;
+        }
+    }
+
 
     public void startClipboardMonitor() {
 
@@ -62,14 +168,14 @@ public class DownloaderBottomFragment   extends Fragment {
                     new Intent(
                             requireContext(),
                             ClipboardMonitor.class
-                ).setAction(STARTFOREGROUND_ACTION)
+                    ).setAction(STARTFOREGROUND_ACTION)
             );
         } else {
             requireActivity().startService(
                     new Intent(
                             requireContext(),
                             ClipboardMonitor.class
-                )
+                    )
             );
         }
 
@@ -79,10 +185,10 @@ public class DownloaderBottomFragment   extends Fragment {
 
 
         requireActivity().stopService(
-               new Intent(
+                new Intent(
                         requireContext(),
                         ClipboardMonitor.class
-            ).setAction(STOPFOREGROUND_ACTION)
+                ).setAction(STOPFOREGROUND_ACTION)
         );
 
 

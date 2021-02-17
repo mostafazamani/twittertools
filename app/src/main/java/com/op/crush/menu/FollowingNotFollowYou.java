@@ -1,6 +1,8 @@
 package com.op.crush.menu;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +22,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Update;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.gson.JsonObject;
 import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FollowingNotFollowYou extends Fragment {
@@ -49,7 +54,6 @@ public class FollowingNotFollowYou extends Fragment {
     Button unfollow_all;
     DbFollow db;
     List<follow> followList;
-    List<follow> fo;
     FolloweingNfyAdapter ynfAdapter;
     private ListView list;
     private TextView txtProgress;
@@ -58,8 +62,7 @@ public class FollowingNotFollowYou extends Fragment {
     private int stat;
     private TwitterSession session;
     private RewardedVideoAd mRewardedVideoAd;
-
-    int j = 0;
+    SwipeRefreshLayout refreshLayout;
 
 
     @Nullable
@@ -69,79 +72,108 @@ public class FollowingNotFollowYou extends Fragment {
         final View view = inflater.inflate(R.layout.following_nfy_fragment, container, false);
 
         // ((MainMenu)getActivity()).getSupportActionBar().hide();//Toolbar hidden
-
-        back_to_homefrag = view.findViewById(R.id.fnfy_back);
         unfollow_all = view.findViewById(R.id.unfollow_all);
         list = view.findViewById(R.id.list_fnfy);
         txtProgress = view.findViewById(R.id.txtProgress1);
         progressBar = view.findViewById(R.id.progressBar1);
 
+        refreshLayout = view.findViewById(R.id.swipu);
+
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
+        ProgressDialog dialog = new ProgressDialog(view.getContext());
+        dialog.setMessage("wait");
+        dialog.setCancelable(false);
+
+        ProgressDialog dialogf = new ProgressDialog(view.getContext());
+        dialogf.setMessage("UnFollowing...");
+        dialogf.setCancelable(false);
 
         MobileAds.initialize(view.getContext(), "ca-app-pub-6353098097853332~3028901753");
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(view.getContext());
 
+        ynfAdapter = new FolloweingNfyAdapter(view.getContext());
+        list.setAdapter(ynfAdapter);
 
-        back_to_homefrag.setOnClickListener(new View.OnClickListener() {
+        db = DbFollow.getInstance(view.getContext());
+        db.getReadableDatabase();
+
+
+        followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+        ynfAdapter.AddToList(followList);
+        ynfAdapter.notifyDataSetChanged();
+        db.close();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View view) {
-                Fragment home_fragment = new HomeBottomFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, home_fragment); // give your fragment container id in first parameter
-                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                transaction.commit();
+            public void onRefresh() {
+
+                ynfAdapter = new FolloweingNfyAdapter(view.getContext());
+                list.setAdapter(ynfAdapter);
+
+                db = DbFollow.getInstance(view.getContext());
+                db.getReadableDatabase();
+
+
+                followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                ynfAdapter.AddToList(followList);
+                ynfAdapter.notifyDataSetChanged();
+                db.close();
+
+                refreshLayout.setRefreshing(false);
             }
         });
 
 
-        model = new ViewModelProvider(getActivity()).get(ProgressViewModel.class);
-        model.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressState>>() {
-            @Override
-            public void onChanged(List<ProgressState> progressStates) {
-                stat = progressStates.get(progressStates.size() - 1).getState();
-                progressBar.setProgress(stat);
-                txtProgress.setText(String.valueOf(stat) + "%");
-                if (stat == 100) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    ynfAdapter = new FolloweingNfyAdapter(view.getContext());
-                    list.setAdapter(ynfAdapter);
-
-                    db = DbFollow.getInstance(view.getContext());
-                    db.getReadableDatabase();
-
-                    fo = new ArrayList<>();
-
-                    followList = db.getExpectItem(DbFollow.TB_FOLLOWING,DbFollow.TB_FOLLOWER);
-                    ynfAdapter.AddToList(followList);
-                    ynfAdapter.notifyDataSetChanged();
-//                    for (int i = 0; i < followList.size(); i++) {
+        //    model = new ViewModelProvider(getActivity()).get(ProgressViewModel.class);
+//        model.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressState>>() {
+//            @Override
+//            public void onChanged(List<ProgressState> progressStates) {
+//                stat = progressStates.get(progressStates.size() - 1).getState();
+//                progressBar.setProgress(stat);
+//                txtProgress.setText(String.valueOf(stat) + "%");
+//                if (stat == 100) {
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                    ynfAdapter = new FolloweingNfyAdapter(view.getContext());
+//                    list.setAdapter(ynfAdapter);
 //
-//                        if (!db.CheckItem(followList.get(i).getId(), DbFollow.TB_FOLLOWER)) {
-//                            fo.add(db.getOneItem(followList.get(i).getId(), DbFollow.TB_FOLLOWING));
+//                    db = DbFollow.getInstance(view.getContext());
+//                    db.getReadableDatabase();
 //
-//                        }
+//                    fo = new ArrayList<>();
 //
-//                        if (i == followList.size() - 1) {
-//                            ynfAdapter.AddToList(fo);
-//                            ynfAdapter.notifyDataSetChanged();
-//                        }
-//
-//
-//                    }
-                }
-            }
-        });
+//                    followList = db.getExpectItem(DbFollow.TB_FOLLOWING,DbFollow.TB_FOLLOWER);
+//                    ynfAdapter.AddToList(followList);
+//                    ynfAdapter.notifyDataSetChanged();
+////                    for (int i = 0; i < followList.size(); i++) {
+////
+////                        if (!db.CheckItem(followList.get(i).getId(), DbFollow.TB_FOLLOWER)) {
+////                            fo.add(db.getOneItem(followList.get(i).getId(), DbFollow.TB_FOLLOWING));
+////
+////                        }
+////
+////                        if (i == followList.size() - 1) {
+////                            ynfAdapter.AddToList(fo);
+////                            ynfAdapter.notifyDataSetChanged();
+////                        }
+////
+////
+////                    }
+//                }
+//            }
+//        });
 
 
         unfollow_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                j = 0;
+                dialog.show();
+
                 mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                     @Override
                     public void onRewardedVideoAdLoaded() {
                         Log.i("ad", "loaded");
+                        dialog.dismiss();
                         mRewardedVideoAd.show();
                     }
 
@@ -164,7 +196,26 @@ public class FollowingNotFollowYou extends Fragment {
                     @Override
                     public void onRewarded(RewardItem rewardItem) {
                         Log.i("ad", "reward");
-                        new AllUnFollow(session, ynfAdapter, db, fo).execute();
+                        dialogf.show();
+                        int r = followList.size();
+
+                        if (r > 5) {
+                            for (int q = 0; q <= 5; q++) {
+                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                if (q == 5) {
+                                 //   followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    dialogf.dismiss();
+                                }
+                            }
+                        } else if (r != 0) {
+                            for (int q = 0; q < r-1; q++) {
+                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                if (q == (r - 1)) {
+                                   // followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    dialogf.dismiss();
+                                }
+                            }
+                        }
 
                     }
 
@@ -176,6 +227,27 @@ public class FollowingNotFollowYou extends Fragment {
                     @Override
                     public void onRewardedVideoAdFailedToLoad(int i) {
                         Log.i("ad", "filed");
+                        dialog.dismiss();
+                        dialogf.show();
+                        int r = followList.size();
+
+                        if (r > 5) {
+                            for (int q = 0; q <= 5; q++) {
+                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                if (q == 5) {
+                                  //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    dialogf.dismiss();
+                                }
+                            }
+                        } else if (r != 0) {
+                            for (int q = 0; q < r-1; q++) {
+                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                if (q == (r - 1)) {
+                                  //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    dialogf.dismiss();
+                                }
+                            }
+                        }
 
                     }
 
@@ -186,6 +258,7 @@ public class FollowingNotFollowYou extends Fragment {
                 });
 
                 loadRewardedVideoAd();
+                followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
             }
         });
 
@@ -203,50 +276,68 @@ public class FollowingNotFollowYou extends Fragment {
         TwitterSession session1;
         FolloweingNfyAdapter ynfAdapter;
         DbFollow db;
+        Context context;
         public int j;
-        List<follow> fo;
+        long id;
 
-        public AllUnFollow(TwitterSession session1, FolloweingNfyAdapter ynfAdapter, DbFollow db, List<follow> fo) {
+        public AllUnFollow(TwitterSession session1, FolloweingNfyAdapter ynfAdapter, Context db, long id) {
             this.session1 = session1;
             this.ynfAdapter = ynfAdapter;
-            this.db = db;
-            this.fo = fo;
+            this.context = db;
+            this.id = id;
         }
 
 
         @Override
         protected Void doInBackground(Void... voids) {
-            j = 0;
-            UnFollow();
-            return null;
-        }
+            db = DbFollow.getInstance(context);
+            db.getReadableDatabase();
+            db.getWritableDatabase();
 
-        public void UnFollow() {
             MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
-            apiClient.getCustomTwitterService().DestroyFollow(fo.get(j).getId()).enqueue(new retrofit2.Callback() {
+            apiClient.getCustomTwitterService().DestroyFollow(id).enqueue(new Callback<JsonObject>() {
                 @Override
-                public void onResponse(Call call, @NonNull Response response) {
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.body() != null) {
                         Log.i("ad", "Destroy follow");
                         ynfAdapter.RemoveList(0);
                         ynfAdapter.notifyDataSetChanged();
-                        db.DeleteItem(fo.get(j).getId(), DbFollow.TB_FOLLOWING);
+                        db.DeleteItem(id, DbFollow.TB_FOLLOWING);
                         db.close();
-                        j += 1;
-
-                        if (j <= 5)
-                            UnFollow();
-
                     }
                 }
 
                 @Override
-                public void onFailure(Call call, Throwable t) {
-
+                public void onFailure(Call<JsonObject> call, Throwable t) {
 
                 }
             });
+            return null;
         }
+
+//        public void UnFollow() {
+//            MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
+//            apiClient.getCustomTwitterService().DestroyFollow(fo.get(j).getId()).enqueue(new Callback<JsonObject>() {
+//                @Override
+//                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                    if (response.body() != null) {
+//                        Log.i("ad", "Destroy follow");
+//                        ynfAdapter.RemoveList(0);
+//                        ynfAdapter.notifyDataSetChanged();
+//                        db.DeleteItem(fo.get(j).getId(), DbFollow.TB_FOLLOWING);
+//                        db.close();
+//                        j += 1;
+//
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<JsonObject> call, Throwable t) {
+//
+//                }
+//            });
+//        }
     }
 }
 

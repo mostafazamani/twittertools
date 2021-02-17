@@ -41,6 +41,8 @@ public class iUtils {
                 return domainKeys[length - 2] + "." + domainKeys[length - 1];
             }
         }
+
+
     }
 
     public static void tintMenuIcon(Context context, MenuItem item, int color) {

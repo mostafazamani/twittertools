@@ -42,5 +42,8 @@ public interface ServiceListener {
     @GET("1.1/users/search.json")
     Call<JsonArray> SearchUser(@Query("q") String query);
 
+    @GET("1.1/statuses/show.json")
+    Call<JsonObject> getTwit(@Query("id") long id);
+
 
 }

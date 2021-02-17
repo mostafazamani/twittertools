@@ -26,6 +26,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.BackoffPolicy;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +55,8 @@ import com.op.crush.Room.CircleCrush.UserCrush;
 import com.op.crush.Room.CircleCrush.UserCrushDatabase;
 import com.op.crush.adapter.CircularItemAdapter;
 import com.op.crush.adapter.CrushsAdapter;
+import com.op.crush.background.LoadFollower;
+import com.op.crush.background.LoadFollowing;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -59,6 +67,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.Inflater;
 
 import retrofit2.Call;
@@ -328,6 +337,19 @@ public class HomeBottomFragment extends Fragment {
                     String purl = show.getProfile_image_url();
                     String url = geturlpic(purl);
                     Picasso.with(context).load(url).into(profile);
+                    PeriodicWorkRequest  workRequest =    new PeriodicWorkRequest.Builder(LoadFollowing.class, 1, TimeUnit.DAYS).build();
+
+                    PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.Builder(LoadFollower.class, 1, TimeUnit.DAYS).build();
+
+
+
+                    WorkManager.getInstance(context).enqueueUniquePeriodicWork("following",
+                            ExistingPeriodicWorkPolicy.REPLACE,
+                            workRequest);
+
+                    WorkManager.getInstance(context).enqueueUniquePeriodicWork("follower",
+                            ExistingPeriodicWorkPolicy.REPLACE,
+                            workRequest1);
 
                 }
 

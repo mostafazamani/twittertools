@@ -1,5 +1,6 @@
 package com.op.crush.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
@@ -29,7 +30,7 @@ import retrofit2.Response;
 public class FollowerYnfAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<follow> ex;
+    private List<follow> ex;
     DbFollow dbFollowings;
     private TwitterSession session;
 
@@ -41,11 +42,12 @@ public class FollowerYnfAdapter extends BaseAdapter {
 
     }
 
-    public void AddToList(List<follow> list){
-        ex.addAll(list);
+    public void AddToList(List<follow> list) {
+        ex = list;
 
     }
-    public void RemoveList(int pos){
+
+    public void RemoveList(int pos) {
         ex.remove(pos);
         notifyDataSetChanged();
     }
@@ -81,8 +83,9 @@ public class FollowerYnfAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.follower_ynf_item, null);
         }
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
-
+        ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setMessage("Following...");
+        dialog.setCancelable(false);
 
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image_fynf);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name_fynf);
@@ -100,24 +103,26 @@ public class FollowerYnfAdapter extends BaseAdapter {
         follow_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                dialog.show();
                 MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
                 apiClient.getCustomTwitterService().CreateFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
                     @Override
                     public void onResponse(Call call, @NonNull Response response) {
                         if (response.body() != null) {
-                            ex.remove(position);
-                            notifyDataSetChanged();
+
                             dbFollowings = DbFollow.getInstance(mContext);
                             dbFollowings.getWritableDatabase();
-                            dbFollowings.AddItem(ex.get(position),DbFollow.TB_FOLLOWING);
+                            dbFollowings.AddItem(ex.get(position), DbFollow.TB_FOLLOWING);
                             dbFollowings.close();
-
+                            ex.remove(position);
+                            notifyDataSetChanged();
+                            dialog.dismiss();
                         }
                     }
 
                     @Override
                     public void onFailure(Call call, Throwable t) {
-
+                        dialog.dismiss();
 
                     }
                 });
@@ -127,20 +132,20 @@ public class FollowerYnfAdapter extends BaseAdapter {
         });
 
 
-
         return convertView;
     }
 
     public String geturlpic(String s) {
         String url = "";
-        if (s !=null) {
+        if (s != null) {
             char[] chars = s.toCharArray();
             for (int i = 0; i < chars.length - 11; i++) {
                 url += chars[i];
             }
 
             url += ".jpg";
-        }else url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
+        } else
+            url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
 
