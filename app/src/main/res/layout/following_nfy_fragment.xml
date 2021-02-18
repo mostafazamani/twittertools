@@ -39,7 +39,7 @@
         android:progress="0"
         android:progressDrawable="@drawable/custom_progressbar_drawable"
         android:secondaryProgress="0"
-        android:visibility="invisible"/>
+        android:visibility="visible"/>
 
 
     <TextView

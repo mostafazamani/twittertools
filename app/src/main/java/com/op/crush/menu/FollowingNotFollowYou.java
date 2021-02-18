@@ -92,35 +92,59 @@ public class FollowingNotFollowYou extends Fragment {
         MobileAds.initialize(view.getContext(), "ca-app-pub-6353098097853332~3028901753");
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(view.getContext());
 
-        ynfAdapter = new FolloweingNfyAdapter(view.getContext());
-        list.setAdapter(ynfAdapter);
 
-        db = DbFollow.getInstance(view.getContext());
-        db.getReadableDatabase();
+        final int[] x = {0};
+        model = new ViewModelProvider(getActivity()).get(ProgressViewModel.class);
+        model.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressState>>() {
+            @Override
+            public void onChanged(List<ProgressState> progressStates) {
+                stat = progressStates.get(progressStates.size() - 1).getState();
+                progressBar.setProgress(stat);
+                txtProgress.setText(String.valueOf(stat) + "%");
+                if (stat == 100) {
+                    x[0] += 1;
+
+                    if (x[0] > 1) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        ynfAdapter = new FolloweingNfyAdapter(view.getContext());
+                        list.setAdapter(ynfAdapter);
+
+                        db = DbFollow.getInstance(view.getContext());
+                        db.getReadableDatabase();
 
 
-        followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-        ynfAdapter.AddToList(followList);
-        ynfAdapter.notifyDataSetChanged();
-        db.close();
+                        followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                        ynfAdapter.AddToList(followList);
+                        ynfAdapter.notifyDataSetChanged();
+                        db.close();
+
+
+                    }
+                }
+            }
+        });
+
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                ynfAdapter = new FolloweingNfyAdapter(view.getContext());
-                list.setAdapter(ynfAdapter);
+                if (x[0] > 1) {
+                    ynfAdapter = new FolloweingNfyAdapter(view.getContext());
+                    list.setAdapter(ynfAdapter);
 
-                db = DbFollow.getInstance(view.getContext());
-                db.getReadableDatabase();
+                    db = DbFollow.getInstance(view.getContext());
+                    db.getReadableDatabase();
 
 
-                followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                ynfAdapter.AddToList(followList);
-                ynfAdapter.notifyDataSetChanged();
-                db.close();
+                    followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                    ynfAdapter.AddToList(followList);
+                    ynfAdapter.notifyDataSetChanged();
+                    db.close();
 
-                refreshLayout.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
+                }
+
             }
         });
 
@@ -203,15 +227,15 @@ public class FollowingNotFollowYou extends Fragment {
                             for (int q = 0; q <= 5; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
                                 if (q == 5) {
-                                 //   followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    //   followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
                                     dialogf.dismiss();
                                 }
                             }
                         } else if (r != 0) {
-                            for (int q = 0; q < r-1; q++) {
+                            for (int q = 0; q < r - 1; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
                                 if (q == (r - 1)) {
-                                   // followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    // followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
                                     dialogf.dismiss();
                                 }
                             }
@@ -235,15 +259,15 @@ public class FollowingNotFollowYou extends Fragment {
                             for (int q = 0; q <= 5; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
                                 if (q == 5) {
-                                  //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
                                     dialogf.dismiss();
                                 }
                             }
                         } else if (r != 0) {
-                            for (int q = 0; q < r-1; q++) {
+                            for (int q = 0; q < r - 1; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
                                 if (q == (r - 1)) {
-                                  //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
+                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
                                     dialogf.dismiss();
                                 }
                             }

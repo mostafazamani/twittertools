@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">crush</string>
-    <string name="com.twitter.sdk.android.CONSUMER_KEY">S7aUWKAaZIyFGF6MZxAhA0NON</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET">63WsbBX8ALpu2wEdgDjkguO0wUHTJTsnoxPInZXN9FN7TuMMSy</string>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">tbWEsn6npr7OrNP0VFrqND2SF</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">wr9mIZLFg15AKsP3O2rFeOdgnFAdaYWtFTcCpLl97J9xZgHiMo</string>
     <string name="todo">TODO</string>
 
     <string name="textview">TextView</string>
