@@ -34,6 +34,37 @@
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
     </style>
+    <style name="YellowTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/yellow</item>
+        <item name="colorPrimaryDark">@color/yellow3</item>
+        <item name="colorAccent">@color/whiteSmoke</item>
+        <item name="backgroundcolor">@color/whiteSmoke</item>
+        <item name="cardBackground">@color/whiteSmoke</item>
+        <item name="textcolor">#000000</item>
+        <item name="tintcolor">#111111</item>
+        <item name="buttoncolor">@color/yellow3</item>
+        <item name="boardcolor">@color/yellow</item>
+        <item name="buttoncolortint">@color/yellow2</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+
+    </style>
+
+    <style name="BlueTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/babyblue</item>
+        <item name="colorPrimaryDark">@color/azure</item>
+        <item name="colorAccent">@color/whiteSmoke</item>
+        <item name="backgroundcolor">@color/whiteSmoke</item>
+        <item name="cardBackground">@color/whiteSmoke</item>
+        <item name="textcolor">@color/denim</item>
+        <item name="tintcolor">@color/space</item>
+        <item name="buttoncolor">@color/babyblue</item>
+        <item name="boardcolor">@color/azure</item>
+        <item name="buttoncolortint">@color/whiteSmoke</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+
+    </style>
 
     <!-- Tranistion Animation Fade In/Out -->
     

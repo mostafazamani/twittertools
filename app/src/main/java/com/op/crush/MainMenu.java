@@ -235,6 +235,9 @@ public class MainMenu extends AppCompatActivity {
 
         Button btn_theme = (Button) actiont.findViewById(R.id.set_theme);
 
+
+
+
         menutheme.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -248,7 +251,7 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        btn_theme.setOnClickListener(new View.OnClickListener() {
+       /* btn_theme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -261,8 +264,7 @@ public class MainMenu extends AppCompatActivity {
 
 
             }
-        });
-
+        });*/
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
