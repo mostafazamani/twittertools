@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.CountDownTimer;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
@@ -48,6 +50,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jh.circularlist.CircularListView;
 import com.jh.circularlist.CircularTouchListener;
+import com.op.crush.MainActivity;
 import com.op.crush.MainMenu;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
@@ -332,24 +335,46 @@ public class HomeBottomFragment extends Fragment {
                     /*Toast.makeText(HomeBottomFragment.this, ""+show.getProfile_name() + "\n"
                             +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();*/
                     int cf = show.getFollowers_count() + show.getFollowings_count();
-                    preferences.edit().putInt("CP", cf).apply();
+                   // preferences.edit().putInt("CP", cf).apply();
 
+
+                    new CountDownTimer(5000, 1000) {
+                        @Override
+                        public void onTick(long l) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+//                            Constraints constraints = new Constraints.Builder()
+//                                    .setRequiresCharging(true)
+//                                    .build();
+//
+//                            PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
+//                                    Builder(LoadFollowing.class, 1, TimeUnit.MINUTES)
+//                                    .setConstraints(constraints).build();
+//
+//                            PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
+//                                    Builder(LoadFollower.class, 1, TimeUnit.MINUTES)
+//                                    .setConstraints(constraints).build();
+//
+//
+//                            WorkManager.getInstance(context).enqueueUniquePeriodicWork("following",
+//                                    ExistingPeriodicWorkPolicy.REPLACE,
+//                                    workRequest);
+//
+//                            WorkManager.getInstance(context).enqueueUniquePeriodicWork("follower",
+//                                    ExistingPeriodicWorkPolicy.REPLACE,
+//                                    workRequest1);
+//
+
+                        }
+                    }.start();
                     String purl = show.getProfile_image_url();
                     String url = geturlpic(purl);
                     Picasso.with(context).load(url).into(profile);
-                    PeriodicWorkRequest  workRequest =    new PeriodicWorkRequest.Builder(LoadFollowing.class, 1, TimeUnit.DAYS).build();
 
-                    PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.Builder(LoadFollower.class, 1, TimeUnit.DAYS).build();
-
-
-
-                    WorkManager.getInstance(context).enqueueUniquePeriodicWork("following",
-                            ExistingPeriodicWorkPolicy.REPLACE,
-                            workRequest);
-
-                    WorkManager.getInstance(context).enqueueUniquePeriodicWork("follower",
-                            ExistingPeriodicWorkPolicy.REPLACE,
-                            workRequest1);
 
                 }
 

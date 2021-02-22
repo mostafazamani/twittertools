@@ -34,21 +34,24 @@ public class LoadFollowing extends Worker {
     private TwitterSession session;
     private DbFollow db;
     public long nextCursor;
+    public long day;
     private int countFollowing;
     private int prog = 0;
     SharedPreferences preferences;
     ProgressDatabase database;
     long min;
+    long ou;
 
     public LoadFollowing(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CP", 0) / 200);
+        pc = 100 / (preferences.getInt("CP", -1) / 200);
         database = ProgressDatabase.getInstance(context);
         nextCursor = preferences.getLong("FollowingC", -1L);
         countFollowing = preferences.getInt("FIC", 0);
+        day = preferences.getLong("day", 0);
         min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollowing", System.currentTimeMillis())) / 60000;
-
+        ou = ((System.currentTimeMillis()) - preferences.getLong("day", System.currentTimeMillis())) / 60000;
         Log.i("following", "constructor" + pc);
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.op.crush.Room.ProgressState;
 import com.op.crush.Room.ProgressViewModel;
+import com.op.crush.background.FlwService;
 import com.op.crush.background.LoadFollower;
 import com.op.crush.background.LoadFollowing;
 import com.op.crush.menu.DownloaderBottomFragment;
@@ -134,6 +136,19 @@ public class MainMenu extends AppCompatActivity {
 
             }
         });
+
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                startService(new Intent(MainMenu.this, FlwService.class));
+            }
+        }.start();
+
 
 
       //  hamberger = findViewById(R.id.hamberger_btn);

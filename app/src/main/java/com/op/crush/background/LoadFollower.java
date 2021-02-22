@@ -31,6 +31,7 @@ public class LoadFollower extends Worker {
     private TwitterSession session;
     private DbFollow db;
     public long nextCursor;
+    public long day;
     private int countFollower;
     int pc;
     SharedPreferences preferences;
@@ -41,10 +42,11 @@ public class LoadFollower extends Worker {
     public LoadFollower(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CP", 1) / 200);
+        pc = 100 / (preferences.getInt("CP", -1) / 200);
         database = ProgressDatabase.getInstance(context);
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
+        day = preferences.getLong("day", 0);
         min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollower", 16L)) / 60000;
         Log.i("followr", "constructor");
     }

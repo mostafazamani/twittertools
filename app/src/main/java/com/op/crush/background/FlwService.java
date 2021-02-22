@@ -7,6 +7,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.op.crush.DbFollow;
 import com.op.crush.MyTwitterApiClient;
@@ -14,6 +18,8 @@ import com.op.crush.models.followmodel;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
+
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -35,6 +41,28 @@ public class FlwService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         Log.i("onStartCommand", "c");
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiresCharging(true)
+                .build();
+
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
+                Builder(LoadFollowing.class, 2, TimeUnit.MINUTES)
+                .setConstraints(constraints).build();
+
+        PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
+                Builder(LoadFollower.class, 2, TimeUnit.MINUTES)
+                .setConstraints(constraints).build();
+
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("following",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                workRequest);
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("follower",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                workRequest1);
+
         return START_STICKY;
     }
 
@@ -43,9 +71,29 @@ public class FlwService extends Service {
         Log.i("create", "c");
         Twitter.initialize(this);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+//
+//        loadFollowers(session, nextCursor);
+//        loadFollowings(session, nextCursor);
+        Constraints constraints = new Constraints.Builder()
+                .setRequiresCharging(true)
+                .build();
 
-        loadFollowers(session, nextCursor);
-        loadFollowings(session, nextCursor);
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
+                Builder(LoadFollowing.class, 2, TimeUnit.MINUTES)
+                .setConstraints(constraints).build();
+
+        PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
+                Builder(LoadFollower.class, 2, TimeUnit.MINUTES)
+                .setConstraints(constraints).build();
+
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("following",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest);
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("follower",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest1);
 
 
     }
