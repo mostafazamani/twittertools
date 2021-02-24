@@ -2,15 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundcolor"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:layout_width="55dp"
         android:layout_height="55dp"
         android:id="@+id/topnfy"
-        android:background="?attr/cardBackground"
-        android:elevation="8dp"
+        app:cardBackgroundColor="@color/lightBlue"
+        android:elevation="16dp"
+        app:cardCornerRadius="26.5dp"
+        android:layout_margin="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -19,14 +24,12 @@
             android:id="@+id/unfollow_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/shape_follow_btn"
+            android:layout_gravity="center"
+            android:gravity="center"
+          android:background="@android:color/transparent"
+            android:textSize="8sp"
             android:text="Unfollow All" />
-    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -53,7 +56,7 @@
     android:id="@+id/swipu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/topnfy">
+    >
     <ListView
         android:id="@+id/list_fnfy"
         android:layout_width="match_parent"

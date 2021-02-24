@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:background="?attr/cardBackground"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="16dp"
+
+    app:cardBackgroundColor="@color/milk"
+    android:background="@color/milk"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="15dp"
+
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="?attr/cardBackground"
+        android:layout_height="72dp">
+
+
     <androidx.cardview.widget.CardView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="1dp"
+
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         app:cardCornerRadius="30dp"
+        android:layout_gravity="center"
         android:padding="2dp"
         app:cardBackgroundColor="@color/lightBlue"
        >
@@ -35,17 +55,20 @@
             android:layout_gravity="start"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:text="Twitter Name"
+
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_id_fynf"
-            android:gravity="start|bottom"/>
+            android:gravity="start|center"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="Twitter Id"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
@@ -53,7 +76,7 @@
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_name_fynf"
-            android:layout_gravity="start|top"
+            android:layout_gravity="start|center"
             android:gravity="start"
             />
     </LinearLayout>
@@ -68,5 +91,5 @@
         android:padding="4dp"
         android:layout_margin="5dp"
         android:id="@+id/follow_btn_fynf"/>
-
-</LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

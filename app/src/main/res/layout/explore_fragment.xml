@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundcolor">
+    android:background="?attr/backgroundcolor"
+    android:orientation="vertical">
 
-    <HorizontalScrollView
-        android:id="@+id/scrollView_sugest"
+    <LinearLayout
+        android:id="@+id/lin_hor_scroll_explore"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+
+        android:orientation="horizontal">
+
+
+
 
         <Button
             android:id="@+id/add_to_sugest"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="2dp"
             android:text="Add Your Id to Other" />
-    </HorizontalScrollView>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/lightBlue"
+
+        >
+
+    </TextView>
 
     <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/scrollView_sugest"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:gravity="center"
         android:horizontalSpacing="1dp"
-
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="1dp"
@@ -33,5 +49,4 @@
         />
 
 
-
-</RelativeLayout>
+</LinearLayout>

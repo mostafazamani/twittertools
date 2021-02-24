@@ -2,31 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundcolor"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:id="@+id/topynf"
-        android:background="?attr/cardBackground"
-        android:elevation="8dp"
-        android:orientation="horizontal"
-        android:padding="4dp">
-
-
-        <Button
-            android:id="@+id/follow_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            app:cardBackgroundColor="@color/lightBlue"
+            android:elevation="16dp"
             android:layout_alignParentEnd="true"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/shape_follow_btn"
-            android:text="Follow All" />
-    </RelativeLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"
+            app:cardElevation="16dp"
+            app:cardCornerRadius="26.5dp">
+            <Button
+                android:id="@+id/follow_all"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+
+                android:textSize="8sp"
+                android:background="@android:color/transparent"
+                android:text="Follow All" />
+        </androidx.cardview.widget.CardView>
+
+
+
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -53,7 +58,7 @@
         android:id="@+id/swipy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topynf">
+        >
     <ListView
         android:id="@+id/list_fynf"
         android:layout_width="match_parent"
