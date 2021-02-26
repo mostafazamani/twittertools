@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -146,12 +147,12 @@ public class HomeBottomFragment extends Fragment {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 Toast.makeText(view.getContext(),
                                         "view at index " + index + " is clicked!",
                                         Toast.LENGTH_SHORT).show();
-                                new Remove(database).execute(index);
+                                new Remove(database,session).execute(index);
                                 adapter.removeItemAt(index);
                                 break;
 
@@ -169,7 +170,7 @@ public class HomeBottomFragment extends Fragment {
 
             }
         });
-        new ListOfCrush(view.getContext(), database, session, adapter,getLayoutInflater()).execute();
+        new ListOfCrush(view.getContext(), database, session, adapter, getLayoutInflater()).execute();
 
 
         btn_crushs.setOnClickListener(new View.OnClickListener() {
@@ -240,8 +241,6 @@ public class HomeBottomFragment extends Fragment {
 
         return view;
     }
-
-
 
 
     public void read_crushs() {
@@ -335,7 +334,7 @@ public class HomeBottomFragment extends Fragment {
                     /*Toast.makeText(HomeBottomFragment.this, ""+show.getProfile_name() + "\n"
                             +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();*/
                     int cf = show.getFollowers_count() + show.getFollowings_count();
-                   // preferences.edit().putInt("CP", cf).apply();
+                    // preferences.edit().putInt("CP", cf).apply();
 
 
                     new CountDownTimer(5000, 1000) {
@@ -465,12 +464,12 @@ public class HomeBottomFragment extends Fragment {
         CircularItemAdapter adapter;
 
         public ListOfCrush(Context context, UserCrushDatabase database, TwitterSession session,
-                           CircularItemAdapter adapter,LayoutInflater minf) {
+                           CircularItemAdapter adapter, LayoutInflater minf) {
             this.context = context;
             this.database = database;
             this.session = session;
             this.adapter = adapter;
-            this.minf = minf ;
+            this.minf = minf;
         }
 
         @Override
@@ -503,7 +502,6 @@ public class HomeBottomFragment extends Fragment {
                                     Picasso.with(context).load(jsonObject.get("profile_image_url").getAsString()).into(itemView);
                                     Log.i("ciecle_list", "bit");
                                     adapter.addItem(v);
-
 
 
                                 } catch (Exception e) {
@@ -557,16 +555,33 @@ public class HomeBottomFragment extends Fragment {
 
     public static class Remove extends AsyncTask<Integer, Void, Void> {
         UserCrushDatabase database;
+        public FirebaseFirestore firestore;
+        TwitterSession session;
 
-        public Remove(UserCrushDatabase database) {
+        public Remove(UserCrushDatabase database, TwitterSession session) {
             this.database = database;
+            this.session = session;
+            firestore = FirebaseFirestore.getInstance();
+            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                    .setTimestampsInSnapshotsEnabled(true)
+                    .build();
+            firestore.setFirestoreSettings(settings);
         }
 
 
         @Override
         protected Void doInBackground(Integer... integers) {
             database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(integers[0]));
-            Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().size()));
+
+            firestore.collection("crush")
+                    .document(String.valueOf(database.userCrushDao().getUserCrush().get(integers[0]).getId()))
+                    .update(String.valueOf(session.getUserId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.i("removeItem", "remove from fire base");
+                }
+            });
+
 
             return null;
         }

@@ -37,6 +37,7 @@ public class LoadFollower extends Worker {
     SharedPreferences preferences;
     private int prog = 0;
     long min;
+    long ou;
 
 
     public LoadFollower(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -48,6 +49,7 @@ public class LoadFollower extends Worker {
         countFollower = preferences.getInt("FRC", 0);
         day = preferences.getLong("day", 0);
         min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollower", 16L)) / 60000;
+        ou = ((System.currentTimeMillis()) - preferences.getLong("dayfollower", System.currentTimeMillis())) / 60000;
         Log.i("followr", "constructor");
     }
 
@@ -56,8 +58,13 @@ public class LoadFollower extends Worker {
     public Result doWork() {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start2");
+        if (ou > 2) {
+            preferences.edit().putInt("FollowerCount", 0).apply();
+            loadFollowers(session, nextCursor);
+        }
 
-        loadFollowers(session, nextCursor);
+        if (nextCursor!=-1)
+            loadFollowers(session, nextCursor);
 
         return Result.success();
     }
@@ -105,7 +112,10 @@ public class LoadFollower extends Worker {
                                     loadFollowers(twitterSession, fol.getNextCursor());
                                 } else {
                                     preferences.edit().putLong("FollowerC", -1L).apply();
+                                    preferences.edit().putInt("FollowerCount", 1).apply();
                                     new progress(database).execute(new ProgressState(100));
+                                    preferences.edit().putLong("dayfollower",  System.currentTimeMillis()).apply();
+
                                 }
                             }
                         }.start();
@@ -118,8 +128,11 @@ public class LoadFollower extends Worker {
                         } else {
                             countFollower = 0;
                             preferences.edit().putLong("FollowerC", -1L).apply();
+                            preferences.edit().putInt("FollowerCount", 1).apply();
                             preferences.edit().putInt("FRC", countFollower).apply();
                             new progress(database).execute(new ProgressState(100));
+                            preferences.edit().putLong("dayfollower",  System.currentTimeMillis()).apply();
+
                         }
                     }
 

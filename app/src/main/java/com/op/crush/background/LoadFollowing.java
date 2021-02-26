@@ -51,7 +51,7 @@ public class LoadFollowing extends Worker {
         countFollowing = preferences.getInt("FIC", 0);
         day = preferences.getLong("day", 0);
         min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollowing", System.currentTimeMillis())) / 60000;
-        ou = ((System.currentTimeMillis()) - preferences.getLong("day", System.currentTimeMillis())) / 60000;
+        ou = ((System.currentTimeMillis()) - preferences.getLong("dayfollowing", System.currentTimeMillis())) / 60000;
         Log.i("following", "constructor" + pc);
     }
 
@@ -61,7 +61,13 @@ public class LoadFollowing extends Worker {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start1");
 
-        lFollowings(session, nextCursor);
+        if (ou > 2) {
+            preferences.edit().putInt("FollowingCount", 0).apply();
+            lFollowings(session, nextCursor);
+        }
+
+        if (nextCursor != -1)
+            lFollowings(session, nextCursor);
 
         return Result.success();
     }
@@ -109,7 +115,10 @@ public class LoadFollowing extends Worker {
                                     lFollowings(twitterSession, fol.getNextCursor());
                                 } else {
                                     preferences.edit().putLong("FollowingC", -1L).apply();
+                                    preferences.edit().putInt("FollowingCount", 1).apply();
                                     new progress(database).execute(new ProgressState(100));
+                                    preferences.edit().putLong("dayfollowing", System.currentTimeMillis()).apply();
+
                                 }
                             }
                         }.start();
@@ -125,6 +134,9 @@ public class LoadFollowing extends Worker {
                             preferences.edit().putLong("FollowingC", -1L).apply();
                             preferences.edit().putInt("FIC", countFollowing).apply();
                             new progress(database).execute(new ProgressState(100));
+                            preferences.edit().putInt("FollowingCount", 1).apply();
+                            preferences.edit().putLong("dayfollowing", System.currentTimeMillis()).apply();
+
                         }
                     }
 

@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
                     //String token = authToken.token;
                     //  String secret = authToken.secret;
 
-                    preferences1.edit().putLong("day",  System.currentTimeMillis()+90000000).apply();
+                    preferences1.edit().putLong("dayfollowing",  System.currentTimeMillis()-90000000).apply();
+                    preferences1.edit().putLong("dayfollower",  System.currentTimeMillis()-90000000).apply();
 
                     MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
                     myTwitterApiClient.getCustomTwitterService().User(session.getUserId(), session.getUserName()).enqueue(new retrofit2.Callback<UserShow>() {

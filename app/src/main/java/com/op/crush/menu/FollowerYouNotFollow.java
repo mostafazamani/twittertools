@@ -3,6 +3,7 @@ package com.op.crush.menu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,6 +78,7 @@ public class FollowerYouNotFollow extends Fragment {
     private TwitterSession session;
     private RewardedVideoAd mRewardedVideoAd;
     SwipeRefreshLayout refreshLayout;
+    SharedPreferences preferences;
     int j = 0;
 
 
@@ -109,6 +111,26 @@ public class FollowerYouNotFollow extends Fragment {
         dialogf.setMessage("Following...");
         dialogf.setCancelable(false);
 
+        preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
+
+        if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
+            progressBar.setVisibility(View.INVISIBLE);
+            ynfAdapter = new FollowerYnfAdapter(view.getContext());
+            list.setAdapter(ynfAdapter);
+
+            db = DbFollow.getInstance(view.getContext());
+            db.getReadableDatabase();
+
+            fo = new ArrayList<>();
+
+            followList = db.getExpectItem(DbFollow.TB_FOLLOWER, DbFollow.TB_FOLLOWING);
+            ynfAdapter.AddToList(followList);
+            ynfAdapter.notifyDataSetChanged();
+            db.close();
+
+        }
+
+
         final int[] x = {0};
         model = new ViewModelProvider(getActivity()).get(ProgressViewModel.class);
         model.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressState>>() {
@@ -120,7 +142,7 @@ public class FollowerYouNotFollow extends Fragment {
                 if (stat == 100) {
                     x[0] += 1;
 
-                    if (x[0] > 1) {
+                    if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                         progressBar.setVisibility(View.INVISIBLE);
                         ynfAdapter = new FollowerYnfAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
@@ -146,7 +168,7 @@ public class FollowerYouNotFollow extends Fragment {
             @Override
             public void onRefresh() {
 
-                if (x[0] > 1) {
+                if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
 
                     ynfAdapter = new FollowerYnfAdapter(getContext());
                     list.setAdapter(ynfAdapter);
