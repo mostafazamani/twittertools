@@ -63,7 +63,7 @@
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_id_fynf"
-            android:gravity="start|center"/>
+            android:gravity="start|bottom"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:background="@android:color/transparent"
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_name_fynf"
-            android:layout_gravity="start|center"
+            android:layout_gravity="start|top"
             android:gravity="start"
             />
     </LinearLayout>

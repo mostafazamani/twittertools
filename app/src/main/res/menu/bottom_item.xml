@@ -4,7 +4,7 @@
     <item
         android:title="Downloader"
         android:id="@+id/item_5"
-        android:icon="@drawable/ic_baseline_cloud_download_24" />
+        android:icon="@drawable/download_selector" />
     <item
         android:title="Tweets"
         android:id="@+id/item_3"
@@ -13,7 +13,7 @@
     <item
         android:title="Users"
         android:id="@+id/item_4"
-        android:icon="@drawable/ic_user"/>
+        android:icon="@drawable/user_selector"/>
 
     <item
         android:title="Explore"
@@ -22,6 +22,6 @@
     <item
     android:title="Home"
     android:id="@+id/item_1"
-    android:icon="@drawable/home_selector" />
+    android:icon="@drawable/crush_menu_selector" />
 
 </menu>

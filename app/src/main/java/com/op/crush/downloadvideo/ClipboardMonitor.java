@@ -155,7 +155,7 @@ public class ClipboardMonitor extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getPackageName() + "-" + getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_baseline_cloud_download_24)
+                .setSmallIcon(R.drawable.ic_baseline_cloud_download_tint)
                 .setContentTitle("Auto Download")
                 .setContentText("copy link to download")
                 .setTicker("TICKER")
