@@ -53,6 +53,8 @@ public class LoadFollowing extends Worker {
         min = ((System.currentTimeMillis()) - preferences.getLong("timeRFollowing", System.currentTimeMillis())) / 60000;
         ou = ((System.currentTimeMillis()) - preferences.getLong("dayfollowing", System.currentTimeMillis())) / 60000;
         Log.i("following", "constructor" + pc);
+        db = DbFollow.getInstance(getApplicationContext());
+        db.getWritableDatabase();
     }
 
     @NonNull
@@ -61,13 +63,16 @@ public class LoadFollowing extends Worker {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start1");
 
-        if (ou > 2) {
-            preferences.edit().putInt("FollowingCount", 0).apply();
+        if (ou > 2 ) {
+            if (nextCursor == -1) {
+                preferences.edit().putInt("FollowingCount", 0).apply();
+                db.DropTable(DbFollow.TB_FOLLOWING);
+                db.close();
+            }
+            lFollowings(session, nextCursor);
+        } else if (nextCursor != -1) {
             lFollowings(session, nextCursor);
         }
-
-        if (nextCursor != -1)
-            lFollowings(session, nextCursor);
 
         return Result.success();
     }

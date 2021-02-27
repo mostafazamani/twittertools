@@ -32,6 +32,18 @@ public class DbFollow extends SQLiteOpenHelper {
             + follow.KEY_IMAGE + " TEXT " +
             ");";
 
+    private static final String CMD1k = "CREATE TABLE IF NOT EXISTS " + TB_FOLLOWER + " ("
+            + follow.Key_ID + " INTEGER, "
+            + follow.KEY_NAME + " TEXT, "
+            + follow.KEY_IMAGE + " TEXT " +
+            ");";
+
+    private static final String CMD2k = "CREATE TABLE IF NOT EXISTS " + TB_FOLLOWING + " ("
+            + follow.Key_ID + " INTEGER, "
+            + follow.KEY_NAME + " TEXT, "
+            + follow.KEY_IMAGE + " TEXT " +
+            ");";
+
 
     public static DbFollow getInstance(Context context) {
         if (mInstance == null) {
@@ -61,14 +73,18 @@ public class DbFollow extends SQLiteOpenHelper {
     }
 
 
-    public void AddItem(follow items,String tb_name) {
+    public void AddItem(follow items, String tb_name) {
 
 
         SQLiteDatabase sd = DbFollow.getInstance(context).getWritableDatabase();
+        if (tb_name == DbFollow.TB_FOLLOWING)
+            sd.execSQL(CMD2k);
+        if (tb_name == DbFollow.TB_FOLLOWER)
+            sd.execSQL(CMD1k);
 //        sd.beginTransaction();
-        if (!CheckItem(items.getId(),tb_name)) {
+        if (!CheckItem(items.getId(), tb_name)) {
 
-           sd.insert(tb_name, null, items.getContentValues());
+            sd.insert(tb_name, null, items.getContentValues());
 
         }
 //        sd.setTransactionSuccessful();
@@ -78,7 +94,7 @@ public class DbFollow extends SQLiteOpenHelper {
 
     }
 
-    public boolean CheckItem(long i,String tb_name) {
+    public boolean CheckItem(long i, String tb_name) {
         SQLiteDatabase db = getReadableDatabase();
         boolean ch = false;
 //        db.beginTransaction();
@@ -97,7 +113,7 @@ public class DbFollow extends SQLiteOpenHelper {
         return ch;
     }
 
-    public follow getOneItem(long i,String tb_name) {
+    public follow getOneItem(long i, String tb_name) {
         SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
 //        db.beginTransaction();
@@ -105,7 +121,7 @@ public class DbFollow extends SQLiteOpenHelper {
         follow f = new follow();
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-           do {
+            do {
 
                 f.setId(cursor.getLong(cursor.getColumnIndex(follow.Key_ID)));
                 f.setName(cursor.getString(cursor.getColumnIndex(follow.KEY_NAME)));
@@ -159,12 +175,13 @@ public class DbFollow extends SQLiteOpenHelper {
         return lsl;
 
     }
-    public List<follow> getExpectItem(String tb_name1,String tb_name2) {
+
+    public List<follow> getExpectItem(String tb_name1, String tb_name2) {
 
         SQLiteDatabase db = DbFollow.getInstance(context).getReadableDatabase();
         List<follow> lsl = new ArrayList<>();
 //        db.beginTransaction();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + tb_name1 +" EXCEPT SELECT * FROM " + tb_name2, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + tb_name1 + " EXCEPT SELECT * FROM " + tb_name2, null);
 
 
         if (cursor.getCount() != 0) {
@@ -191,16 +208,24 @@ public class DbFollow extends SQLiteOpenHelper {
 
     }
 
-    public void DeleteItem(long id,String tb_name) {
+    public void DeleteItem(long id, String tb_name) {
 
         SQLiteDatabase db = DbFollow.getInstance(context).getReadableDatabase();
 
         db.delete(tb_name, follow.Key_ID + " = '" + id + "';", null);
 
 
-       if (db.isOpen()) db.close();
+        if (db.isOpen()) db.close();
 
 
     }
 
+
+    public void DropTable(String tbname) {
+        SQLiteDatabase db = DbFollow.getInstance(context).getReadableDatabase();
+
+        db.execSQL("DROP TABLE IF EXISTS " + tbname);
+
+
+    }
 }
