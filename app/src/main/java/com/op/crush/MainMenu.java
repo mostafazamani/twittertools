@@ -258,6 +258,7 @@ public class MainMenu extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Toast.makeText(MainMenu.this, "dialog", Toast.LENGTH_SHORT).show();
                 Dialog dialog = new Dialog(MainMenu.this);
+
                 dialog.setTitle("select color");
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.theme_dialog);
@@ -288,7 +289,12 @@ public class MainMenu extends AppCompatActivity {
                 int id = drawItem.getItemId();
                 switch (id) {
                     case R.id.about_us:
-                        Toast.makeText(MainMenu.this, "My Account", Toast.LENGTH_SHORT).show();
+
+                        Dialog about_us=new Dialog(MainMenu.this,android.R.style.Theme_NoTitleBar_Fullscreen);
+                        about_us.setTitle("select color");
+                        about_us.setCancelable(true);
+                        about_us.setContentView(R.layout.about_us);
+                        about_us.show();
                         break;
                     case R.id.settings:
                         Toast.makeText(MainMenu.this, "Settings", Toast.LENGTH_SHORT).show();

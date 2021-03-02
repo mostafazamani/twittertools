@@ -30,5 +30,10 @@
     <string name="starting_download">Starting download...</string>
     <string name="invalid_url">Invalid Video URL or Check Internet Connection</string>
 
+    <string name="nav_footer_text">Copyright March 2021 \n
+    Version 2.1.2
+    </string>
+
+
 
 </resources>

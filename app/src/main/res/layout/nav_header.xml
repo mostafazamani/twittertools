@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/profile_banner"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+
         android:scaleType="centerCrop" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/profile_banner"
+        android:background="@color/lightBlue" />
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/profile_image_card"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:id="@+id/profile_image_card"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="74dp"
-        android:background="@color/lightBlue"
+        android:layout_gravity="center"
+        app:cardCornerRadius="50dp"
+        android:layout_marginTop="100dp"
         app:cardBackgroundColor="@color/lightBlue"
-        app:cardCornerRadius="50dp">
+        android:elevation="16dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="97dp"
             android:layout_height="97dp"
             android:layout_gravity="center"
             android:layout_margin="3dp"
-
             android:background="@color/whiteSmoke"
             app:cardBackgroundColor="?attr/cardBackground"
             app:cardCornerRadius="50dp">
@@ -35,28 +41,90 @@
             <ImageView
                 android:id="@+id/nav_profile"
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:layout_gravity="center" />
 
 
         </androidx.cardview.widget.CardView>
     </androidx.cardview.widget.CardView>
+
     <TextView
+        android:id="@+id/header_twitter_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/name_text"
+        android:layout_below="@+id/profile_image_card"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
+        android:gravity="center"
         android:padding="2dp"
-        android:layout_below="@+id/profile_image_card"/>
+        android:text="Twitter Name"
+        android:textColor="?attr/textcolor" />
+
+    <TextView
+        android:id="@+id/header_twitter_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_twitter_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:padding="2dp"
+
+        android:text="Twitter ID"
+        android:textColor="?attr/textcolor" />
+
+    <LinearLayout
+        android:id="@+id/header_lin"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_twitter_id"
+        android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Follower"
+                android:paddingEnd="9dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:paddingStart="9dp"
+                android:background="@drawable/shape_red_blue"
+                android:textColor="?attr/textcolor"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Folloing"
+            android:paddingEnd="9dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingStart="9dp"
+            android:background="@drawable/shape_red_blue"
+
+            android:textColor="?attr/textcolor"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/id_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="2dp"
-        android:padding="2dp"
-        android:layout_below="@+id/name_text"/>
+        android:layout_height="2dp"
+        android:layout_below="@+id/header_lin"
+        android:layout_marginTop="4dp"
+        android:background="#D60000"
+        android:elevation="8dp" />
 
 
 </RelativeLayout>

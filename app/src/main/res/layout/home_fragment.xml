@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="1.5dp"
-        android:background="?attr/backgroundcolor"
+        android:background="@color/lightBlue"
         android:elevation="8dp"
         android:orientation="horizontal">
 
@@ -56,29 +56,17 @@
 
     </LinearLayout>-->
     </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:layout_below="@+id/toolbar_lin_card"
-        android:elevation="6dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="?attr/boardcolor"
-        app:cardCornerRadius="23dp"
-        >
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        
-        app:cardBackgroundColor="?attr/cardBackground"
-        app:cardCornerRadius="23dp"
-        >
+
+
 
 
     <com.jh.circularlist.CircularListView
         android:id="@+id/my_circular_list"
         android:layout_width="match_parent"
+
+        android:elevation="6dp"
+        android:layout_below="@+id/toolbar_lin_card"
+        android:background="@drawable/shape_crush_list"
         android:layout_height="350dp">
 
         <androidx.cardview.widget.CardView
@@ -109,8 +97,6 @@
         </androidx.cardview.widget.CardView>
     </com.jh.circularlist.CircularListView>
 
-    </androidx.cardview.widget.CardView>
-    </androidx.cardview.widget.CardView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
