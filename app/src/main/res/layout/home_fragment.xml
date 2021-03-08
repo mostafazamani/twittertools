@@ -122,7 +122,7 @@
             android:elevation="6dp"
             app:cardElevation="6dp"
             android:padding="3dp"
-            app:cardBackgroundColor="?attr/boardcolor"
+            app:cardBackgroundColor="@color/redlove"
             app:cardCornerRadius="23dp">
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                android:layout_marginStart="1dp"
                android:layout_marginEnd="1dp"
                android:layout_gravity="center"
-               app:cardBackgroundColor="?attr/boardcolor"
+               app:cardBackgroundColor="@color/redlove"
 
                app:cardCornerRadius="28dp">
 
