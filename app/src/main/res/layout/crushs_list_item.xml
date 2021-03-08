@@ -2,21 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="86dp"
-    android:background="?attr/cardBackground"
+    android:background="@color/redlove"
+    android:layout_marginBottom="3dp"
+    android:layout_marginStart="13dp"
+    android:layout_marginEnd="13dp"
+    android:layout_marginTop="3dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:orientation="horizontal">
         <androidx.cardview.widget.CardView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_margin="1dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginBottom="11dp"
             app:cardCornerRadius="40dp"
             android:padding="2dp"
+            android:layout_gravity="center"
             app:cardBackgroundColor="@color/lightBlue"
             >
             <ImageView
@@ -51,16 +59,7 @@
             android:textColor="?attr/textcolor"
             android:id="@+id/profile_id_crushs_list"
             android:gravity="start|bottom"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="Direct"
-            android:layout_gravity="center"
-            android:background="@drawable/shape_follow_btn"
-            android:gravity="center"
-            android:padding="4dp"
-            android:layout_margin="5dp"
-            android:id="@+id/massage_btn_crushs_list"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,6 +76,37 @@
             />
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
 
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Direct"
+                android:layout_marginBottom="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_follow_btn"
+                android:gravity="center"
+
+                android:id="@+id/uncrush_btn_crushs_list"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Direct"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_follow_btn"
+                android:gravity="center"
+
+
+                android:id="@+id/massage_btn_crushs_list"/>
+
+        </LinearLayout>
     </LinearLayout>
+
+
 </RelativeLayout>
