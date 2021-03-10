@@ -53,7 +53,7 @@
             android:paddingLeft="8dp"
             android:paddingTop="4dp"
             android:paddingRight="8dp"
-            android:textColor="?attr/textcolor"
+            android:textColor="@color/textcolor"
             android:textSize="12sp"
             android:textStyle="bold"
             tools:text="Twitter Name" />
@@ -65,11 +65,12 @@
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@+id/add_to_follower"
             android:layout_toLeftOf="@+id/add_to_follower"
-            android:background="@color/milk"
+            android:background="@color/background2"
             android:minHeight="15dp"
             android:maxHeight="25dp"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:maxLines="1"
+            android:textColorHint="@color/textcolor_tint"
             android:textColor="?attr/textcolor"
             android:textSize="10sp"
             tools:text="Twitter ID" />

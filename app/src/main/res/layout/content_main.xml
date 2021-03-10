@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundcolor"
+    android:background="@color/background"
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:openDrawer="start">
@@ -23,7 +23,7 @@
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/backgroundcolor">
+            android:background="@color/background">
 
             <!--<LinearLayout
                 android:id="@+id/toolbar_lin"
@@ -72,9 +72,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/bottom_nav"
                 android:background="?attr/backgroundcolor" />
-                <!--android:layout_below="@+id/toolbar_lin"-->
-
-
+            <!--android:layout_below="@+id/toolbar_lin"-->
 
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -84,10 +82,9 @@
                 android:layout_alignParentBottom="true"
                 android:animateLayoutChanges="true"
                 android:animationCache="true"
-                android:background="?attr/backgroundcolor"
+                android:background="@color/background2"
                 android:elevation="8dp"
                 android:theme="@style/AppTheme"
-
                 app:elevation="8dp"
                 app:itemBackground="?attr/backgroundcolor"
                 app:itemHorizontalTranslationEnabled="true"
@@ -105,7 +102,7 @@
         android:layout_gravity="end|right"
         android:animateLayoutChanges="true"
         android:animationCache="true"
-        android:background="?attr/backgroundcolor"
+        android:background="@color/background2"
         android:fitsSystemWindows="true"
         android:layoutMode="clipBounds"
         android:theme="@style/AppTheme"

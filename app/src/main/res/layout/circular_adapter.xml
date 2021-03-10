@@ -21,8 +21,8 @@
             android:layout_height="97dp"
             android:layout_gravity="center"
             android:layout_margin="3dp"
-            android:background="@color/whiteSmoke"
-            app:cardBackgroundColor="?attr/cardBackground"
+            android:background="@color/background2"
+            app:cardBackgroundColor="@color/background2"
             app:cardCornerRadius="50dp">
 
 

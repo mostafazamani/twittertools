@@ -9,6 +9,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/nightswitch"
             android:layout_width="fill_parent"
+            android:checked="false"
             android:layout_height="match_parent"
             android:text=""/>
     </LinearLayout>

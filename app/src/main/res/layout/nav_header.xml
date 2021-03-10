@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/profile_banner"
@@ -23,17 +24,17 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        app:cardCornerRadius="50dp"
         android:layout_marginTop="100dp"
+        android:elevation="16dp"
         app:cardBackgroundColor="@color/lightBlue"
-        android:elevation="16dp">
+        app:cardCornerRadius="50dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="97dp"
             android:layout_height="97dp"
             android:layout_gravity="center"
             android:layout_margin="3dp"
-            android:background="@color/whiteSmoke"
+            android:background="@color/background"
             app:cardBackgroundColor="?attr/cardBackground"
             app:cardCornerRadius="50dp">
 
@@ -58,7 +59,7 @@
         android:gravity="center"
         android:padding="2dp"
         android:text="Twitter Name"
-        android:textColor="?attr/textcolor" />
+        android:textColor="@color/textcolor" />
 
     <TextView
         android:id="@+id/header_twitter_id"
@@ -71,48 +72,46 @@
         android:padding="2dp"
 
         android:text="Twitter ID"
-        android:textColor="?attr/textcolor" />
+        android:textColor="@color/textcolor_tint" />
 
     <LinearLayout
         android:id="@+id/header_lin"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header_twitter_id"
+        android:gravity="center"
         android:orientation="horizontal">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Follower"
-                android:paddingEnd="9dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:paddingStart="9dp"
-                android:background="@drawable/shape_red_blue"
-                android:textColor="?attr/textcolor"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Folloing"
-            android:paddingEnd="9dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:paddingStart="9dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/shape_red_blue"
+            android:gravity="center"
+            android:paddingStart="9dp"
+            android:paddingEnd="9dp"
+            android:text="Follower"
+            android:textColor="@color/textcolor"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-            android:textColor="?attr/textcolor"
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/shape_red_blue"
+            android:gravity="center"
+            android:paddingStart="9dp"
+            android:paddingEnd="9dp"
+            android:text="Folloing"
+
+            android:textColor="@color/textcolor"
             android:textSize="15sp"
             android:textStyle="bold" />
 

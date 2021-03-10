@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -80,7 +81,7 @@ public class MainMenu extends AppCompatActivity {
     boolean night;
 
 
-    SharedPreferences preferences;
+    SharedPreferences preferences , night_preferences= null;
     BottomNavigationView bottomNavigationView;
     ImageView profile, banner;
     private DrawerLayout drawerLayout;
@@ -101,7 +102,6 @@ public class MainMenu extends AppCompatActivity {
     boolean f5 = true;
     TextView text;
     TextView t;
-
     private ProgressViewModel progressViewModel;
 
     @Override
@@ -151,6 +151,7 @@ public class MainMenu extends AppCompatActivity {
 
 
 
+
       //  hamberger = findViewById(R.id.hamberger_btn);
       //  bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
@@ -165,16 +166,12 @@ public class MainMenu extends AppCompatActivity {
         //  setSupportActionBar(toolbar); //toolbar
 
         preferences = getSharedPreferences("Courser", Context.MODE_PRIVATE);
-
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
-
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
-
-
         banner = navigationView.getHeaderView(0).findViewById(R.id.profile_banner);
         profile = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
 
@@ -187,9 +184,6 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 */
-
-
-
 
 
         progressViewModel.getState().observe(this, new Observer<List<ProgressState>>() {
@@ -205,17 +199,45 @@ public class MainMenu extends AppCompatActivity {
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-
         user_info(session, MainMenu.this);
 
 
 
 
         ////////////////////Night Mode
+
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
         View actionView = MenuItemCompat.getActionView(menuItem);
+        nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
+        night_preferences = getSharedPreferences("night" , 0);
+        Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
 
+        if (aBoolean){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            nightswitch.setChecked(true);
+        }
+
+        nightswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    nightswitch.setChecked(true);
+                    SharedPreferences.Editor editor = night_preferences.edit();
+                    editor.putBoolean("night_mode",true);
+                    editor.commit();
+                }
+                else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    nightswitch.setChecked(false);
+                    SharedPreferences.Editor editor = night_preferences.edit();
+                    editor.putBoolean("night_mode",false);
+                    editor.commit();
+                }
+            }
+        });
+/*
         nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme);
@@ -242,7 +264,7 @@ public class MainMenu extends AppCompatActivity {
                     }
                 }
             }
-        });
+        });*/
         ////////////////////Night Mode End//////////////////////
         ///////////theme//////////
         MenuItem menutheme = menu.findItem(R.id.theme);
@@ -296,15 +318,14 @@ public class MainMenu extends AppCompatActivity {
                         about_us.setContentView(R.layout.about_us);
                         about_us.show();
                         break;
-                    case R.id.settings:
-                        Toast.makeText(MainMenu.this, "Settings", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.mycart: {
-                        Toast.makeText(MainMenu.this, "My Cart", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
+
                     case R.id.nav_switch: {
-                        if (night == true) {
+                        if (nightswitch.isChecked())
+                        nightswitch.setChecked(true);
+                        else
+                            nightswitch.setChecked(true);
+
+                      /*  if (night == true) {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             nightswitch.setChecked(true);
                             restartApp();
@@ -312,7 +333,7 @@ public class MainMenu extends AppCompatActivity {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             nightswitch.setChecked(false);
                             restartApp();
-                        }
+                        }*/
                     }
                     case R.id.theme: {
 

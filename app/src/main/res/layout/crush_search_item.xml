@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:background="?attr/cardBackground"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
     <androidx.cardview.widget.CardView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center"
         android:layout_margin="1dp"
         app:cardCornerRadius="30dp"
         android:padding="2dp"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            android:background="@color/whiteSmoke"
+            android:background="@color/background2"
             android:id="@+id/profile_image_crush_search"
             />
     </androidx.cardview.widget.CardView>
@@ -40,7 +40,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
+            android:textColor="@color/textcolor"
             android:id="@+id/profile_id_crush_search"
             android:gravity="start|bottom"/>
         <TextView
@@ -52,7 +52,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
+            android:textColor="@color/textcolor_tint"
             android:id="@+id/profile_name_crush_search"
             android:layout_gravity="start|top"
             android:gravity="start"

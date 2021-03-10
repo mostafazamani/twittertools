@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="?attr/backgroundcolor"
+    android:background="@color/background"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -31,7 +31,7 @@
         android:layout_marginEnd="4dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="?attr/textcolor"
+        android:textColor="@color/textcolor"
         android:text="@string/name_app_description"
         android:layout_height="match_parent"/>
 

@@ -5,8 +5,8 @@
     app:cardCornerRadius="22dp"
     app:cardElevation="16dp"
 
-    app:cardBackgroundColor="@color/milk"
-    android:background="@color/milk"
+    app:cardBackgroundColor="@color/background2"
+    android:background="@color/background2"
     android:layout_marginStart="15dp"
     android:layout_marginTop="15dp"
     android:layout_marginEnd="15dp"
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
 
-            android:background="@color/whiteSmoke"
+            android:background="@color/background"
             android:id="@+id/profile_image_fnfy"
             />
     </androidx.cardview.widget.CardView>
@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
+
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="Twitter Name"
@@ -61,7 +62,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
+            android:textColor="@color/textcolor"
             android:id="@+id/profile_id_fnfy"
             android:gravity="start|bottom"/>
         <TextView
@@ -73,7 +74,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
+            android:textColor="@color/textcolor_tint"
             android:id="@+id/profile_name_fnfy"
             android:layout_gravity="start|top"
             android:gravity="start"

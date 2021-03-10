@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent">
 
 
@@ -46,6 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="5dp"
+            android:textColor="@color/textcolor"
+            android:textColorHint="@color/textcolor_tint"
             android:text="@string/select_quality" />
 
     </LinearLayout>

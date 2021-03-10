@@ -11,7 +11,14 @@
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
 
     <string name="name_app_description">Crush Finder \n
     Twitter Tools
@@ -23,15 +30,11 @@
     <string name="starting_download">Starting download...</string>
     <string name="invalid_url">Invalid Video URL or Check Internet Connection</string>
 
-    <string name="developer_name">Mostafa Zamani \n and \n Mehdi Aalipour</string>
     <string name="nav_footer_text">Copyright March 2021 \n
     Version 2.1.2
     </string>
 
-
-
-    <!--Diffrent Text In DAY and NIGHT-->
-    <string name="night_day">Light Mode</string>
+    <string name="night_day">Night Mode</string>
 
 
 </resources>

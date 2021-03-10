@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#eeeeee</color>
-    <color name="background2">#C4C4C4</color>
+    <color name="background">#272727</color>
+    <color name="background2">#4E4E4E</color>
     <color name="colorAccent">#11b6ed</color>
     <color name="lightBlue">#11b6ed</color>
 
-    <color name="textcolor">#000000</color>
-    <color name="textcolor_tint">#4E4E4E</color>
+    <color name="textcolor">#FFFFFF</color>
+    <color name="textcolor_tint">#C4C4C4</color>
 
 
+    <color name="milk">#4E4E4E</color>
 
-    <color name="milk">#C4C4C4</color>
-    <color name="whiteSmoke">#eeeeee</color>
+    <color name="whiteSmoke">#272727</color>
     <!-- set-->
     <color name="denim"> #131e3a</color>
     <color name="babyblue"> #89cfef</color>
     <color name="azure"> #0080fe</color>
     <color name="space"> #1c2951</color>
     <color name="redlove">#D60000</color>
-
 </resources>

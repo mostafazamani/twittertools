@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+    android:background="@color/background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,14 +16,14 @@
         android:id="@+id/follow_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/cardBackground"
+        android:background="@color/background2"
         android:elevation="6dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/follow_view_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:background="?attr/backgroundcolor"
+        android:background="@color/background"
         android:layout_below="@id/follow_tab_layout"/>
     </RelativeLayout>
 </LinearLayout>

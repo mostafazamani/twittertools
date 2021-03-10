@@ -33,7 +33,7 @@
 
             >
 
-            <solid android:color="@color/whiteSmoke">
+            <solid android:color="@color/background">
 
             </solid>
 

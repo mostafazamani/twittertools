@@ -8,12 +8,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="8dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:cardBackgroundColor="@color/lightBlue"
             app:cardCornerRadius="20dp"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
             >
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="20dp"
         android:layout_gravity="center"
@@ -32,12 +32,15 @@
         >
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:textStyle="italic"
             android:id="@+id/crush_search_edittext"
             android:padding="6dp"
+            android:background="@color/background2"
 
+            android:textColor="@color/textcolor"
+            android:textColorHint="@color/textcolor_tint"
             android:outlineAmbientShadowColor="@color/lightBlue"
             android:outlineSpotShadowColor="@color/lightBlue"
             android:textColorLink="@color/lightBlue"
@@ -47,7 +50,7 @@
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:cardBackgroundColor="@color/lightBlue"
             app:cardCornerRadius="50dp"
             android:layout_weight="7"
@@ -60,7 +63,7 @@
             <ImageButton
                 android:id="@+id/crush_search_button"
                 android:layout_width="match_parent"
-                android:layout_height="21dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
 
                 android:layout_margin="3dp"

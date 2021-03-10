@@ -1,95 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    app:cardCornerRadius="22dp"
-    app:cardElevation="16dp"
-
-    app:cardBackgroundColor="@color/milk"
-    android:background="@color/milk"
     android:layout_marginStart="15dp"
+
     android:layout_marginTop="15dp"
     android:layout_marginEnd="15dp"
+    android:background="@color/background2"
+    app:cardBackgroundColor="@color/background2"
+    app:cardCornerRadius="22dp"
 
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    app:cardElevation="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:layout_height="72dp"
         android:background="?attr/cardBackground"
-        android:layout_height="72dp">
+        android:orientation="horizontal">
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
 
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        app:cardCornerRadius="30dp"
-        android:layout_gravity="center"
-        android:padding="2dp"
-        app:cardBackgroundColor="@color/lightBlue"
-       >
-        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:padding="2dp"
+            app:cardBackgroundColor="@color/lightBlue"
+            app:cardCornerRadius="30dp">
+
+            <ImageView
+                android:id="@+id/profile_image_fynf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/background"
+                android:scaleType="fitXY" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_id_fynf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="start|bottom"
+                android:text="Twitter Name"
+                android:textColor="@color/textcolor" />
+
+            <TextView
+                android:id="@+id/profile_name_fynf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="start"
+                android:text="Twitter Id"
+                android:textColor="@color/textcolor_tint" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/follow_btn_fynf"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
             android:layout_gravity="center"
-            android:background="@color/whiteSmoke"
-            android:id="@+id/profile_image_fynf"
-            />
-    </androidx.cardview.widget.CardView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="Twitter Name"
-
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
-            android:id="@+id/profile_id_fynf"
-            android:gravity="start|bottom"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Twitter Id"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:background="@android:color/transparent"
-            android:textColor="?attr/textcolor"
-            android:id="@+id/profile_name_fynf"
-            android:layout_gravity="start|top"
-            android:gravity="start"
-            />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Follow"
-        android:layout_gravity="center"
-        android:background="@drawable/shape_follow_btn"
-        android:gravity="center"
-        android:padding="4dp"
-        android:layout_margin="5dp"
-        android:id="@+id/follow_btn_fynf"/>
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_follow_btn"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Follow" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

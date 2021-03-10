@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteSmoke"
+    android:background="@color/background"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15dp">
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1.5dp"
-        app:cardBackgroundColor="?attr/boardcolor"
+        app:cardBackgroundColor="@color/lightBlue"
         app:cardCornerRadius="25dp"
         android:elevation="6dp"
         app:cardElevation="6dp"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_margin="1.5dp"
-            app:cardBackgroundColor="?attr/cardBackground"
+            app:cardBackgroundColor="@color/background2"
             app:cardCornerRadius="25dp"
             android:elevation="6dp"
             app:cardElevation="6dp"
@@ -40,14 +40,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
+        android:textColor="@color/textcolor"
         android:layout_gravity="center|top"
         android:elevation="6dp" />
 
     <Button
         android:id="@+id/btn_download"
         android:layout_width="wrap_content"
-        android:background="?attr/buttoncolor"
-        android:textColor="?attr/textcolor"
+        android:background="@drawable/shape_follow_btn"
+        android:textColor="@color/textcolor"
         android:layout_height="wrap_content"
         android:text="Download" />
 
@@ -55,6 +56,8 @@
         android:id="@+id/switch_download"
         android:layout_width="wrap_content"
 
+        android:textColor="@color/textcolor"
+        android:textColorHint="@color/textcolor"
         android:layout_height="wrap_content"
         android:text="Auto Download" />
 
