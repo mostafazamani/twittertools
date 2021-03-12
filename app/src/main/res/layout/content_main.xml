@@ -15,7 +15,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#020202"
+        android:background="@color/background"
         android:foregroundGravity="center"
         app:layoutDescription="@xml/scene">
 
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/bottom_nav"
-                android:background="?attr/backgroundcolor" />
+                android:background="@color/background" />
             <!--android:layout_below="@+id/toolbar_lin"-->
 
 
@@ -86,9 +86,9 @@
                 android:elevation="8dp"
                 android:theme="@style/AppTheme"
                 app:elevation="8dp"
-                app:itemBackground="?attr/backgroundcolor"
+                app:itemBackground="@color/background2"
                 app:itemHorizontalTranslationEnabled="true"
-                app:itemTextColor="?attr/textcolor"
+                app:itemTextColor="@color/textcolor"
                 app:labelVisibilityMode="selected"
                 app:menu="@menu/bottom_item" />
         </RelativeLayout>
@@ -102,13 +102,13 @@
         android:layout_gravity="end|right"
         android:animateLayoutChanges="true"
         android:animationCache="true"
-        android:background="@color/background2"
+        android:background="@color/background"
         android:fitsSystemWindows="true"
         android:layoutMode="clipBounds"
         android:theme="@style/AppTheme"
         app:headerLayout="@layout/nav_header"
-        app:itemBackground="?attr/backgroundcolor"
-        app:itemTextColor="?attr/textcolor"
+        app:itemBackground="@color/background"
+        app:itemTextColor="@color/textcolor"
         app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
 
 
