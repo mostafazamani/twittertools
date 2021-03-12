@@ -64,6 +64,7 @@ import com.op.crush.background.LoadFollowing;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -107,6 +108,7 @@ public class HomeBottomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.home_fragment, container, false);
+        Twitter.initialize(view.getContext());
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         firestore = FirebaseFirestore.getInstance();
@@ -152,8 +154,29 @@ public class HomeBottomFragment extends Fragment {
                                 Toast.makeText(view.getContext(),
                                         "view at index " + index + " is clicked!",
                                         Toast.LENGTH_SHORT).show();
-                                new Remove(database,session).execute(index);
-                                adapter.removeItemAt(index);
+                               // new Remove(database, session).execute(index);
+
+                                if (database.userCrushDao().getUserCrush().size() > 0) {
+                                    Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()));
+                                    firestore.collection("crush")
+                                            .document(String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()))
+                                            .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index));
+                                            Log.i("removeItem", "remove from fire base");
+                                            adapter.removeItemAt(index);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.i("removeItem", e.getMessage());
+                                        }
+                                    });
+
+                                }
+
+
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -571,18 +594,19 @@ public class HomeBottomFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Integer... integers) {
-            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(integers[0]));
 
-            firestore.collection("crush")
-                    .document(String.valueOf(database.userCrushDao().getUserCrush().get(integers[0]).getId()))
-                    .update(String.valueOf(session.getUserId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.i("removeItem", "remove from fire base");
-                }
-            });
+            if (integers[0] != null) {
+                database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(integers[0]));
+                firestore.collection("crush")
+                        .document(String.valueOf(database.userCrushDao().getUserCrush().get(integers[0]).getId()))
+                        .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("removeItem", "remove from fire base");
+                    }
+                });
 
-
+            }
             return null;
         }
     }

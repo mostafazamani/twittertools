@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.SetOptions;
 import com.op.crush.R;
 import com.op.crush.Room.CircleCrush.UserCrush;
 import com.op.crush.Room.CircleCrush.UserCrushDatabase;
@@ -86,8 +87,8 @@ public class ListSearchAdapter extends BaseAdapter {
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put(String.valueOf(session.getId()), session.getId());
+        Map<String, String> map = new HashMap<>();
+        map.put(String.valueOf(session.getId()), String.valueOf(session.getId()));
 
 
         database = UserCrushDatabase.getInstance(convertView.getContext());
@@ -114,12 +115,14 @@ public class ListSearchAdapter extends BaseAdapter {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         firestore.collection("crush")
-                                .document(String.valueOf(list.get(i).getId())).set(map)
+                                .document(String.valueOf(list.get(i).getId())).set(map, SetOptions.merge())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.i("firebase", "saved");
-                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
+                                        Log.i("firebase", String.valueOf(list.get(i).getId()));
+//                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
+                                        database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
                                         View v = inflater.inflate(R.layout.circular_adapter, null);
                                         ImageView itemView = v.findViewById(R.id.img_item);
                                         itemView.setImageBitmap(bitmap);

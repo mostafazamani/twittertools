@@ -18,6 +18,7 @@ import com.op.crush.Room.ProgressDatabase;
 import com.op.crush.Room.ProgressState;
 
 import com.op.crush.models.followmodel;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
@@ -44,6 +45,7 @@ public class LoadFollowing extends Worker {
 
     public LoadFollowing(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        Twitter.initialize(context);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
         pc = 100 / (preferences.getInt("CP", -1) / 200);
         database = ProgressDatabase.getInstance(context);
@@ -55,6 +57,7 @@ public class LoadFollowing extends Worker {
         Log.i("following", "constructor" + pc);
         db = DbFollow.getInstance(getApplicationContext());
         db.getWritableDatabase();
+
     }
 
     @NonNull

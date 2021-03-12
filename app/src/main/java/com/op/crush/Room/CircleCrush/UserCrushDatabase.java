@@ -24,6 +24,7 @@ public abstract class UserCrushDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     UserCrushDatabase.class,
                     "UserCrush_database")
+                    .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .addCallback(callback)
                     .build();
