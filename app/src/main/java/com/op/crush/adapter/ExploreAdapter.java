@@ -17,6 +17,7 @@ import com.op.crush.R;
 import com.op.crush.models.SuggestUser;
 
 
+import com.op.crush.models.follow;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -41,7 +42,10 @@ public class ExploreAdapter extends BaseAdapter {
 
     }
 
+    public void AddToList(SuggestUser list){
+        ex.add(list);
 
+    }
 
     // 2
     @Override
@@ -52,13 +56,13 @@ public class ExploreAdapter extends BaseAdapter {
     // 3
     @Override
     public long getItemId(int position) {
-        return users.get(position).getId();
+        return ex.get(position).getId();
     }
 
     // 4
     @Override
     public Object getItem(int position) {
-        return users.get(position);
+        return ex.get(position);
     }
 
     // 5
