@@ -136,8 +136,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         // Pass the activity result to the login button.
         loginButton.onActivityResult(requestCode, resultCode, data);
+
     }
 
 

@@ -73,12 +73,8 @@ public class MainMenu extends AppCompatActivity {
 
 
     private TwitterSession session;
-
-    ImageButton hamberger;
-   // LinearLayout bar;
-
     SwitchCompat nightswitch;
-    boolean night;
+
 
 
     SharedPreferences preferences , night_preferences= null;
@@ -213,11 +209,11 @@ public class MainMenu extends AppCompatActivity {
         night_preferences = getSharedPreferences("night" , 0);
         Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
 
-        if (aBoolean){
+        /*if (aBoolean){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             nightswitch.setChecked(true);
         }
-
+*/
         nightswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -237,72 +233,6 @@ public class MainMenu extends AppCompatActivity {
                 }
             }
         });
-/*
-        nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            setTheme(R.style.DarkTheme);
-
-            nightswitch.setChecked(true);
-            night = true;
-        } else if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
-            setTheme(R.style.AppTheme);
-            night = false;
-            nightswitch.setChecked(false);
-        }
-        nightswitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                {
-                    if (night == true) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        restartApp();
-                        setTheme(R.style.AppTheme);
-                    } else if (night == false) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        restartApp();
-                        setTheme(R.style.DarkTheme);
-                    }
-                }
-            }
-        });*/
-        ////////////////////Night Mode End//////////////////////
-        ///////////theme//////////
-        MenuItem menutheme = menu.findItem(R.id.theme);
-        View actiont = MenuItemCompat.getActionView(menutheme);
-
-        Button btn_theme = (Button) actiont.findViewById(R.id.set_theme);
-
-
-
-
-        menutheme.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast.makeText(MainMenu.this, "dialog", Toast.LENGTH_SHORT).show();
-                Dialog dialog = new Dialog(MainMenu.this);
-
-                dialog.setTitle("select color");
-                dialog.setCancelable(true);
-                dialog.setContentView(R.layout.theme_dialog);
-                dialog.show();
-                return true;
-            }
-        });
-
-       /* btn_theme.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                ThemeDialog themeDialog = new ThemeDialog();
-
-                FragmentManager manager = MainMenu.this.getSupportFragmentManager();
-
-                themeDialog.show(manager,"dialog");
-
-
-            }
-        });*/
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -324,20 +254,8 @@ public class MainMenu extends AppCompatActivity {
                         nightswitch.setChecked(true);
                         else
                             nightswitch.setChecked(true);
-
-                      /*  if (night == true) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            nightswitch.setChecked(true);
-                            restartApp();
-                        } else if (!night) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            nightswitch.setChecked(false);
-                            restartApp();
-                        }*/
                     }
-                    case R.id.theme: {
 
-                    }
                         break;
 
                     default:

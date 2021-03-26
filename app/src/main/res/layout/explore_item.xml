@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="150dp"
     android:layout_height="200dp"
-    android:elevation="8dp"
-    app:cardElevation="8dp"
+    android:elevation="16dp"
+    app:cardElevation="16dp"
     android:layout_gravity="center"
     app:cardBackgroundColor="@color/lightBlue"
     android:gravity="center"
@@ -20,17 +20,16 @@
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:scaleType="centerInside"
+
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_twitter" />
 
 
         <ImageView
             android:id="@+id/add_to_follower"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
@@ -61,7 +60,7 @@
         <TextView
             android:id="@+id/profile_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@+id/add_to_follower"
             android:layout_toLeftOf="@+id/add_to_follower"
@@ -72,7 +71,7 @@
             android:maxLines="1"
             android:textColorHint="@color/textcolor_tint"
             android:textColor="?attr/textcolor"
-            android:textSize="10sp"
+            android:textSize="15sp"
             tools:text="Twitter ID" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
