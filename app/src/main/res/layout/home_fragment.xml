@@ -14,12 +14,12 @@
         app:cardElevation="8dp">
 
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/toolbar_lin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-
-            android:background="@color/lightBlue"
+            android:layout_alignParentTop="true"
+            android:background="@color/background2"
             android:elevation="8dp"
             android:orientation="horizontal">
 
@@ -30,6 +30,9 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
+                android:layout_alignParentStart="true"
+
+                android:padding="4dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_twitter_tweet">
@@ -38,23 +41,31 @@
 
             <TextView
                 android:id="@+id/txt_status"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+
+                android:textColor="@color/textcolor"
+                android:text="Twitter Tools,Crush Finder"
+                android:maxLines="1"
                 android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/txt_sta"
-                android:layout_width="100dp"
-                android:layout_height="match_parent" />
+
 
             <Button
                 android:id="@+id/btn_open_nav"
                 android:layout_width="50dp"
+                android:layout_alignParentEnd="true"
                 android:layout_height="50dp"
+
                 android:layout_marginLeft="100dp"
                 android:background="@drawable/open_nav" />
 
-        </LinearLayout>
-        -->
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 
@@ -162,37 +173,6 @@
                             android:textColor="@color/textcolor" />
 
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-
-                            android:layout_marginStart="1dp"
-                            android:layout_marginEnd="1dp"
-                            app:cardBackgroundColor="@color/redlove"
-                            app:cardCornerRadius="28dp"
-
-                            app:cardElevation="8dp">
-
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="1dp"
-                                android:padding="2dp"
-                                app:cardBackgroundColor="?attr/cardBackground"
-                                app:cardCornerRadius="28dp">
-
-                                <ImageView
-                                    android:id="@+id/crush_list_status"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:layout_gravity="center"
-                                    android:background="@android:color/transparent"
-                                    android:gravity="center"
-                                    android:padding="4dp" />
-                            </androidx.cardview.widget.CardView>
-                        </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"

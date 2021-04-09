@@ -112,9 +112,12 @@ public class MainMenu extends AppCompatActivity {
 
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
                 motionLayout.setProgress(slideOffset / 2);
+
+
             }
 
             @Override
@@ -132,6 +135,7 @@ public class MainMenu extends AppCompatActivity {
 
             }
         });
+
 
         new CountDownTimer(5000, 1000) {
             @Override
@@ -302,6 +306,7 @@ public class MainMenu extends AppCompatActivity {
 
 
 
+
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
                             fm.beginTransaction().hide(active).show(fragment1).commit();
@@ -310,8 +315,10 @@ public class MainMenu extends AppCompatActivity {
                             return true;
                         //selectedFragment = new HomeBottomFragment();
 
+
                         //break;
                         case R.id.item_2:
+
                             if (f2) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
                                 f2 = false;
@@ -323,6 +330,8 @@ public class MainMenu extends AppCompatActivity {
                         // selectedFragment = new ExploreBottomFragment();
                         // break;
                         case R.id.item_4:
+
+
                             if (f4) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment4, "4").hide(fragment4).commit();
                                 f4 = false;
@@ -331,6 +340,7 @@ public class MainMenu extends AppCompatActivity {
                             active = fragment4;
                             return true;
                         case R.id.item_3:
+
                             if (f3) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
                                 f3 = false;
@@ -340,6 +350,7 @@ public class MainMenu extends AppCompatActivity {
                             return true;
 
                         case R.id.item_5:
+
                             if (f5) {
                                 fm.beginTransaction().add(R.id.fragment_container, fragment5, "5").hide(fragment5).commit();
                                 f5 = false;
