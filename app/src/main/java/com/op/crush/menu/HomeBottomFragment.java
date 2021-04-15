@@ -159,11 +159,11 @@ public class HomeBottomFragment extends Fragment {
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
                                     Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()));
                                     firestore.collection("crush")
-                                            .document(String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()))
+                                            .document(String.valueOf(database.userCrushDao().getUserCrush().get(index+1).getUser_id()))
                                             .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index));
+                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index+1));
                                             Log.i("removeItem", "remove from fire base");
                                             adapter.removeItemAt(index);
                                         }
@@ -199,9 +199,8 @@ public class HomeBottomFragment extends Fragment {
         btn_crushs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ListCrushs(database, session, firestore, view.getContext());
 
-                new ListCrushs(database, session, firestore, view.getContext()).execute();
-                btn_crushs.setVisibility(View.GONE);
             }
         });
 
@@ -423,59 +422,43 @@ public class HomeBottomFragment extends Fragment {
         return url;
     }
 
-
-    public class ListCrushs extends AsyncTask<Void, Void, Void> {
-        UserCrushDatabase database;
-
-        TwitterSession session;
-        FirebaseFirestore firestore;
-        private List<DocumentSnapshot> qs;
-        Context context;
-
-        public ListCrushs(UserCrushDatabase database, TwitterSession session, FirebaseFirestore firestore
-                , Context context) {
-            this.database = database;
-            this.session = session;
-            this.firestore = firestore;
-            this.context = context;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            List<UserCrush> list = database.userCrushDao().getUserCrush();
-            firestore.collection("crush").document(String.valueOf(session.getId()))
-                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Set<String> ma = documentSnapshot.getData().keySet();
-                    List<Long> list1 = new ArrayList<>();
-                    List<String> stringList = new ArrayList<>();
-                    for (String s : ma) {
-                        stringList.add(s);
-                    }
-                    for (int i = 0; i < stringList.size(); i++) {
-                        for (int j = 0; j < list.size(); j++) {
-                            if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
-                                list1.add(list.get(j).getUser_id());
-                            }
+    public void ListCrushs(UserCrushDatabase database, TwitterSession session, FirebaseFirestore firestore
+            , Context context) {
+        List<UserCrush> list = database.userCrushDao().getUserCrush();
+        firestore.collection("crush").document(String.valueOf(session.getUserId()))
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Set<String> ma = documentSnapshot.getData().keySet();
+                List<Long> list1 = new ArrayList<>();
+                List<String> stringList = new ArrayList<>();
+                for (String s : ma) {
+                    stringList.add(s);
+                }
+                for (int i = 0; i < stringList.size(); i++) {
+                    for (int j = 0; j < list.size(); j++) {
+                        Log.i("crushslist", String.valueOf(list.get(j).getUser_id()));
+                        Log.i("crushslist", stringList.get(i));
+                        if (stringList.get(i).contains(String.valueOf(list.get(j).getUser_id()))) {
+                            list1.add(list.get(j).getUser_id());
+                            Log.i("crushslist", stringList.get(i));
                         }
                     }
-                    Log.i("crushslist", String.valueOf(list1.size()));
-                    Log.i("crushslist", String.valueOf(stringList.size()));
-
-                    CrushsAdapter crushsAdapter = new CrushsAdapter(list1, context);
-                    list_crushs.setAdapter(crushsAdapter);
-
-
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.i("crushslist", "onFailure");
-                }
-            });
-            return null;
-        }
+                Log.i("crushslistt", String.valueOf(list1.size()));
+                Log.i("crushslisttt", String.valueOf(stringList.size()));
+
+                CrushsAdapter crushsAdapter = new CrushsAdapter(context);
+                list_crushs.setAdapter(crushsAdapter);
+                crushsAdapter.AddToList(list1);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("crushslist", "onFailure");
+            }
+        });
     }
 
     public static class ListOfCrush extends AsyncTask<Void, Void, Void> {

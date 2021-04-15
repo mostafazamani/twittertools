@@ -5,6 +5,7 @@ package com.op.crush.menu;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class ExploreBottomFragment extends Fragment {
 
     Button add_to_sugest;
 
-    DbSuggest dbSuggest;
+    //DbSuggest dbSuggest;
     EditText editText;
 
 
@@ -81,31 +82,36 @@ public class ExploreBottomFragment extends Fragment {
         TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String countryCode = telephoneManager.getNetworkCountryIso();
 
+        if (countryCode == null)
+            countryCode= "Public";
+        else
+            countryCode = countryCode.toUpperCase();
+
+        Log.i("countryCode" , countryCode);
+
+       // dbSuggest = new DbSuggest(view.getContext());
+      //  dbSuggest.getReadableDatabase();
 
 
-        dbSuggest = new DbSuggest(view.getContext());
-        dbSuggest.getReadableDatabase();
-
-
-        sl = dbSuggest.getItem();
+      //  sl = dbSuggest.getItem();
 
         add_to_sugest = view.findViewById(R.id.add_to_sugest);
 
 
         ////////////////GridView//////////////////////////
         gridView = view.findViewById(R.id.gridview);
-        exploreAdapter = new ExploreAdapter(view.getContext(), suggestUsers);
+        exploreAdapter = new ExploreAdapter(view.getContext());
         gridView.setAdapter(exploreAdapter);
 
 
 
-        firestore.collection("SugestUser").document("IR").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
 
-                    for (int i = 0; i < 4; i++) {
-                        int rand = new Random().nextInt(4);
+                    for (int i = 0; i < 100; i++) {
+                        int rand = new Random().nextInt(19000);
                         String id = documentSnapshot.getString(String.valueOf(rand));
 
                         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);

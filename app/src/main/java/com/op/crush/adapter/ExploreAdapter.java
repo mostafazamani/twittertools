@@ -22,19 +22,19 @@ import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ExploreAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<SuggestUser> ex;
+    private final List<SuggestUser> ex = new ArrayList<>();
     private final List<SuggestUser> users;
     private TwitterSession session;
 
     // 1
-    public ExploreAdapter(Context context , List<SuggestUser> list) {
-        this.ex = list;
+    public ExploreAdapter(Context context ) {
         this.mContext = context;
         DbSuggest suggest = new DbSuggest(context);
         suggest.getReadableDatabase();

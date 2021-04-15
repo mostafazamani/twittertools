@@ -21,6 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.SetOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.op.crush.Room.ProgressState;
 import com.op.crush.Room.ProgressViewModel;
 import com.op.crush.background.FlwService;
@@ -61,7 +68,9 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -91,7 +100,7 @@ public class MainMenu extends AppCompatActivity {
     Fragment fragment5 = new DownloaderBottomFragment(); //downloader
     FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
-
+    private FirebaseFirestore firestore;
     boolean f2 = true;
     boolean f3 = true;
     boolean f4 = true;
@@ -201,6 +210,62 @@ public class MainMenu extends AppCompatActivity {
 
         user_info(session, MainMenu.this);
 
+        Map<String, String> map = new HashMap<>();
+
+        firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firestore.setFirestoreSettings(settings);
+
+
+//
+//        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+//        myTwitterApiClient.getCustomTwitterService().getid(1994321L,1694138268288000421L,5000).enqueue(new retrofit2.Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//
+//                if (response.body() != null) {
+//                    try {
+//
+//                        JsonObject jsonObject = (JsonObject) response.body();
+//                        JsonArray jsonObject1 = jsonObject.getAsJsonArray("ids");
+//                        for (int i=15000; i < jsonObject1.size()+15000; i++){
+//                            map.put(String.valueOf(i), jsonObject1.get(i-15000).toString());
+//                        }
+//
+//
+//                        firestore.collection("SugestUser")
+//                                .document("FR").set(map, SetOptions.merge())
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Log.i("id", "saved");
+//
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.i("id", "not saved" + e.getMessage());
+//
+//                            }
+//                        });
+//
+//                    } catch (Exception e) {
+//                        Log.i("id", e.getMessage());
+//                    }
+//                } else {
+//                    Log.i("id", "3");
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//
+//                Log.i("id", "error");
+//            }
+//        });
 
 
 

@@ -19,11 +19,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
+import com.op.crush.models.follow;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,27 +35,30 @@ import retrofit2.Response;
 public class CrushsAdapter extends BaseAdapter {
 
     private TwitterSession session;
-    private List<Long> list ;
+    private List<Long> l;
     private Context context;
 
-    public CrushsAdapter(List<Long> list, Context context) {
-        this.list = list;
+    public CrushsAdapter( Context context) {
+        l = new ArrayList<>();
         this.context = context;
     }
-
+    public void AddToList(List<Long> list){
+        l.addAll(list);
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
-        return list.size();
+        return l.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return l.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return list.get(i);
+        return l.get(i);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class CrushsAdapter extends BaseAdapter {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
-        myTwitterApiClient.getCustomTwitterService().SeeUserInfo(list.get(i)).enqueue(new Callback<JsonArray>() {
+        myTwitterApiClient.getCustomTwitterService().SeeUserInfo(l.get(i)).enqueue(new Callback<JsonArray>() {
             @Override
             public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
                 if (response.body() != null) {
@@ -104,4 +109,6 @@ public class CrushsAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+
 }

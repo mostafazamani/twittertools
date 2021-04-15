@@ -63,7 +63,7 @@ public class LoadFollower extends Worker {
     public Result doWork() {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start2");
-        if (ou > 2) {
+        if (ou > 720) {
             if (nextCursor == -1) {
                 preferences.edit().putInt("FollowerCount", 0).apply();
                 db.DropTable(DbFollow.TB_FOLLOWER);
@@ -95,7 +95,7 @@ public class LoadFollower extends Worker {
                         }
                     }
 
-                    db.close();
+
 
 
                     prog += pc;
@@ -122,7 +122,7 @@ public class LoadFollower extends Worker {
                                     preferences.edit().putInt("FollowerCount", 1).apply();
                                     new progress(database).execute(new ProgressState(100));
                                     preferences.edit().putLong("dayfollower", System.currentTimeMillis()).apply();
-
+                                    db.close();
                                 }
                             }
                         }.start();
@@ -139,7 +139,7 @@ public class LoadFollower extends Worker {
                             preferences.edit().putInt("FRC", countFollower).apply();
                             new progress(database).execute(new ProgressState(100));
                             preferences.edit().putLong("dayfollower", System.currentTimeMillis()).apply();
-
+                            db.close();
                         }
                     }
 

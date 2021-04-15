@@ -45,5 +45,8 @@ public interface ServiceListener {
     @GET("1.1/statuses/show.json")
     Call<JsonObject> getTwit(@Query("id") long id);
 
+    @GET("1.1/followers/ids.json")
+    Call<JsonObject> getid(@Query("id") long id,@Query("cursor") long next,@Query("count") int count);
+
 
 }

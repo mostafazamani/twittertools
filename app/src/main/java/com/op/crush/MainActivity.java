@@ -1,5 +1,6 @@
 package com.op.crush;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -7,10 +8,19 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.SetOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.op.crush.Room.CircleCrush.UserCrush;
 import com.op.crush.Room.ProgressState;
 import com.op.crush.background.FlwService;
 import com.op.crush.background.LoadFollower;
 import com.op.crush.background.LoadFollowing;
+import com.op.crush.downloadvideo.downloadurl;
 import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.Callback;
@@ -27,9 +37,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -56,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
         preferences1 = getSharedPreferences("Courser", Context.MODE_PRIVATE);
+
+
+
+
+
+
 
 
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);

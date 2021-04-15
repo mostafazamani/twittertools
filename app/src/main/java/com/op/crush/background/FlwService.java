@@ -79,11 +79,11 @@ public class FlwService extends Service {
                 .build();
 
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
-                Builder(LoadFollowing.class, 2, TimeUnit.MINUTES)
+                Builder(LoadFollowing.class, 720, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
         PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
-                Builder(LoadFollower.class, 2, TimeUnit.MINUTES)
+                Builder(LoadFollower.class, 720, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
 
