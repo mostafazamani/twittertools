@@ -35,11 +35,10 @@ import retrofit2.Response;
 public class CrushsAdapter extends BaseAdapter {
 
     private TwitterSession session;
-    private List<Long> l;
+    private List<Long> l = new ArrayList<>();
     private Context context;
 
     public CrushsAdapter( Context context) {
-        l = new ArrayList<>();
         this.context = context;
     }
     public void AddToList(List<Long> list){
