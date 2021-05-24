@@ -5,25 +5,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/lin_hor_scroll_explore"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
 
-        android:orientation="horizontal">
-
-
-
-
-        <Button
-            android:id="@+id/add_to_sugest"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="2dp"
-            android:text="Add Your Id to Other" />
-    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

@@ -82,11 +82,11 @@ public class MainMenu extends AppCompatActivity {
 
 
     private TwitterSession session;
-    SwitchCompat nightswitch;
 
 
 
-    SharedPreferences preferences , night_preferences= null;
+
+    SharedPreferences preferences ;
     BottomNavigationView bottomNavigationView;
     ImageView profile, banner;
     private DrawerLayout drawerLayout;
@@ -105,8 +105,7 @@ public class MainMenu extends AppCompatActivity {
     boolean f3 = true;
     boolean f4 = true;
     boolean f5 = true;
-    TextView text;
-    TextView t;
+
     private ProgressViewModel progressViewModel;
 
     @Override
@@ -118,6 +117,7 @@ public class MainMenu extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final MotionLayout motionLayout = findViewById(R.id.view);
+
 
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -161,18 +161,12 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-      //  hamberger = findViewById(R.id.hamberger_btn);
-      //  bar = findViewById(R.id.toolbar_lin);
         bottomNavigationView = findViewById(R.id.bottom_nav);
-     //   text = findViewById(R.id.txt_status); //188 line
-      //  t = findViewById(R.id.txt_sta);
 
 
 
 
 
-        // toolbar = findViewById(R.id.m_toolbar);
-        //  setSupportActionBar(toolbar); //toolbar
 
         preferences = getSharedPreferences("Courser", Context.MODE_PRIVATE);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -272,17 +266,17 @@ public class MainMenu extends AppCompatActivity {
         ////////////////////Night Mode
 
         Menu menu = navigationView.getMenu();
-        MenuItem menuItem = menu.findItem(R.id.nav_switch);
-        View actionView = MenuItemCompat.getActionView(menuItem);
-        nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
-        night_preferences = getSharedPreferences("night" , 0);
-        Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
+     //   MenuItem menuItem = menu.findItem(R.id.nav_switch);
+    //    View actionView = MenuItemCompat.getActionView(menuItem);
+    //    nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
+    //    night_preferences = getSharedPreferences("night" , 0);
+    //    Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
 
         /*if (aBoolean){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             nightswitch.setChecked(true);
         }
-*/
+
         nightswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -303,7 +297,7 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-
+*/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem drawItem) {
@@ -318,14 +312,7 @@ public class MainMenu extends AppCompatActivity {
                         about_us.show();
                         break;
 
-                    case R.id.nav_switch: {
-                        if (nightswitch.isChecked())
-                        nightswitch.setChecked(true);
-                        else
-                            nightswitch.setChecked(true);
-                    }
 
-                        break;
 
                     default:
                         return true;

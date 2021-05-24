@@ -6,11 +6,13 @@
         android:icon="@drawable/ic_about_us"
         android:title="About Us"/>
 
+<!--
 
     <item android:id="@+id/nav_switch"
         app:actionLayout="@layout/toggle_switch_navigation"
         android:title="Night Mode"
         android:icon="@drawable/ic_day_night"/>
+-->
 
 
 

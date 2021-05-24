@@ -22,8 +22,8 @@
 
             <gradient
 
-                android:endColor="@color/lightBlue"
-                android:startColor="#D60000"
+                android:endColor="@color/background2"
+                android:startColor="@color/background"
                 android:angle="90"
                 android:type="linear" />
 

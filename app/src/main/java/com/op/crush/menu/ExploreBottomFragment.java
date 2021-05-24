@@ -95,7 +95,7 @@ public class ExploreBottomFragment extends Fragment {
 
       //  sl = dbSuggest.getItem();
 
-        add_to_sugest = view.findViewById(R.id.add_to_sugest);
+
 
 
         ////////////////GridView//////////////////////////

@@ -84,8 +84,8 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_margin="3dp"
-            android:background="?attr/boardcolor"
-            app:cardBackgroundColor="?attr/boardcolor"
+            android:background="@color/background"
+            app:cardBackgroundColor="@color/background"
             app:cardCornerRadius="50dp">
 
             <androidx.cardview.widget.CardView
@@ -180,7 +180,7 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="1dp"
                             android:layout_marginEnd="1dp"
-                            app:cardBackgroundColor="@color/redlove"
+                            app:cardBackgroundColor="@color/background"
                             app:cardCornerRadius="28dp"
 
                             app:cardElevation="8dp">

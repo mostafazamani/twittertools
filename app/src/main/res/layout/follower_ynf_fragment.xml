@@ -64,6 +64,10 @@
     <ListView
         android:id="@+id/list_fynf"
         android:layout_width="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/divider_Height"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
         android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

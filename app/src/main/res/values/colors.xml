@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#eeeeee</color>
-    <color name="background2">#C4C4C4</color>
-    <color name="colorAccent">#11b6ed</color>
-    <color name="lightBlue">#11b6ed</color>
+    <color name="background">#edf2f4</color>
+    <color name="background2">#FF6469</color>
+    <color name="colorAccent">#d90429</color>
+    <color name="lightBlue">#d90429</color>
 
-    <color name="textcolor">#000000</color>
+    <color name="textcolor">#111111</color>
     <color name="textcolor_tint">#4E4E4E</color>
 
 
@@ -17,6 +17,6 @@
     <color name="babyblue"> #89cfef</color>
     <color name="azure"> #0080fe</color>
     <color name="space"> #1c2951</color>
-    <color name="redlove">#D60000</color>
+    <color name="redlove">#d90429</color>
 
 </resources>
