@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void failure(TwitterException exception) {
                     // Do something on failure
-                    Toast.makeText(getApplicationContext(), "Login fail " + exception.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Login fail , try again ", Toast.LENGTH_LONG).show();
                 }
             });
         }

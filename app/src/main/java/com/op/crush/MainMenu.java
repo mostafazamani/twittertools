@@ -89,6 +89,7 @@ public class MainMenu extends AppCompatActivity {
     SharedPreferences preferences ;
     BottomNavigationView bottomNavigationView;
     ImageView profile, banner;
+    TextView fc,fwc,tid,tname;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -177,6 +178,10 @@ public class MainMenu extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for toolbar
         banner = navigationView.getHeaderView(0).findViewById(R.id.profile_banner);
         profile = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
+        fc = navigationView.getHeaderView(0).findViewById(R.id.f_count);
+        fwc = navigationView.getHeaderView(0).findViewById(R.id.fw_count);
+        tid = navigationView.getHeaderView(0).findViewById(R.id.header_twitter_id);
+        tname = navigationView.getHeaderView(0).findViewById(R.id.header_twitter_name);
 
 /*
 
@@ -430,8 +435,8 @@ public class MainMenu extends AppCompatActivity {
 
                 if (response.body() != null) {
                     UserShow show = response.body();
-                    Toast.makeText(MainMenu.this, "" + show.getProfile_name() + "\n"
-                            + show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainMenu.this, "" + show.getProfile_name() + "\n"
+//                            + show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
                     int cf = show.getFollowers_count() + show.getFollowings_count();
                     preferences.edit().putInt("CP", cf).apply();
 
@@ -440,7 +445,10 @@ public class MainMenu extends AppCompatActivity {
                     // follower_num.setText("Follower\n" + String.valueOf(show.getFollowers_count()));
                     //  following_num.setText("Following\n" + String.valueOf(show.getFollowings_count()));
                     String url = geturlpic(purl);
-
+                    fc.setText(String.valueOf(show.getFollowers_count()));
+                    fwc.setText(String.valueOf(show.getFollowings_count()));
+                    tid.setText(show.getScreen_name());
+                    tname.setText(show.getProfile_name());
 
                     Picasso.with(context).load(burl).into(banner);
                     Picasso.with(context).load(url).into(profile);
@@ -449,7 +457,7 @@ public class MainMenu extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserShow> call, Throwable t) {
-
+                Toast.makeText(context, "Check your connection", Toast.LENGTH_SHORT).show();
             }
         });
 

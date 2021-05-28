@@ -127,6 +127,7 @@ public class FollowingNotFollowYou extends Fragment {
 
                     if (preferences.getInt("FollowerCount", 0)==1 && preferences.getInt("FollowingCount", 0)==1) {
                         progressBar.setVisibility(View.INVISIBLE);
+                        txtProgress.setVisibility(View.INVISIBLE);
                         ynfAdapter = new FolloweingNfyAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
 
@@ -244,22 +245,16 @@ public class FollowingNotFollowYou extends Fragment {
                         dialogf.show();
                         int r = followList.size();
 
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
+                        if (r > 15) {
+                            for (int q = 0; q <= 15; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == 5) {
-                                    //   followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         } else if (r != 0) {
                             for (int q = 0; q < r - 1; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == (r - 1)) {
-                                    // followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         }
 
                     }
@@ -276,22 +271,17 @@ public class FollowingNotFollowYou extends Fragment {
                         dialogf.show();
                         int r = followList.size();
 
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
+                        if (r > 15) {
+                            for (int q = 0; q <= 15; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == 5) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         } else if (r != 0) {
                             for (int q = 0; q < r - 1; q++) {
                                 new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == (r - 1)) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
+
                             }
+                            dialogf.dismiss();
                         }
 
                     }

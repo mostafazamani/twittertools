@@ -80,6 +80,7 @@ public class FollowerYouNotFollow extends Fragment {
     SwipeRefreshLayout refreshLayout;
     SharedPreferences preferences;
     int j = 0;
+    ProgressDialog dialogf;
 
 
     @Nullable
@@ -107,7 +108,7 @@ public class FollowerYouNotFollow extends Fragment {
         dialog.setMessage("wait");
         dialog.setCancelable(false);
 
-        ProgressDialog dialogf = new ProgressDialog(view.getContext());
+        dialogf = new ProgressDialog(view.getContext());
         dialogf.setMessage("Following...");
         dialogf.setCancelable(false);
 
@@ -144,6 +145,7 @@ public class FollowerYouNotFollow extends Fragment {
 
                     if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                         progressBar.setVisibility(View.INVISIBLE);
+                        txtProgress.setVisibility(View.INVISIBLE);
                         ynfAdapter = new FollowerYnfAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
 
@@ -267,22 +269,16 @@ public class FollowerYouNotFollow extends Fragment {
 
                         int r = followList.size();
 
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
+                        if (r > 15) {
+                            for (int q = 0; q <= 15; q++) {
                                 new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                if (q == 5) {
-                                    //   followList = db.getExpectItem(DbFollow.TB_FOLLOWER,DbFollow.TB_FOLLOWING);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         } else if (r != 0) {
                             for (int q = 0; q < r - 1; q++) {
                                 new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                if (q == (r - 1)) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWER,DbFollow.TB_FOLLOWING);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         }
 
                     }
@@ -295,26 +291,20 @@ public class FollowerYouNotFollow extends Fragment {
                     @Override
                     public void onRewardedVideoAdFailedToLoad(int i) {
                         Log.i("ad", "filed");
-                        dialog.dismiss();
                         dialogf.show();
                         int r = followList.size();
 
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
+                        if (r > 15) {
+                            for (int q = 0; q <= 15; q++) {
                                 new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                if (q == 5) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWER,DbFollow.TB_FOLLOWING);
-                                    dialogf.dismiss();
-                                }
                             }
+                            dialogf.dismiss();
                         } else if (r != 0) {
                             for (int q = 0; q < r - 1; q++) {
                                 new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                if (q == (r - 1)) {
-                                    // followList = db.getExpectItem(DbFollow.TB_FOLLOWER,DbFollow.TB_FOLLOWING);
-                                    dialogf.dismiss();
-                                }
+
                             }
+                            dialogf.dismiss();
                         }
 
                     }
@@ -372,7 +362,8 @@ public class FollowerYouNotFollow extends Fragment {
                         Log.i("ad", "Create follow");
                         ynfAdapter.RemoveList(0);
                         ynfAdapter.notifyDataSetChanged();
-                        db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
+                        if (fo.size() > j)
+                            db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
                         db.close();
 
                     }
