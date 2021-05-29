@@ -1,16 +1,23 @@
 package com.op.crush.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
+
+import com.op.crush.DbFollow;
 import com.op.crush.DbSuggest;
+import com.op.crush.MyTwitterApiClient;
 import com.op.crush.R;
 
 
@@ -24,6 +31,9 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class ExploreAdapter extends BaseAdapter {
@@ -81,7 +91,12 @@ public class ExploreAdapter extends BaseAdapter {
         final ImageView profilePic = (ImageView) convertView.findViewById(R.id.profile_image);
         final TextView textname = (TextView) convertView.findViewById(R.id.profile_name);
         final TextView idname = (TextView) convertView.findViewById(R.id.profile_id);
+        ImageView button = convertView.findViewById(R.id.add_to_follower);
         //final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
+
+        ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setMessage("Following...");
+        dialog.setCancelable(false);
 
         String purl = ex.get(position).getProfilePictureUrl();
         String url = geturlpic(purl);
@@ -89,6 +104,42 @@ public class ExploreAdapter extends BaseAdapter {
         idname.setText(ex.get(position).getScreenName());
 
         Picasso.with(convertView.getContext()).load(url).into(profilePic);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+                MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
+                apiClient.getCustomTwitterService().CreateFollow(ex.get(position).getId()).enqueue(new retrofit2.Callback() {
+                    @Override
+                    public void onResponse(Call call, @NonNull Response response) {
+                        if (response.body() != null) {
+
+                            DbFollow dbFollowings = DbFollow.getInstance(mContext);
+                            dbFollowings.getWritableDatabase();
+                            SuggestUser s = ex.get(position);
+                            follow f = new follow();
+                            f.setId(s.getId());
+                            f.setName(s.getName());
+                            f.setScreenName(s.getScreenName());
+                            f.setProfilePictureUrl(s.getProfilePictureUrl());
+                            dbFollowings.AddItem(f, DbFollow.TB_FOLLOWING);
+                            dbFollowings.close();
+                            ex.remove(position);
+                            notifyDataSetChanged();
+                            dialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Toast.makeText(mContext, "try again", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+
+                    }
+                });
+            }
+        });
 
 
         return convertView;

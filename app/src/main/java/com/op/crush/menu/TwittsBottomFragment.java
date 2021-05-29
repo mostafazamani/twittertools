@@ -1,5 +1,6 @@
 package com.op.crush.menu;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ public class TwittsBottomFragment extends Fragment {
     private TwitterSession session;
     List<Long> list;
     RecyclerView recyclerView;
+    private ProgressDialog dialog;
 
 
     @Nullable
@@ -42,7 +44,9 @@ public class TwittsBottomFragment extends Fragment {
         Twitter.initialize(getContext());
         View view = inflater.inflate(R.layout.twitts_fragment,container,false);
 
-
+        dialog = new ProgressDialog(view.getContext());
+        dialog.setMessage("loading...");
+        dialog.setCancelable(false);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         recyclerView = view.findViewById(R.id.timeline_item);
@@ -52,11 +56,12 @@ public class TwittsBottomFragment extends Fragment {
         list = new ArrayList<>();
         recyclerView.setAdapter(adapter);
 
-
+        dialog.show();
         MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
         myTwitterApiClient.getCustomTwitterService().HomeTimeline(100).enqueue(new retrofit2.Callback() {
             @Override
             public void onResponse(Call call, @NonNull Response response) {
+                dialog.dismiss();
                 if (response.body() != null) {
                     try {
                         JsonArray elements = (JsonArray) response.body();
@@ -73,7 +78,6 @@ public class TwittsBottomFragment extends Fragment {
                         }
 
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     adapter.AddItemToList(list);
@@ -82,8 +86,8 @@ public class TwittsBottomFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, Throwable t) {
-
-                Toast.makeText(getContext(), "wtf" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                Toast.makeText(getContext(), "check your connection", Toast.LENGTH_SHORT).show();
 
             }
         });

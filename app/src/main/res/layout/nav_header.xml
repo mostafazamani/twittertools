@@ -93,6 +93,7 @@
             android:gravity="center"
             android:paddingStart="9dp"
             android:paddingEnd="9dp"
+            android:id="@+id/f_count"
             android:text="Follower"
             android:textColor="@color/textcolor"
             android:textSize="15sp"
@@ -109,8 +110,8 @@
             android:gravity="center"
             android:paddingStart="9dp"
             android:paddingEnd="9dp"
-            android:text="Folloing"
-
+            android:text="Following"
+            android:id="@+id/fw_count"
             android:textColor="@color/textcolor"
             android:textSize="15sp"
             android:textStyle="bold" />

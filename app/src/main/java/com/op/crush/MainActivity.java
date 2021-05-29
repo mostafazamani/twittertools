@@ -8,6 +8,11 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     TwitterSession session;
 
     Switch n;
+    private SharedPreferences preferences2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +77,23 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
         preferences1 = getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        preferences2 = getSharedPreferences("AdL", Context.MODE_PRIVATE);
+        String url = "https://www.dropbox.com/s/17b9g70xy9t8gpl/ad.txt?dl=1";
+        final RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                preferences.edit().putString("ad", response.trim()).apply();
+                Log.i("adl", response);
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("adl", error.getMessage());
+            }
+        });
 
-
-
-
-
-
+        queue.add(stringRequest);
 
 
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
@@ -101,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
                     //String token = authToken.token;
                     //  String secret = authToken.secret;
 
-                    preferences1.edit().putLong("dayfollowing",  System.currentTimeMillis()-90000000).apply();
-                    preferences1.edit().putLong("dayfollower",  System.currentTimeMillis()-90000000).apply();
+                    preferences1.edit().putLong("dayfollowing", System.currentTimeMillis() - 90000000).apply();
+                    preferences1.edit().putLong("dayfollower", System.currentTimeMillis() - 90000000).apply();
 
                     MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
                     myTwitterApiClient.getCustomTwitterService().User(session.getUserId(), session.getUserName()).enqueue(new retrofit2.Callback<UserShow>() {
@@ -130,13 +147,12 @@ public class MainActivity extends AppCompatActivity {
                     });
 
 
-
                 }
 
                 @Override
                 public void failure(TwitterException exception) {
                     // Do something on failure
-                    Toast.makeText(getApplicationContext(), "Login fail " + exception.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Login fail , try again ", Toast.LENGTH_LONG).show();
                 }
             });
         }

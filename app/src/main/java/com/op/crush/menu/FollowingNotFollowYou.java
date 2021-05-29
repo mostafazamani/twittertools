@@ -65,6 +65,8 @@ public class FollowingNotFollowYou extends Fragment {
     private RewardedVideoAd mRewardedVideoAd;
     SwipeRefreshLayout refreshLayout;
     SharedPreferences preferences;
+    private SharedPreferences preferences1;
+    boolean adl = false;
 
 
     @Nullable
@@ -92,8 +94,12 @@ public class FollowingNotFollowYou extends Fragment {
         dialogf.setCancelable(false);
 
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        preferences1 = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        String a = preferences1.getString("ad", "true");
+        if (a.equals("true"))
+            adl = true;
 
-        if (preferences.getInt("FollowerCount", 0)==1 && preferences.getInt("FollowingCount", 0)==1) {
+        if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
             progressBar.setVisibility(View.INVISIBLE);
             ynfAdapter = new FolloweingNfyAdapter(view.getContext());
             list.setAdapter(ynfAdapter);
@@ -125,8 +131,9 @@ public class FollowingNotFollowYou extends Fragment {
                 if (stat == 100) {
                     x[0] += 1;
 
-                    if (preferences.getInt("FollowerCount", 0)==1 && preferences.getInt("FollowingCount", 0)==1) {
+                    if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                         progressBar.setVisibility(View.INVISIBLE);
+                        txtProgress.setVisibility(View.INVISIBLE);
                         ynfAdapter = new FolloweingNfyAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
 
@@ -150,7 +157,7 @@ public class FollowingNotFollowYou extends Fragment {
             @Override
             public void onRefresh() {
 
-                if (preferences.getInt("FollowerCount", 0)==1 && preferences.getInt("FollowingCount", 0)==1) {
+                if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                     ynfAdapter = new FolloweingNfyAdapter(view.getContext());
                     list.setAdapter(ynfAdapter);
 
@@ -212,97 +219,104 @@ public class FollowingNotFollowYou extends Fragment {
         unfollow_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.show();
 
-                mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-                    @Override
-                    public void onRewardedVideoAdLoaded() {
-                        Log.i("ad", "loaded");
-                        dialog.dismiss();
-                        mRewardedVideoAd.show();
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdOpened() {
-                        Log.i("ad", "open");
-                    }
-
-                    @Override
-                    public void onRewardedVideoStarted() {
-                        Log.i("ad", "start");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdClosed() {
-                        Log.i("ad", "vclose");
-
-                    }
-
-                    @Override
-                    public void onRewarded(RewardItem rewardItem) {
-                        Log.i("ad", "reward");
-                        dialogf.show();
-                        int r = followList.size();
-
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
-                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == 5) {
-                                    //   followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
-                            }
-                        } else if (r != 0) {
-                            for (int q = 0; q < r - 1; q++) {
-                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == (r - 1)) {
-                                    // followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
-                            }
+                if (adl) {
+                    dialog.show();
+                    mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+                        @Override
+                        public void onRewardedVideoAdLoaded() {
+                            Log.i("ad", "loaded");
+                            dialog.dismiss();
+                            mRewardedVideoAd.show();
                         }
 
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdLeftApplication() {
-                        Log.i("ad", "left");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdFailedToLoad(int i) {
-                        Log.i("ad", "filed");
-                        dialog.dismiss();
-                        dialogf.show();
-                        int r = followList.size();
-
-                        if (r > 5) {
-                            for (int q = 0; q <= 5; q++) {
-                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == 5) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
-                            }
-                        } else if (r != 0) {
-                            for (int q = 0; q < r - 1; q++) {
-                                new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-                                if (q == (r - 1)) {
-                                    //  followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
-                                    dialogf.dismiss();
-                                }
-                            }
+                        @Override
+                        public void onRewardedVideoAdOpened() {
+                            Log.i("ad", "open");
                         }
 
-                    }
+                        @Override
+                        public void onRewardedVideoStarted() {
+                            Log.i("ad", "start");
+                        }
 
-                    @Override
-                    public void onRewardedVideoCompleted() {
-                        Log.i("ad", "completed");
-                    }
-                });
+                        @Override
+                        public void onRewardedVideoAdClosed() {
+                            Log.i("ad", "vclose");
 
-                loadRewardedVideoAd();
+                        }
+
+                        @Override
+                        public void onRewarded(RewardItem rewardItem) {
+                            Log.i("ad", "reward");
+                            dialogf.show();
+                            int r = followList.size();
+
+                            if (r > 15) {
+                                for (int q = 0; q <= 15; q++) {
+                                    new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                }
+                                dialogf.dismiss();
+                            } else if (r != 0) {
+                                for (int q = 0; q < r - 1; q++) {
+                                    new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                }
+                                dialogf.dismiss();
+                            }
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdLeftApplication() {
+                            Log.i("ad", "left");
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdFailedToLoad(int i) {
+                            Log.i("ad", "filed");
+                            dialog.dismiss();
+                            dialogf.show();
+                            int r = followList.size();
+
+                            if (r > 15) {
+                                for (int q = 0; q <= 15; q++) {
+                                    new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                                }
+                                dialogf.dismiss();
+                            } else if (r != 0) {
+                                for (int q = 0; q < r - 1; q++) {
+                                    new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+
+                                }
+                                dialogf.dismiss();
+                            }
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoCompleted() {
+                            Log.i("ad", "completed");
+                        }
+                    });
+
+                    loadRewardedVideoAd();
+                }else {
+                    dialogf.show();
+                    int r = followList.size();
+
+                    if (r > 15) {
+                        for (int q = 0; q <= 15; q++) {
+                            new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                        }
+                        dialogf.dismiss();
+                    } else if (r != 0) {
+                        for (int q = 0; q < r - 1; q++) {
+                            new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+
+                        }
+                        dialogf.dismiss();
+                    }
+                }
                 followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
             }
         });

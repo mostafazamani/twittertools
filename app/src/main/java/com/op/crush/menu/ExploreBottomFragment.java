@@ -2,6 +2,7 @@ package com.op.crush.menu;
 
 //import android.support.v4.app.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -95,7 +96,10 @@ public class ExploreBottomFragment extends Fragment {
 
       //  sl = dbSuggest.getItem();
 
-
+        ProgressDialog dialog = new ProgressDialog(view.getContext());
+        dialog.setMessage("loading...");
+        dialog.setCancelable(false);
+        dialog.show();
 
 
         ////////////////GridView//////////////////////////
@@ -138,6 +142,7 @@ public class ExploreBottomFragment extends Fragment {
 
                                             exploreAdapter.AddToList(suggestUser);
                                             exploreAdapter.notifyDataSetChanged();
+                                            dialog.dismiss();
                                         } catch (Exception e) {
                                             Toast.makeText(view.getContext(), "seeUserInfo explorer :" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }

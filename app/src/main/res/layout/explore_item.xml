@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="512dp"
+            android:layout_height="512dp"
             android:scaleType="centerCrop"
             android:background="@drawable/ic_twitter" />
 

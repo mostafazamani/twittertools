@@ -1,6 +1,7 @@
 package com.op.crush.menu;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class CrushSearch extends DialogFragment {
     private TwitterSession session;
     private CircularItemAdapter adapte;
     private LayoutInflater inflate;
+    private ProgressDialog dialog;
 
 
     public CrushSearch(CircularItemAdapter adapter,LayoutInflater inflater) {
@@ -71,7 +73,9 @@ public class CrushSearch extends DialogFragment {
         btn_search = v.findViewById(R.id.crush_search_button);
         listView = v.findViewById(R.id.crush_search_listview);
 
-
+        dialog = new ProgressDialog(v.getContext());
+        dialog.setMessage("wait...");
+        dialog.setCancelable(false);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
@@ -80,12 +84,12 @@ public class CrushSearch extends DialogFragment {
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dialog.show();
                 MyTwitterApiClient apiClient = new MyTwitterApiClient(session);
                 apiClient.getCustomTwitterService().SearchUser(txt_search.getText().toString()).enqueue(new Callback<JsonArray>() {
                     @Override
                     public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-
+                                dialog.dismiss();
                         if (response.body() != null) {
                             try {
                                 JsonArray elements = (JsonArray) response.body();
@@ -104,7 +108,7 @@ public class CrushSearch extends DialogFragment {
 //                                Log.i("search","end");
 
                             } catch (Exception e) {
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -113,7 +117,8 @@ public class CrushSearch extends DialogFragment {
 
                     @Override
                     public void onFailure(Call<JsonArray> call, Throwable t) {
-
+                        dialog.dismiss();
+                        Toast.makeText(getContext(), "try again", Toast.LENGTH_SHORT).show();
                     }
                 });
 

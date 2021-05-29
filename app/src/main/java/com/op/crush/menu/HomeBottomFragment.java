@@ -1,5 +1,6 @@
 package com.op.crush.menu;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -99,6 +100,7 @@ public class HomeBottomFragment extends Fragment {
     ListView list_crushs;
     public Button btn_crushs;
     ArrayList<Bitmap> itemTitles;
+    ProgressDialog dialog;
     int step = 0;
 
     public Context context;
@@ -132,6 +134,9 @@ public class HomeBottomFragment extends Fragment {
         list_crushs = view.findViewById(R.id.crushs);
         btn_crushs = view.findViewById(R.id.btn_refresh_crushs);
 
+        dialog = new ProgressDialog(view.getContext());
+        dialog.setMessage("wait...");
+        dialog.setCancelable(false);
 
         user_info(session, view.getContext());
 
@@ -151,9 +156,7 @@ public class HomeBottomFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                Toast.makeText(view.getContext(),
-                                        "view at index " + index + " is clicked!",
-                                        Toast.LENGTH_SHORT).show();
+
                                // new Remove(database, session).execute(index);
 
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
@@ -187,7 +190,7 @@ public class HomeBottomFragment extends Fragment {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Are you sure you wnat to delete this item from crush list?").setPositiveButton("Yes", dialogClickListener)
+                builder.setMessage("Are you sure you want to delete this item from crush list?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
 
 
@@ -199,8 +202,8 @@ public class HomeBottomFragment extends Fragment {
         btn_crushs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.show();
                 ListCrushs(database, session, firestore, view.getContext());
-
             }
         });
 
@@ -429,6 +432,7 @@ public class HomeBottomFragment extends Fragment {
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                dialog.dismiss();
                 Set<String> ma = documentSnapshot.getData().keySet();
                 List<Long> list1 = new ArrayList<>();
                 List<String> stringList = new ArrayList<>();
@@ -450,12 +454,15 @@ public class HomeBottomFragment extends Fragment {
 
                 CrushsAdapter crushsAdapter = new CrushsAdapter(context);
                 list_crushs.setAdapter(crushsAdapter);
+                if (list1.size()<1)
+                    Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
                 crushsAdapter.AddToList(list1);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
                 Log.i("crushslist", "onFailure");
             }
         });
