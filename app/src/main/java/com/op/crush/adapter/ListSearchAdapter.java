@@ -1,6 +1,7 @@
 package com.op.crush.adapter;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -47,6 +49,7 @@ public class ListSearchAdapter extends BaseAdapter {
     public FirebaseFirestore firestore;
     private TwitterSession session;
     private Dialog dialog;
+    private ProgressDialog dialog1;
 
 
     public ListSearchAdapter(Context context, List<UserCrushSearch> list,
@@ -106,11 +109,14 @@ public class ListSearchAdapter extends BaseAdapter {
                 .build();
         firestore.setFirestoreSettings(settings);
 
+        dialog1 = new ProgressDialog(convertView.getContext());
+        dialog1.setMessage("wait...");
+        dialog1.setCancelable(false);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dialog1.show();
                 Picasso.with(context).load(url).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -119,14 +125,14 @@ public class ListSearchAdapter extends BaseAdapter {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.i("firebase", "saved");
+                                        dialog1.dismiss();
+                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
                                         Log.i("firebase", String.valueOf(list.get(i).getId()));
 //                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
                                         database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
                                         View v = inflater.inflate(R.layout.circular_adapter, null);
                                         ImageView itemView = v.findViewById(R.id.img_item);
                                         itemView.setImageBitmap(bitmap);
-                                        Log.i("ciecle_list", "bit");
                                         adapter.addItem(v);
                                         dialog.dismiss();
                                     }
@@ -134,7 +140,8 @@ public class ListSearchAdapter extends BaseAdapter {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Log.i("firebase", "not saved" + e.getMessage());
-
+                                dialog1.dismiss();
+                                Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                             }
                         });
 

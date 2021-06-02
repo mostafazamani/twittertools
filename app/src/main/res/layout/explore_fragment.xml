@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -17,6 +16,11 @@
         >
 
     </TextView>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/ex_swip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <GridView
         android:id="@+id/gridview"
@@ -38,5 +42,5 @@
 
         />
 
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

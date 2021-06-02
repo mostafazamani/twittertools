@@ -37,6 +37,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -74,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Twitter.initialize(this);
         setContentView(R.layout.activity_main);
+
+        if (getAppIntro(this)) {
+            Intent i = new Intent(MainActivity.this, IntroActivityApp.class);
+            startActivity(i);
+        }
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
         preferences1 = getSharedPreferences("Courser", Context.MODE_PRIVATE);
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserShow> call, Throwable t) {
-
+                            Toast.makeText(MainActivity.this, "Check your connection", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -167,7 +173,11 @@ public class MainActivity extends AppCompatActivity {
         finish();
 
     }
-
+    private boolean getAppIntro(Activity mainActivity) {
+        SharedPreferences preferences;
+        preferences = mainActivity.getSharedPreferences("intro", Context.MODE_PRIVATE);
+        return preferences.getBoolean("AppIntro", true);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

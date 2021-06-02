@@ -35,7 +35,6 @@ public class DbSuggest extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CMD);
-        Toast.makeText(context, "created", Toast.LENGTH_SHORT).show();
 
     }
 

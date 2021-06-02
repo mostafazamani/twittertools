@@ -107,6 +107,7 @@ dependencies {
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
     implementation 'com.github.Shashank02051997:FancyToast-Android:0.1.6'
 
+    implementation 'com.github.AppIntro:AppIntro:6.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

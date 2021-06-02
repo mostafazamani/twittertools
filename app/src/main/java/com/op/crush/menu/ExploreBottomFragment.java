@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -59,8 +60,8 @@ public class ExploreBottomFragment extends Fragment {
 
     //DbSuggest dbSuggest;
     EditText editText;
-
-
+    SwipeRefreshLayout refreshLayout;
+    String countryCode;
     GridView gridView;
     private ExploreAdapter exploreAdapter;
     private FirebaseFirestore firestore;
@@ -72,6 +73,8 @@ public class ExploreBottomFragment extends Fragment {
         final View view = inflater.inflate(R.layout.explore_fragment, container, false);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
+        refreshLayout = view.findViewById(R.id.ex_swip);
+
         firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
@@ -81,7 +84,7 @@ public class ExploreBottomFragment extends Fragment {
         List<SuggestUser> suggestUsers = new ArrayList<>();
 
         TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String countryCode = telephoneManager.getNetworkCountryIso();
+        countryCode = telephoneManager.getNetworkCountryIso();
 
         if (countryCode == null)
             countryCode= "Public";
@@ -99,7 +102,7 @@ public class ExploreBottomFragment extends Fragment {
         ProgressDialog dialog = new ProgressDialog(view.getContext());
         dialog.setMessage("loading...");
         dialog.setCancelable(false);
-        dialog.show();
+
 
 
         ////////////////GridView//////////////////////////
@@ -108,7 +111,7 @@ public class ExploreBottomFragment extends Fragment {
         gridView.setAdapter(exploreAdapter);
 
 
-
+        dialog.show();
         firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -144,7 +147,7 @@ public class ExploreBottomFragment extends Fragment {
                                             exploreAdapter.notifyDataSetChanged();
                                             dialog.dismiss();
                                         } catch (Exception e) {
-                                            Toast.makeText(view.getContext(), "seeUserInfo explorer :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
                                         }
 
                                     }
@@ -153,7 +156,8 @@ public class ExploreBottomFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<JsonArray> call, Throwable t) {
-
+                                    dialog.dismiss();
+                                    Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -189,6 +193,98 @@ public class ExploreBottomFragment extends Fragment {
                 }
 
             }
+        });
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                dialog.show();
+                firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+
+                            for (int i = 0; i < 100; i++) {
+                                int rand = new Random().nextInt(19000);
+                                String id = documentSnapshot.getString(String.valueOf(rand));
+
+                                MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+                                if (id != null)
+                                    myTwitterApiClient.getCustomTwitterService().SeeUserInfo(Long.parseLong(id)).enqueue(new Callback<JsonArray>() {
+                                        @Override
+                                        public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                                            if (response.body() != null) {
+
+
+                                                try {
+                                                    JsonArray elements = (JsonArray) response.body();
+                                                    SuggestUser suggestUser = new SuggestUser();
+
+                                                    JsonObject jsonObject = (JsonObject) elements.get(0);
+
+
+                                                    suggestUser.setId(Long.parseLong(id));
+                                                    suggestUser.setName(jsonObject.get("name").getAsString());
+                                                    suggestUser.setScreenName(jsonObject.get("screen_name").getAsString());
+                                                    suggestUser.setProfilePictureUrl(jsonObject.get("profile_image_url").getAsString());
+
+                                                    suggestUsers.add(suggestUser);
+
+                                                    exploreAdapter.AddToList(suggestUser);
+                                                    exploreAdapter.notifyDataSetChanged();
+                                                    dialog.dismiss();
+                                                } catch (Exception e) {
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<JsonArray> call, Throwable t) {
+                                            dialog.dismiss();
+                                            Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+                            }
+
+                        }
+
+                    }
+                });
+
+
+
+
+
+                gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                        if (absListView.getLastVisiblePosition() == i - 1) {
+//                    j += 30;
+//                    if (j+30 <= sl.size()){
+//
+//                        exploreAdapter.AddItemToList(getSl(sl, j));
+//                        exploreAdapter.notifyDataSetChanged();
+//                    }
+
+
+                        }
+
+                    }
+                });
+                refreshLayout.setRefreshing(false);
+            }
+
         });
 
         return view;
