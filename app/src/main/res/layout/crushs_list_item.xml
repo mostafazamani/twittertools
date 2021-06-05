@@ -87,6 +87,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:visibility="invisible"
                 android:text="UnCrush"
                 android:layout_marginBottom="2dp"
                 android:layout_gravity="center"
@@ -97,6 +98,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:visibility="invisible"
                 android:text="Massage"
                 android:layout_gravity="center"
                 android:background="@drawable/shape_follow_btn"
