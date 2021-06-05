@@ -2,6 +2,7 @@ package com.op.crush;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -15,10 +16,11 @@ public class IntroActivityApp extends AppIntro {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide1));
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide3));
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide4));
-
+        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide1, Color.BLUE));
+        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide2,Color.GREEN));
+        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide3,Color.YELLOW));
+        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide4,Color.RED));
+        setColorTransitionsEnabled(true);
         setSkipButtonEnabled(false);
 
     }

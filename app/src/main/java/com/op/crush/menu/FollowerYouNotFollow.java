@@ -115,7 +115,7 @@ public class FollowerYouNotFollow extends Fragment {
         dialogf.setCancelable(false);
 
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        preferences1 = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        preferences1 = view.getContext().getSharedPreferences("AdL", Context.MODE_PRIVATE);
         String a = preferences1.getString("ad", "true");
         if (a.equals("true"))
             adl = true;
@@ -305,14 +305,17 @@ public class FollowerYouNotFollow extends Fragment {
                             if (r > 15) {
                                 for (int q = 0; q <= 15; q++) {
                                     new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
+                                if (q==15)
+                                    dialogf.dismiss();
                                 }
-                                dialogf.dismiss();
+
                             } else if (r != 0) {
                                 for (int q = 0; q < r - 1; q++) {
                                     new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-
+                                    if (q== r-2)
+                                        dialogf.dismiss();
                                 }
-                                dialogf.dismiss();
+
                             }
 
                         }
@@ -352,6 +355,32 @@ public class FollowerYouNotFollow extends Fragment {
     private void loadRewardedVideoAd() {
         mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/2923307589",
                 new AdRequest.Builder().build());
+    }
+
+    public void AllFollow(TwitterSession session1, FollowerYnfAdapter ynfAdapter, Context context, List<follow> fo, long id, int j){
+        DbFollow db;
+        db = DbFollow.getInstance(context);
+        db.getWritableDatabase();
+        MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
+        apiClient.getCustomTwitterService().CreateFollow(id).enqueue(new retrofit2.Callback() {
+            @Override
+            public void onResponse(Call call, @NonNull Response response) {
+                if (response.body() != null) {
+                    Log.i("ad", "Create follow");
+                    ynfAdapter.RemoveList(0);
+                    ynfAdapter.notifyDataSetChanged();
+                    if (fo.size() > j)
+                        db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
+                    db.close();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
     public static class AllFollow extends AsyncTask<Void, Void, Void> {

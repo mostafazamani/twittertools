@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                preferences.edit().putString("ad", response.trim()).apply();
+                preferences2.edit().putString("ad", response.trim()).apply();
                 Log.i("adl", response);
             }
         }, new com.android.volley.Response.ErrorListener() {

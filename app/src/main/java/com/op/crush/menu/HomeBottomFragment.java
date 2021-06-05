@@ -37,6 +37,11 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -104,6 +109,9 @@ public class HomeBottomFragment extends Fragment {
     int step = 0;
 
     public Context context;
+    private RewardedVideoAd mRewardedVideoAd;
+    boolean adl = false;
+    private SharedPreferences preferences1;
 
     @Nullable
     @Override
@@ -140,6 +148,14 @@ public class HomeBottomFragment extends Fragment {
 
         user_info(session, view.getContext());
 
+        MobileAds.initialize(view.getContext(), "ca-app-pub-6353098097853332~3028901753");
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(view.getContext());
+
+        preferences1 = view.getContext().getSharedPreferences("AdL", Context.MODE_PRIVATE);
+        String a = preferences1.getString("ad", "true");
+        if (a.equals("true"))
+            adl = true;
+
 
         itemTitles = new ArrayList<>();
 //        itemTitles.add(BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
@@ -157,16 +173,16 @@ public class HomeBottomFragment extends Fragment {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
 
-                               // new Remove(database, session).execute(index);
+                                // new Remove(database, session).execute(index);
 
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
                                     Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()));
                                     firestore.collection("crush")
-                                            .document(String.valueOf(database.userCrushDao().getUserCrush().get(index+1).getUser_id()))
+                                            .document(String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()))
                                             .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index+1));
+                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index + 1));
                                             Log.i("removeItem", "remove from fire base");
                                             adapter.removeItemAt(index);
                                         }
@@ -203,7 +219,52 @@ public class HomeBottomFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 dialog.show();
-                ListCrushs(database, session, firestore, view.getContext());
+                if (adl) {
+                    mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+                        @Override
+                        public void onRewardedVideoAdLoaded() {
+                                    mRewardedVideoAd.show();
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdOpened() {
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoStarted() {
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdClosed() {
+
+                        }
+
+                        @Override
+                        public void onRewarded(RewardItem rewardItem) {
+                            ListCrushs(database, session, firestore, view.getContext());
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdLeftApplication() {
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdFailedToLoad(int i) {
+                            ListCrushs(database, session, firestore, view.getContext());
+                        }
+
+                        @Override
+                        public void onRewardedVideoCompleted() {
+
+                        }
+                    });
+
+                  loadRewardedVideoAd();
+                } else
+                    ListCrushs(database, session, firestore, view.getContext());
             }
         });
 
@@ -267,7 +328,10 @@ public class HomeBottomFragment extends Fragment {
         return view;
     }
 
-
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/2923307589",
+                new AdRequest.Builder().build());
+    }
     public void read_crushs() {
         collectionReference = firestore.collection("crush").
                 document(String.valueOf(session.getId())).collection("cr");
@@ -434,9 +498,9 @@ public class HomeBottomFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 dialog.dismiss();
                 Set<String> ma = documentSnapshot.getData().keySet();
-                Log.i("list",ma.toString());
-                Log.i("list",list.toString());
-                if (ma.size()>0) {
+                Log.i("list", ma.toString());
+                Log.i("list", list.toString());
+                if (ma.size() > 0) {
                     List<Long> list1 = new ArrayList<>();
                     List<String> stringList = new ArrayList<>(ma);
                     for (int i = 0; i < stringList.size(); i++) {

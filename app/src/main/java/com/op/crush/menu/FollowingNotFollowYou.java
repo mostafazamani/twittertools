@@ -67,7 +67,7 @@ public class FollowingNotFollowYou extends Fragment {
     SharedPreferences preferences;
     private SharedPreferences preferences1;
     boolean adl = false;
-
+    ProgressDialog dialogf;
 
     @Nullable
     @Override
@@ -89,12 +89,12 @@ public class FollowingNotFollowYou extends Fragment {
         dialog.setMessage("wait");
         dialog.setCancelable(false);
 
-        ProgressDialog dialogf = new ProgressDialog(view.getContext());
+        dialogf = new ProgressDialog(view.getContext());
         dialogf.setMessage("UnFollowing...");
         dialogf.setCancelable(false);
 
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        preferences1 = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
+        preferences1 = view.getContext().getSharedPreferences("AdL", Context.MODE_PRIVATE);
         String a = preferences1.getString("ad", "true");
         if (a.equals("true"))
             adl = true;
@@ -300,21 +300,22 @@ public class FollowingNotFollowYou extends Fragment {
                     });
 
                     loadRewardedVideoAd();
-                }else {
+                } else {
                     dialogf.show();
                     int r = followList.size();
 
                     if (r > 15) {
                         for (int q = 0; q <= 15; q++) {
                             new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
+                            if (q == 15)
+                                dialogf.dismiss();
                         }
-                        dialogf.dismiss();
                     } else if (r != 0) {
                         for (int q = 0; q < r - 1; q++) {
                             new AllUnFollow(session, ynfAdapter, getContext(), followList.get(q).getId()).execute();
-
+                            if (q == r - 2)
+                                dialogf.dismiss();
                         }
-                        dialogf.dismiss();
                     }
                 }
                 followList = db.getExpectItem(DbFollow.TB_FOLLOWING, DbFollow.TB_FOLLOWER);
@@ -374,7 +375,12 @@ public class FollowingNotFollowYou extends Fragment {
             return null;
         }
 
-//        public void UnFollow() {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        //        public void UnFollow() {
 //            MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
 //            apiClient.getCustomTwitterService().DestroyFollow(fo.get(j).getId()).enqueue(new Callback<JsonObject>() {
 //                @Override
