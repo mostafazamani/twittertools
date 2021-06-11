@@ -493,29 +493,32 @@ public class HomeBottomFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 dialog.dismiss();
-                Set<String> ma = documentSnapshot.getData().keySet();
-                Log.i("list", ma.toString());
-                Log.i("list", list.toString());
-                if (ma.size() > 0) {
-                    List<Long> list1 = new ArrayList<>();
-                    List<String> stringList = new ArrayList<>(ma);
-                    for (int i = 0; i < stringList.size(); i++) {
-                        for (int j = 0; j < list.size(); j++) {
-                            Log.i("crushslist", String.valueOf(list.get(j).getUser_id()));
-                            Log.i("crushslist", stringList.get(i));
-                            if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
-                                list1.add(list.get(j).getUser_id());
+                if (documentSnapshot.getData()!=null) {
+                    Set<String> ma = documentSnapshot.getData().keySet();
+                    Log.i("list", ma.toString());
+                    Log.i("list", list.toString());
+                    if (ma.size() > 0) {
+                        List<Long> list1 = new ArrayList<>();
+                        List<String> stringList = new ArrayList<>(ma);
+                        for (int i = 0; i < stringList.size(); i++) {
+                            for (int j = 0; j < list.size(); j++) {
+                                Log.i("crushslist", String.valueOf(list.get(j).getUser_id()));
+                                Log.i("crushslist", stringList.get(i));
+                                if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
+                                    list1.add(list.get(j).getUser_id());
+                                }
                             }
                         }
+
+                        CrushsAdapter crushsAdapter = new CrushsAdapter(context);
+                        list_crushs.setAdapter(crushsAdapter);
+                        if (list1.size() < 1)
+                            Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
+                        crushsAdapter.AddToList(list1);
                     }
-
-                    CrushsAdapter crushsAdapter = new CrushsAdapter(context);
-                    list_crushs.setAdapter(crushsAdapter);
-                    if (list1.size() < 1)
-                        Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
-                    crushsAdapter.AddToList(list1);
+                }else {
+                    Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
                 }
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
