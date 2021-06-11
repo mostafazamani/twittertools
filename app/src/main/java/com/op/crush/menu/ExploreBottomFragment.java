@@ -65,6 +65,7 @@ public class ExploreBottomFragment extends Fragment {
     GridView gridView;
     private ExploreAdapter exploreAdapter;
     private FirebaseFirestore firestore;
+    boolean conn = true;
 
     @Nullable
     @Override
@@ -76,9 +77,7 @@ public class ExploreBottomFragment extends Fragment {
         refreshLayout = view.findViewById(R.id.ex_swip);
 
         firestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
         firestore.setFirestoreSettings(settings);
 
         List<SuggestUser> suggestUsers = new ArrayList<>();
@@ -88,8 +87,14 @@ public class ExploreBottomFragment extends Fragment {
 
         if (countryCode == null)
             countryCode= "Public";
+        else if(countryCode.trim().toLowerCase().equals("gb") || countryCode.trim().toLowerCase().equals("de") || countryCode.trim().toLowerCase().equals("tr") || countryCode.trim().toLowerCase().equals("fr"))
+            countryCode = "FR";
+        else if (countryCode.trim().toLowerCase().equals("us") || countryCode.trim().toLowerCase().equals("zm")|| countryCode.trim().toLowerCase().equals("ca"))
+            countryCode = "SA";
+        else if (countryCode.trim().toLowerCase().equals("ir") )
+            countryCode = "IR";
         else
-            countryCode = countryCode.toUpperCase();
+            countryCode = "Public";
 
         Log.i("countryCode" , countryCode);
 
@@ -157,7 +162,10 @@ public class ExploreBottomFragment extends Fragment {
                                 @Override
                                 public void onFailure(Call<JsonArray> call, Throwable t) {
                                     dialog.dismiss();
-                                    Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                                    if (conn) {
+                                        Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                                        conn =false;
+                                    }
                                 }
                             });
 
@@ -198,7 +206,7 @@ public class ExploreBottomFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                conn=true;
                 dialog.show();
                 firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override

@@ -105,7 +105,6 @@ public class ListSearchAdapter extends BaseAdapter {
 
         firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         firestore.setFirestoreSettings(settings);
 
@@ -149,7 +148,7 @@ public class ListSearchAdapter extends BaseAdapter {
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-
+                        Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -178,24 +177,5 @@ public class ListSearchAdapter extends BaseAdapter {
             url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
     }
-
-    public void add_crush(Long map, long id) {
-
-    }
-
-    public static class Ins extends AsyncTask<UserCrush, Void, Void> {
-        UserCrushDatabase database;
-
-        public Ins(UserCrushDatabase database) {
-            this.database = database;
-        }
-
-        @Override
-        protected Void doInBackground(UserCrush... userCrushes) {
-            database.userCrushDao().insert(userCrushes[0]);
-            return null;
-        }
-    }
-
 
 }

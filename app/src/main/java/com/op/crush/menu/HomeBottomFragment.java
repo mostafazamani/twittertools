@@ -122,15 +122,11 @@ public class HomeBottomFragment extends Fragment {
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         firestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
+
         firestore.setFirestoreSettings(settings);
 
         database = UserCrushDatabase.getInstance(view.getContext());
-
-        TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String countryCode = telephoneManager.getNetworkCountryIso();
 
         context = view.getContext();
 
@@ -176,7 +172,7 @@ public class HomeBottomFragment extends Fragment {
                                 // new Remove(database, session).execute(index);
 
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
-                                    Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index).getUser_id()));
+                                    Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index+1).getUser_id()));
                                     firestore.collection("crush")
                                             .document(String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()))
                                             .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -637,9 +633,7 @@ public class HomeBottomFragment extends Fragment {
             this.database = database;
             this.session = session;
             firestore = FirebaseFirestore.getInstance();
-            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                    .setTimestampsInSnapshotsEnabled(true)
-                    .build();
+            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
             firestore.setFirestoreSettings(settings);
         }
 

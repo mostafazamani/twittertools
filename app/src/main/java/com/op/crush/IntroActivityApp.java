@@ -4,23 +4,28 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.github.appintro.AppIntro;
+import com.github.appintro.AppIntro2;
+import com.github.appintro.AppIntroCustomLayoutFragment;
 import com.github.appintro.AppIntroFragment;
+import com.github.appintro.AppIntroPageTransformerType;
 
-public class IntroActivityApp extends AppIntro {
+import static com.github.appintro.AppIntroPageTransformerType.*;
+
+public class IntroActivityApp extends AppIntro2 {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide1, Color.BLUE));
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide2,Color.GREEN));
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide3,Color.YELLOW));
-        addSlide(AppIntroFragment.newInstance("","",R.drawable.slide4,Color.RED));
-        setColorTransitionsEnabled(true);
+        addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro1));
+        addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro2));
+        addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro3));
+        addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro4));
         setSkipButtonEnabled(false);
 
     }
