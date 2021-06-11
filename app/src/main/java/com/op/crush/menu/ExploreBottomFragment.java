@@ -253,8 +253,10 @@ public class ExploreBottomFragment extends Fragment {
                                         @Override
                                         public void onFailure(Call<JsonArray> call, Throwable t) {
                                             dialog.dismiss();
-                                            Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
-                                        }
+                                            if (conn) {
+                                                Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                                                conn =false;
+                                            }                                        }
                                     });
 
 
