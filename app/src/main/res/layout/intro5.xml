@@ -2,47 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/slide5"
+    android:background="@drawable/slide6"
     >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="50dp"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="How it works:"
-            android:textSize="30sp"
 
-
-            android:textColor="@color/textcolor">
-
-        </TextView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Every fifteen minutes, we receive 3,000 followers and 3,000 followers in the database"
-            android:textSize="20sp"
-
-
-            android:textColor="@color/textcolor">
-
-        </TextView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thank you for supporting us"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-
-
-            android:textColor="@color/textcolor">
-
-        </TextView>
-
-
-    </LinearLayout>
 
 </RelativeLayout>
