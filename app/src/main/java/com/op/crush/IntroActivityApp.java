@@ -26,6 +26,7 @@ public class IntroActivityApp extends AppIntro2 {
         addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro2));
         addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro3));
         addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro4));
+        addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro5));
         setSkipButtonEnabled(false);
 
     }
