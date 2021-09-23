@@ -104,6 +104,7 @@ public class HomeBottomFragment extends Fragment {
     public TextView txt_crushs;
     ListView list_crushs;
     public Button btn_crushs;
+    public Button btn_open_nav;
     ArrayList<Bitmap> itemTitles;
     ProgressDialog dialog;
     int step = 0;
@@ -137,6 +138,7 @@ public class HomeBottomFragment extends Fragment {
         txt_crushs = view.findViewById(R.id.txt_crushs);
         list_crushs = view.findViewById(R.id.crushs);
         btn_crushs = view.findViewById(R.id.btn_refresh_crushs);
+        btn_open_nav = view.findViewById(R.id.btn_open_nav);
 
         dialog = new ProgressDialog(view.getContext());
         dialog.setMessage("wait...");

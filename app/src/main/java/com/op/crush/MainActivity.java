@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void failure(TwitterException exception) {
                     // Do something on failure
-                    Toast.makeText(getApplicationContext(), "Login fail , try again ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Difficulty communicating with Twitter's API\nLogin fail , try again ", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -189,5 +189,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

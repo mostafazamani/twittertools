@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -93,6 +94,7 @@ public class MainMenu extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
+    public static DrawerLayout donav;
 
     Fragment fragment1 = new HomeBottomFragment();
     Fragment fragment2 = new ExploreBottomFragment();
@@ -314,9 +316,26 @@ public class MainMenu extends AppCompatActivity {
                         about_us.setContentView(R.layout.about_us);
                         about_us.show();
                         break;
-
-
-
+                    case R.id.policy :
+                        String url = "https://twittwetools.w3spaces.com/";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        break;
+                    case R.id.twitter:
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.twitter.android");
+                        if (launchIntent != null) {
+                            startActivity(launchIntent);//null pointer check in case package name was not found
+                        }
+                        break;
+                    case R.id.exit :
+                        SharedPreferences preferences;
+                        preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+                        preferences.edit().putString("log", "logout").apply();
+                        Intent intent = new Intent(MainMenu.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
                     default:
                         return true;
                 }

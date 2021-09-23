@@ -5,6 +5,15 @@
     <item android:id="@+id/about_us"
         android:icon="@drawable/ic_about_us"
         android:title="About Us"/>
+    <item android:id="@+id/twitter"
+        android:icon="@drawable/ic_baseline_open_in_new_24"
+        android:title="Twitter"/>
+    <item android:id="@+id/policy"
+        android:icon="@drawable/ic_baseline_policy_24"
+        android:title="Privacy Policy"/>
+    <item android:id="@+id/exit"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
+        android:title="Logout"/>
 
 <!--
 
