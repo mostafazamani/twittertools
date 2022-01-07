@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Twitter tools crush finder</string>
+    <string name="app_name">Tools and Crush Finder</string>
     <string name="com.twitter.sdk.android.CONSUMER_KEY">tbWEsn6npr7OrNP0VFrqND2SF</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">wr9mIZLFg15AKsP3O2rFeOdgnFAdaYWtFTcCpLl97J9xZgHiMo</string>
     <string name="todo">TODO</string>
@@ -14,7 +14,7 @@
 
 
     <string name="name_app_description">Crush Finder \n
-    Twitter Tools
+    and Tools
     </string>
     <string name="genarating_download_link">Generating download link</string>
     <string name="select_quality">Select Quality</string>

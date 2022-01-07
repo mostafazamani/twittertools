@@ -42,7 +42,7 @@
         android:textSize="15sp"
         android:layout_margin="20dp"
         android:layout_below="@+id/launcher_logo"
-        android:text="Twitter Tools,Crush Finder"
+        android:text="Tools and Crush Finder"
         android:textStyle="bold"
         android:gravity="center"/>
 
