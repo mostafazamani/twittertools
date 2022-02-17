@@ -313,7 +313,7 @@ public class HomeBottomFragment extends Fragment {
     }
 
     private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/2923307589",
+        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/5531784892",
                 new AdRequest.Builder().build());
     }
     public void read_crushs() {

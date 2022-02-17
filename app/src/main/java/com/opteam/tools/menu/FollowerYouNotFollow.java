@@ -80,6 +80,7 @@ public class FollowerYouNotFollow extends Fragment {
         list = view.findViewById(R.id.list_fynf);
         txtProgress = view.findViewById(R.id.txtProgress);
         progressBar = view.findViewById(R.id.progressBar);
+        follow_all.setVisibility(View.INVISIBLE);
 
         refreshLayout = view.findViewById(R.id.swipy);
 
@@ -134,6 +135,7 @@ public class FollowerYouNotFollow extends Fragment {
                     if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                         progressBar.setVisibility(View.INVISIBLE);
                         txtProgress.setVisibility(View.INVISIBLE);
+                        follow_all.setVisibility(View.VISIBLE);
                         ynfAdapter = new FollowerYnfAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
 
@@ -335,35 +337,35 @@ public class FollowerYouNotFollow extends Fragment {
     }
 
     private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/2923307589",
+        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/5531784892",
                 new AdRequest.Builder().build());
     }
 
-    public void AllFollow(TwitterSession session1, FollowerYnfAdapter ynfAdapter, Context context, List<follow> fo, long id, int j){
-        DbFollow db;
-        db = DbFollow.getInstance(context);
-        db.getWritableDatabase();
-        MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
-        apiClient.getCustomTwitterService().CreateFollow(id).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    Log.i("ad", "Create follow");
-                    ynfAdapter.RemoveList(0);
-                    ynfAdapter.notifyDataSetChanged();
-                    if (fo.size() > j)
-                        db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
-                    db.close();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
-    }
+//    public void AllFollow(TwitterSession session1, FollowerYnfAdapter ynfAdapter, Context context, List<follow> fo, long id, int j){
+//        DbFollow db;
+//        db = DbFollow.getInstance(context);
+//        db.getWritableDatabase();
+//        MyTwitterApiClient apiClient = new MyTwitterApiClient(session1);
+//        apiClient.getCustomTwitterService().CreateFollow(id).enqueue(new retrofit2.Callback() {
+//            @Override
+//            public void onResponse(Call call, @NonNull Response response) {
+//                if (response.body() != null) {
+//                    Log.i("ad", "Create follow");
+//                    ynfAdapter.RemoveList(0);
+//                    ynfAdapter.notifyDataSetChanged();
+//                    if (fo.size() > j)
+//                        db.AddItem(fo.get(j), DbFollow.TB_FOLLOWING);
+//                    db.close();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, Throwable t) {
+//
+//            }
+//        });
+//    }
 
     public static class AllFollow extends AsyncTask<Void, Void, Void> {
 

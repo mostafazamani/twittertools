@@ -147,7 +147,7 @@ public class ExploreBottomFragment extends Fragment {
                                             exploreAdapter.notifyDataSetChanged();
                                             dialog.dismiss();
                                         } catch (Exception e) {
-
+                                            dialog.dismiss();
                                         }
 
                                     }

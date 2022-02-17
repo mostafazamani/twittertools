@@ -76,6 +76,7 @@ public class FollowingNotFollowYou extends Fragment {
         list = view.findViewById(R.id.list_fnfy);
         txtProgress = view.findViewById(R.id.txtProgress1);
         progressBar = view.findViewById(R.id.progressBar1);
+        unfollow_all.setVisibility(View.INVISIBLE);
 
         refreshLayout = view.findViewById(R.id.swipu);
 
@@ -130,6 +131,7 @@ public class FollowingNotFollowYou extends Fragment {
                     if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                         progressBar.setVisibility(View.INVISIBLE);
                         txtProgress.setVisibility(View.INVISIBLE);
+                        unfollow_all.setVisibility(View.VISIBLE);
                         ynfAdapter = new FolloweingNfyAdapter(view.getContext());
                         list.setAdapter(ynfAdapter);
 
@@ -323,7 +325,7 @@ public class FollowingNotFollowYou extends Fragment {
     }
 
     private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/2923307589",
+        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/5531784892",
                 new AdRequest.Builder().build());
     }
 
