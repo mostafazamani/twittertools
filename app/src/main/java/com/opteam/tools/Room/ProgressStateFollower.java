@@ -4,7 +4,7 @@ package com.opteam.tools.Room;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "progress")
+@Entity(tableName = "progressfollower")
 public class ProgressStateFollower {
 
     @PrimaryKey(autoGenerate = true)

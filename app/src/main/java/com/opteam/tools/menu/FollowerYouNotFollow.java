@@ -32,7 +32,9 @@ import com.opteam.tools.DbFollow;
 import com.opteam.tools.MyTwitterApiClient;
 import com.opteam.tools.R;
 import com.opteam.tools.Room.ProgressState;
+import com.opteam.tools.Room.ProgressStateFollower;
 import com.opteam.tools.Room.ProgressViewModel;
+import com.opteam.tools.Room.ProgressViewModelFollower;
 import com.opteam.tools.adapter.FollowerYnfAdapter;
 import com.opteam.tools.models.follow;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -52,10 +54,14 @@ public class FollowerYouNotFollow extends Fragment {
     List<follow> followList;
     List<follow> fo;
     private TextView txtProgress;
+    private TextView txtProgress2;
     private ProgressBar progressBar;
+    private ProgressBar progressBar2;
     FollowerYnfAdapter ynfAdapter;
     ProgressViewModel model;
+    ProgressViewModelFollower modelFollower;
     int stat;
+    int statFollower;
     private ListView list;
     private TwitterSession session;
     private RewardedVideoAd mRewardedVideoAd;
@@ -79,10 +85,13 @@ public class FollowerYouNotFollow extends Fragment {
         follow_all = view.findViewById(R.id.follow_all);
         list = view.findViewById(R.id.list_fynf);
         txtProgress = view.findViewById(R.id.txtProgress);
+        txtProgress2 = view.findViewById(R.id.txtProgress2);
         progressBar = view.findViewById(R.id.progressBar);
+        progressBar2 = view.findViewById(R.id.progressBar2);
         follow_all.setVisibility(View.INVISIBLE);
 
         refreshLayout = view.findViewById(R.id.swipy);
+        refreshLayout.setEnabled(false);
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
@@ -105,6 +114,10 @@ public class FollowerYouNotFollow extends Fragment {
 
         if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
             progressBar.setVisibility(View.INVISIBLE);
+            progressBar2.setVisibility(View.INVISIBLE);
+            txtProgress.setVisibility(View.INVISIBLE);
+            txtProgress2.setVisibility(View.INVISIBLE);
+            refreshLayout.setEnabled(true);
             ynfAdapter = new FollowerYnfAdapter(view.getContext());
             list.setAdapter(ynfAdapter);
 
@@ -128,27 +141,69 @@ public class FollowerYouNotFollow extends Fragment {
             public void onChanged(List<ProgressState> progressStates) {
                 stat = progressStates.get(progressStates.size() - 1).getState();
                 progressBar.setProgress(stat);
-                txtProgress.setText(String.valueOf(stat) + "%");
+                txtProgress.setText("Following\n"+String.valueOf(stat) + "%");
                 if (stat == 100) {
-                    x[0] += 1;
+                    if (statFollower == 100) {
+                        x[0] += 1;
 
-                    if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        txtProgress.setVisibility(View.INVISIBLE);
-                        follow_all.setVisibility(View.VISIBLE);
-                        ynfAdapter = new FollowerYnfAdapter(view.getContext());
-                        list.setAdapter(ynfAdapter);
+                        if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            progressBar2.setVisibility(View.INVISIBLE);
+                            txtProgress.setVisibility(View.INVISIBLE);
+                            txtProgress2.setVisibility(View.INVISIBLE);
+                            follow_all.setVisibility(View.VISIBLE);
+                            ynfAdapter = new FollowerYnfAdapter(view.getContext());
+                            list.setAdapter(ynfAdapter);
 
-                        db = DbFollow.getInstance(view.getContext());
-                        db.getReadableDatabase();
+                            db = DbFollow.getInstance(view.getContext());
+                            db.getReadableDatabase();
 
-                        fo = new ArrayList<>();
+                            fo = new ArrayList<>();
 
-                        followList = db.getExpectItem(DbFollow.TB_FOLLOWER, DbFollow.TB_FOLLOWING);
-                        ynfAdapter.AddToList(followList);
-                        ynfAdapter.notifyDataSetChanged();
-                        db.close();
+                            followList = db.getExpectItem(DbFollow.TB_FOLLOWER, DbFollow.TB_FOLLOWING);
+                            ynfAdapter.AddToList(followList);
+                            ynfAdapter.notifyDataSetChanged();
+                            db.close();
+                            refreshLayout.setEnabled(true);
+                        }
+                    }
+                }
 
+            }
+        });
+
+
+        modelFollower = new ViewModelProvider(getActivity()).get(ProgressViewModelFollower.class);
+        modelFollower.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressStateFollower>>() {
+            @Override
+            public void onChanged(List<ProgressStateFollower> progressStates) {
+                statFollower = progressStates.get(progressStates.size() - 1).getState();
+                progressBar2.setProgress(stat);
+                txtProgress2.setText("Follower \n" + String.valueOf(statFollower) + "%");
+                if (statFollower == 100) {
+                    if (stat == 100) {
+                        x[0] += 1;
+
+                        if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            progressBar2.setVisibility(View.INVISIBLE);
+                            txtProgress.setVisibility(View.INVISIBLE);
+                            txtProgress2.setVisibility(View.INVISIBLE);
+                            follow_all.setVisibility(View.VISIBLE);
+                            ynfAdapter = new FollowerYnfAdapter(view.getContext());
+                            list.setAdapter(ynfAdapter);
+
+                            db = DbFollow.getInstance(view.getContext());
+                            db.getReadableDatabase();
+
+                            fo = new ArrayList<>();
+
+                            followList = db.getExpectItem(DbFollow.TB_FOLLOWER, DbFollow.TB_FOLLOWING);
+                            ynfAdapter.AddToList(followList);
+                            ynfAdapter.notifyDataSetChanged();
+                            db.close();
+                            refreshLayout.setEnabled(true);
+                        }
                     }
                 }
 
@@ -289,14 +344,14 @@ public class FollowerYouNotFollow extends Fragment {
                             if (r > 15) {
                                 for (int q = 0; q <= 15; q++) {
                                     new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                if (q==15)
-                                    dialogf.dismiss();
+                                    if (q == 15)
+                                        dialogf.dismiss();
                                 }
 
                             } else if (r != 0) {
                                 for (int q = 0; q < r - 1; q++) {
                                     new AllFollow(session, ynfAdapter, getContext(), followList, followList.get(0).getId(), q).execute();
-                                    if (q== r-2)
+                                    if (q == r - 2)
                                         dialogf.dismiss();
                                 }
 
@@ -312,7 +367,7 @@ public class FollowerYouNotFollow extends Fragment {
 
                     loadRewardedVideoAd();
 
-                }else{
+                } else {
                     dialogf.show();
                     int r = followList.size();
 

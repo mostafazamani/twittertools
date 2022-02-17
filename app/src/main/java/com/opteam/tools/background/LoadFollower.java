@@ -14,7 +14,9 @@ import androidx.work.WorkerParameters;
 import com.opteam.tools.DbFollow;
 import com.opteam.tools.MyTwitterApiClient;
 import com.opteam.tools.Room.ProgressDatabase;
+import com.opteam.tools.Room.ProgressDatabaseFollower;
 import com.opteam.tools.Room.ProgressState;
+import com.opteam.tools.Room.ProgressStateFollower;
 import com.opteam.tools.models.followmodel;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -26,7 +28,7 @@ import retrofit2.Response;
 
 public class LoadFollower extends Worker {
 
-    private final ProgressDatabase database;
+    private final ProgressDatabaseFollower database;
     private TwitterSession session;
     private DbFollow db;
     public long nextCursor;
@@ -43,8 +45,8 @@ public class LoadFollower extends Worker {
         super(context, workerParams);
         Twitter.initialize(context);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CP", -1) / 200);
-        database = ProgressDatabase.getInstance(context);
+        pc = 100 / (preferences.getInt("CPf", -1) / 200);
+        database = ProgressDatabaseFollower.getInstance(context);
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
         day = preferences.getLong("day", 0);
@@ -98,7 +100,7 @@ public class LoadFollower extends Worker {
 
                     prog += pc;
                     countFollower++;
-                    new progress(database).execute(new ProgressState(prog));
+                    new progress(database).execute(new ProgressStateFollower(prog));
                     preferences.edit().putLong("FollowerC", fol.getNextCursor()).apply();
                     preferences.edit().putInt("FRC", countFollower).apply();
                     preferences.edit().putLong("timeRFollower", System.currentTimeMillis()).apply();
@@ -118,7 +120,7 @@ public class LoadFollower extends Worker {
                                 } else {
                                     preferences.edit().putLong("FollowerC", -1L).apply();
                                     preferences.edit().putInt("FollowerCount", 1).apply();
-                                    new progress(database).execute(new ProgressState(100));
+                                    new progress(database).execute(new ProgressStateFollower(100));
                                     preferences.edit().putLong("dayfollower", System.currentTimeMillis()).apply();
                                     db.close();
                                 }
@@ -135,7 +137,7 @@ public class LoadFollower extends Worker {
                             preferences.edit().putLong("FollowerC", -1L).apply();
                             preferences.edit().putInt("FollowerCount", 1).apply();
                             preferences.edit().putInt("FRC", countFollower).apply();
-                            new progress(database).execute(new ProgressState(100));
+                            new progress(database).execute(new ProgressStateFollower(100));
                             preferences.edit().putLong("dayfollower", System.currentTimeMillis()).apply();
                             db.close();
                         }
@@ -154,16 +156,16 @@ public class LoadFollower extends Worker {
 
     }
 
-    public static class progress extends AsyncTask<ProgressState, Void, Void> {
+    public static class progress extends AsyncTask<ProgressStateFollower, Void, Void> {
 
-        ProgressDatabase database;
+        ProgressDatabaseFollower database;
 
-        public progress(ProgressDatabase database) {
+        public progress(ProgressDatabaseFollower database) {
             this.database = database;
         }
 
         @Override
-        protected Void doInBackground(ProgressState... progressStates) {
+        protected Void doInBackground(ProgressStateFollower... progressStates) {
             database.progressDao().insert(progressStates[0]);
             return null;
         }

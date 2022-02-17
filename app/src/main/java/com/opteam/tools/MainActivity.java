@@ -80,9 +80,34 @@ public class MainActivity extends AppCompatActivity {
         if (preferences.getString("log", "").equals("login")) {
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 //            startService(new Intent(MainActivity.this, FlwService.class));
+            MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+            myTwitterApiClient.getCustomTwitterService().User(session.getUserId(), session.getUserName()).enqueue(new retrofit2.Callback<UserShow>() {
+                @Override
+                public void onResponse(Call<UserShow> call, Response<UserShow> response) {
 
 
-            loginMethod();
+                    if (response.body() != null) {
+                        UserShow show = response.body();
+                    /*Toast.makeText(HomeBottomFragment.this, ""+show.getProfile_name() + "\n"
+                            +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();*/
+                        int cf = show.getFollowings_count();
+                        int cff = show.getFollowers_count();
+                        preferences1.edit().putInt("CP", cf).apply();
+                        preferences1.edit().putInt("CPf", cff).apply();
+                        Log.i("foll",String.valueOf(cff));
+
+                        loginMethod();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<UserShow> call, Throwable t) {
+                    Toast.makeText(MainActivity.this, "Check your connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
         } else {
             loginButton.setCallback(new Callback<TwitterSession>() {
@@ -110,8 +135,11 @@ public class MainActivity extends AppCompatActivity {
                                 UserShow show = response.body();
                     /*Toast.makeText(HomeBottomFragment.this, ""+show.getProfile_name() + "\n"
                             +show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();*/
-                                int cf = show.getFollowers_count() + show.getFollowings_count();
-                                preferences.edit().putInt("CP", cf).apply();
+                                int cf = show.getFollowings_count();
+                                int cff = show.getFollowers_count();
+                                preferences1.edit().putInt("CP", cf).apply();
+                                preferences1.edit().putInt("CPf", cff).apply();
+                                Log.i("foll",String.valueOf(cff));
 
                                 loginMethod();
                             }
