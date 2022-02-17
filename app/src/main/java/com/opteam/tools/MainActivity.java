@@ -18,6 +18,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         Twitter.initialize(this);
         setContentView(R.layout.activity_main);
 
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("wait");
+        dialog.setCancelable(false);
+
         if (getAppIntro(this)) {
             Intent i = new Intent(MainActivity.this, IntroActivityApp.class);
             startActivity(i);
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
 
         if (preferences.getString("log", "").equals("login")) {
+            dialog.show();
             session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 //            startService(new Intent(MainActivity.this, FlwService.class));
             MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         preferences1.edit().putInt("CP", cf).apply();
                         preferences1.edit().putInt("CPf", cff).apply();
                         Log.i("foll",String.valueOf(cff));
-
+                        dialog.dismiss();
                         loginMethod();
                     }
 
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<UserShow> call, Throwable t) {
+                    dialog.dismiss();
                     Toast.makeText(MainActivity.this, "Check your connection", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -113,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             loginButton.setCallback(new Callback<TwitterSession>() {
                 @Override
                 public void success(Result<TwitterSession> result) {
+                    dialog.show();
                     // Do something with result, which provides a TwitterSession for making API calls
                     session = TwitterCore.getInstance().getSessionManager().getActiveSession();
                     preferences.edit().putString("log", "login").apply();
@@ -141,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                                 preferences1.edit().putInt("CPf", cff).apply();
                                 Log.i("foll",String.valueOf(cff));
 
+                                dialog.dismiss();
+
                                 loginMethod();
                             }
 
@@ -149,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserShow> call, Throwable t) {
+                            dialog.dismiss();
                             Toast.makeText(MainActivity.this, "Check your connection", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -159,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void failure(TwitterException exception) {
                     // Do something on failure
-                    Toast.makeText(getApplicationContext(), "Difficulty communicating with Twitter's API\nLogin fail , try again ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Login fail , try again ", Toast.LENGTH_LONG).show();
                 }
             });
         }

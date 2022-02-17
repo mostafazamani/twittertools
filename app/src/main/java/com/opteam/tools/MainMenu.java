@@ -60,12 +60,10 @@ public class MainMenu extends AppCompatActivity {
     private TwitterSession session;
 
 
-
-
-    SharedPreferences preferences ;
+    SharedPreferences preferences;
     BottomNavigationView bottomNavigationView;
     ImageView profile, banner;
-    TextView fc,fwc,tid,tname;
+    TextView fc, fwc, tid, tname;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -73,7 +71,7 @@ public class MainMenu extends AppCompatActivity {
 
     Fragment fragment1 = new HomeBottomFragment();
     Fragment fragment2 = new ExploreBottomFragment();
-//    Fragment fragment3 = new TwittsBottomFragment();
+    //    Fragment fragment3 = new TwittsBottomFragment();
     Fragment fragment4 = new FollowBottomFragment();
     Fragment fragment5 = new DownloaderBottomFragment(); //downloader
     FragmentManager fm = getSupportFragmentManager();
@@ -95,7 +93,6 @@ public class MainMenu extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final MotionLayout motionLayout = findViewById(R.id.view);
-
 
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -137,13 +134,7 @@ public class MainMenu extends AppCompatActivity {
         }.start();
 
 
-
-
         bottomNavigationView = findViewById(R.id.bottom_nav);
-
-
-
-
 
 
         preferences = getSharedPreferences("Courser", Context.MODE_PRIVATE);
@@ -175,7 +166,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onChanged(List<ProgressState> progressStates) {
                 if (progressStates != null && progressStates.size() > 0) {
-                //    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
+                    //    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                     Log.i("vm", String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                 }
             }
@@ -242,15 +233,14 @@ public class MainMenu extends AppCompatActivity {
 //        });
 
 
-
         ////////////////////Night Mode
 
         Menu menu = navigationView.getMenu();
-     //   MenuItem menuItem = menu.findItem(R.id.nav_switch);
-    //    View actionView = MenuItemCompat.getActionView(menuItem);
-    //    nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
-    //    night_preferences = getSharedPreferences("night" , 0);
-    //    Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
+        //   MenuItem menuItem = menu.findItem(R.id.nav_switch);
+        //    View actionView = MenuItemCompat.getActionView(menuItem);
+        //    nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
+        //    night_preferences = getSharedPreferences("night" , 0);
+        //    Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
 
         /*if (aBoolean){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -285,13 +275,13 @@ public class MainMenu extends AppCompatActivity {
                 switch (id) {
                     case R.id.about_us:
 
-                        Dialog about_us=new Dialog(MainMenu.this,android.R.style.Theme_NoTitleBar_Fullscreen);
+                        Dialog about_us = new Dialog(MainMenu.this, android.R.style.Theme_NoTitleBar_Fullscreen);
                         about_us.setTitle("select color");
                         about_us.setCancelable(true);
                         about_us.setContentView(R.layout.about_us);
                         about_us.show();
                         break;
-                    case R.id.policy :
+                    case R.id.policy:
                         String url = "https://twittwetools.w3spaces.com/";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
@@ -303,11 +293,11 @@ public class MainMenu extends AppCompatActivity {
                             startActivity(launchIntent);//null pointer check in case package name was not found
                         }
                         break;
-                    case R.id.exit :
+                    case R.id.exit:
                         SharedPreferences preferences;
                         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
                         preferences.edit().putString("log", "logout").apply();
-                        Intent intent = new Intent(MainMenu.this,MainActivity.class);
+                        Intent intent = new Intent(MainMenu.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -325,7 +315,6 @@ public class MainMenu extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomListener);
         bottomNavigationView.setSelectedItemId(R.id.item_1);
         bottomNavigationView.setItemIconTintList(null); //baraye selectas
-
 
 
     }
@@ -354,12 +343,10 @@ public class MainMenu extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
 
-
-
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
                             fm.beginTransaction().hide(active).show(fragment1).commit();
-                     //       bar.setVisibility(View.VISIBLE);
+                            //       bar.setVisibility(View.VISIBLE);
                             active = fragment1;
                             return true;
                         //selectedFragment = new HomeBottomFragment();
@@ -429,8 +416,10 @@ public class MainMenu extends AppCompatActivity {
                     UserShow show = response.body();
 //                    Toast.makeText(MainMenu.this, "" + show.getProfile_name() + "\n"
 //                            + show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
-                    int cf = show.getFollowers_count() + show.getFollowings_count();
+                    int cf = show.getFollowings_count();
+                    int cff = show.getFollowers_count();
                     preferences.edit().putInt("CP", cf).apply();
+                    preferences.edit().putInt("CPf", cff).apply();
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
@@ -466,7 +455,6 @@ public class MainMenu extends AppCompatActivity {
 
         return url;
     }
-
 
 
 }

@@ -45,7 +45,11 @@ public class LoadFollowing extends Worker {
         super(context, workerParams);
         Twitter.initialize(context);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CP", -1) / 200);
+        if ((preferences.getInt("CP", -1) >= 200)) {
+            pc = 100 / (preferences.getInt("CP", -1) / 200);
+        } else {
+            pc = 100;
+        }
         database = ProgressDatabase.getInstance(context);
         nextCursor = preferences.getLong("FollowingC", -1L);
         countFollowing = preferences.getInt("FIC", 0);
@@ -64,7 +68,7 @@ public class LoadFollowing extends Worker {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         Log.i("foll", "start1");
 
-        if (ou > 720 ) {
+        if (ou > 720) {
             if (nextCursor == -1) {
                 preferences.edit().putInt("FollowingCount", 0).apply();
                 db.DropTable(DbFollow.TB_FOLLOWING);
@@ -95,8 +99,6 @@ public class LoadFollowing extends Worker {
                                 db.AddItem(fol.getResults().get(i), DbFollow.TB_FOLLOWING);
                         }
                     }
-
-
 
 
                     prog += pc;

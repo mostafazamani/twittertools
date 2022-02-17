@@ -45,7 +45,11 @@ public class LoadFollower extends Worker {
         super(context, workerParams);
         Twitter.initialize(context);
         preferences = context.getSharedPreferences("Courser", Context.MODE_PRIVATE);
-        pc = 100 / (preferences.getInt("CPf", -1) / 200);
+        if ((preferences.getInt("CPf", -1) >= 200)) {
+            pc = 100 / (preferences.getInt("CPf", -1) / 200);
+        } else {
+            pc = 100;
+        }
         database = ProgressDatabaseFollower.getInstance(context);
         nextCursor = preferences.getLong("FollowerC", -1L);
         countFollower = preferences.getInt("FRC", 0);
@@ -94,8 +98,6 @@ public class LoadFollower extends Worker {
 
                         }
                     }
-
-
 
 
                     prog += pc;

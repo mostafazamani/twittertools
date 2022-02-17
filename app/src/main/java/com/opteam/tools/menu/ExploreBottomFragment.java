@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -70,6 +71,7 @@ public class ExploreBottomFragment extends Fragment {
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
         refreshLayout = view.findViewById(R.id.ex_swip);
+        refreshLayout.setEnabled(false);
 
         firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
@@ -159,7 +161,7 @@ public class ExploreBottomFragment extends Fragment {
                                     dialog.dismiss();
                                     if (conn) {
                                         Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
-                                        conn =false;
+                                        conn = false;
                                     }
                                 }
                             });
@@ -168,7 +170,14 @@ public class ExploreBottomFragment extends Fragment {
                     }
 
                 }
-
+                refreshLayout.setEnabled(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                refreshLayout.setEnabled(true);
+                dialog.dismiss();
+                Toast.makeText(view.getContext(), "Failed, pull to refresh", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -201,6 +210,24 @@ public class ExploreBottomFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshLayout.setEnabled(true);
+
+                TelephonyManager telephoneManager = (TelephonyManager) view.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                countryCode = telephoneManager.getNetworkCountryIso();
+
+                if (countryCode == null)
+                    countryCode= "Public";
+                else if(countryCode.trim().toLowerCase().equals("gb") || countryCode.trim().toLowerCase().equals("de") || countryCode.trim().toLowerCase().equals("tr") || countryCode.trim().toLowerCase().equals("fr"))
+                    countryCode = "FR";
+                else if (countryCode.trim().toLowerCase().equals("us") || countryCode.trim().toLowerCase().equals("zm")|| countryCode.trim().toLowerCase().equals("ca"))
+                    countryCode = "SA";
+                else if (countryCode.trim().toLowerCase().equals("ir") )
+                    countryCode = "IR";
+                else
+                    countryCode = "Public";
+
+                Log.i("countryCode" , countryCode);
+
                 conn=true;
                 dialog.show();
                 firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -259,6 +286,12 @@ public class ExploreBottomFragment extends Fragment {
 
                         }
 
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dialog.dismiss();
+                        Toast.makeText(view.getContext(), "Failed, pull to refresh", Toast.LENGTH_LONG).show();
                     }
                 });
 
