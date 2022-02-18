@@ -28,7 +28,8 @@
             android:name="com.opteam.tools.downloadvideo.ClipboardMonitor"
             android:exported="false"
             android:label="Clipboard Monitor"
-            android:stopWithTask="false" />
+            android:stopWithTask="false"
+            android:requestLegacyExternalStorage="true"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

@@ -17,6 +17,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.google.gson.JsonArray;
@@ -26,6 +27,8 @@ import com.opteam.tools.R;
 import com.opteam.tools.MainActivity;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +49,7 @@ public class ClipboardMonitor extends Service {
             new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
                 public void onPrimaryClipChanged() {
-                    String newClip = mCM.getPrimaryClip().getItemAt(0).getText().toString();
+                    String newClip = Objects.requireNonNull(mCM.getPrimaryClip()).getItemAt(0).getText().toString();
                     //   Toast.makeText(getApplicationContext(), newClip, Toast.LENGTH_LONG).show();
                     Log.i("LOGClipboard111111 clip", newClip + "");
 
@@ -151,10 +154,19 @@ public class ClipboardMonitor extends Service {
     private void startInForeground() {
         Log.i("LOGClipboard111111", "worki 1");
 
+        String channelId;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = createNotificationChannel("my_service", "My Background Service");
+        } else {
+            // If earlier version channel ID is not used
+            // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+            channelId = "";
+        }
+
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getPackageName() + "-" + getString(R.string.app_name))
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_baseline_cloud_download_tint)
                 .setContentTitle("Auto Download")
                 .setContentText("copy link to download")
@@ -162,18 +174,24 @@ public class ClipboardMonitor extends Service {
                 // .addAction(R.drawable.ic_download_24dp, getString(R.string.stop_btn), makePendingIntent(STOPFOREGROUND_ACTION))
                 .setContentIntent(pendingIntent);
         Notification notification = builder.build();
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel channel = new NotificationChannel(getPackageName() + "--" + "ClipbordManager", getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("copy link to download");
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(channel);
-        }
+
         prefs = getSharedPreferences("PREF_CLIP", MODE_PRIVATE);
         editor = prefs.edit();
         editor.putBoolean("csRunning", true);
         editor.apply();
         //stopSelf();
         startForeground(1002, notification);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(String my_service, String my_background_service) {
+        NotificationChannel ch = new NotificationChannel(my_service, my_background_service, NotificationManager.IMPORTANCE_NONE);
+
+        ch.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(ch);
+        return my_service;
+
     }
 
     @Override
