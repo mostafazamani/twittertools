@@ -5,6 +5,7 @@ package com.opteam.tools.menu;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class ExploreBottomFragment extends Fragment {
     private ExploreAdapter exploreAdapter;
     private FirebaseFirestore firestore;
     boolean conn = true;
+    private ProgressDialog dialog;
 
     @Nullable
     @Override
@@ -89,7 +91,7 @@ public class ExploreBottomFragment extends Fragment {
         else if (countryCode.trim().toLowerCase().equals("us") || countryCode.trim().toLowerCase().equals("zm")|| countryCode.trim().toLowerCase().equals("ca"))
             countryCode = "SA";
         else if (countryCode.trim().toLowerCase().equals("ir") )
-            countryCode = "IR";
+            countryCode = "Public";
         else
             countryCode = "Public";
 
@@ -101,7 +103,7 @@ public class ExploreBottomFragment extends Fragment {
 
       //  sl = dbSuggest.getItem();
 
-        ProgressDialog dialog = new ProgressDialog(view.getContext());
+        dialog = new ProgressDialog(view.getContext());
         dialog.setMessage("loading...");
         dialog.setCancelable(false);
 
@@ -112,74 +114,80 @@ public class ExploreBottomFragment extends Fragment {
         exploreAdapter = new ExploreAdapter(view.getContext());
         gridView.setAdapter(exploreAdapter);
 
-
         dialog.show();
-        firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
+            public void run() {
+                firestore.collection("SugestUser").document(countryCode).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
 
-                    for (int i = 0; i < 100; i++) {
-                        int rand = new Random().nextInt(19000);
-                        String id = documentSnapshot.getString(String.valueOf(rand));
+                            for (int i = 0; i < 100; i++) {
+                                int rand = new Random().nextInt(19000);
+                                String id = documentSnapshot.getString(String.valueOf(rand));
 
-                        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
-                        if (id != null)
-                            myTwitterApiClient.getCustomTwitterService().SeeUserInfo(Long.parseLong(id)).enqueue(new Callback<JsonArray>() {
-                                @Override
-                                public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-                                    if (response.body() != null) {
-
-
-                                        try {
-                                            JsonArray elements = (JsonArray) response.body();
-                                            SuggestUser suggestUser = new SuggestUser();
-
-                                            JsonObject jsonObject = (JsonObject) elements.get(0);
+                                MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(session);
+                                if (id != null)
+                                    myTwitterApiClient.getCustomTwitterService().SeeUserInfo(Long.parseLong(id)).enqueue(new Callback<JsonArray>() {
+                                        @Override
+                                        public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                                            if (response.body() != null) {
 
 
-                                            suggestUser.setId(Long.parseLong(id));
-                                            suggestUser.setName(jsonObject.get("name").getAsString());
-                                            suggestUser.setScreenName(jsonObject.get("screen_name").getAsString());
-                                            suggestUser.setProfilePictureUrl(jsonObject.get("profile_image_url").getAsString());
+                                                try {
+                                                    JsonArray elements = (JsonArray) response.body();
+                                                    SuggestUser suggestUser = new SuggestUser();
 
-                                            suggestUsers.add(suggestUser);
+                                                    JsonObject jsonObject = (JsonObject) elements.get(0);
 
-                                            exploreAdapter.AddToList(suggestUser);
-                                            exploreAdapter.notifyDataSetChanged();
+
+                                                    suggestUser.setId(Long.parseLong(id));
+                                                    suggestUser.setName(jsonObject.get("name").getAsString());
+                                                    suggestUser.setScreenName(jsonObject.get("screen_name").getAsString());
+                                                    suggestUser.setProfilePictureUrl(jsonObject.get("profile_image_url").getAsString());
+
+                                                    suggestUsers.add(suggestUser);
+
+                                                    exploreAdapter.AddToList(suggestUser);
+                                                    exploreAdapter.notifyDataSetChanged();
+                                                    dialog.dismiss();
+                                                } catch (Exception e) {
+                                                    dialog.dismiss();
+                                                }
+
+                                            }
                                             dialog.dismiss();
-                                        } catch (Exception e) {
-                                            dialog.dismiss();
+
                                         }
 
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<JsonArray> call, Throwable t) {
-                                    dialog.dismiss();
-                                    if (conn) {
-                                        Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
-                                        conn = false;
-                                    }
-                                }
-                            });
+                                        @Override
+                                        public void onFailure(Call<JsonArray> call, Throwable t) {
+                                            dialog.dismiss();
+                                            if (conn) {
+                                                Toast.makeText(view.getContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                                                conn = false;
+                                            }
+                                        }
+                                    });
 
 
+                            }
+
+                        }
+                        refreshLayout.setEnabled(true);
                     }
-
-                }
-                refreshLayout.setEnabled(true);
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        refreshLayout.setEnabled(true);
+                        dialog.dismiss();
+                        Toast.makeText(view.getContext(), "Failed, pull to refresh", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                refreshLayout.setEnabled(true);
-                dialog.dismiss();
-                Toast.makeText(view.getContext(), "Failed, pull to refresh", Toast.LENGTH_LONG).show();
-            }
-        });
+        },1000);
 
 
 
@@ -222,7 +230,7 @@ public class ExploreBottomFragment extends Fragment {
                 else if (countryCode.trim().toLowerCase().equals("us") || countryCode.trim().toLowerCase().equals("zm")|| countryCode.trim().toLowerCase().equals("ca"))
                     countryCode = "SA";
                 else if (countryCode.trim().toLowerCase().equals("ir") )
-                    countryCode = "IR";
+                    countryCode = "Public";
                 else
                     countryCode = "Public";
 
@@ -335,5 +343,10 @@ public class ExploreBottomFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dialog.dismiss();
+    }
 
 }

@@ -39,6 +39,8 @@
             android:id="@+id/crush_search_edittext"
             android:padding="6dp"
             android:background="@color/background2"
+            android:inputType="text"
+            android:lines="1"
             android:maxLines="1"
             android:textColor="@color/textcolor"
             android:textColorHint="@color/textcolor_tint"
