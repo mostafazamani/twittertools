@@ -75,11 +75,15 @@ public class ClipboardMonitor extends Service {
                                         JsonArray elements1 = jsonObject3.getAsJsonArray("variants");
                                         JsonObject jsonObject4 = (JsonObject) elements1.get(2);
                                         String url = jsonObject4.get("url").getAsString();
-                                        downloadurl.DL(url, gettwitid(newClip), ".mp4", getApplicationContext());
+//                                        downloadurl.DL(url, gettwitid(newClip), ".mp4", getApplicationContext());
+                                        downloadurl d = new downloadurl();
+                                        d.DownL(getApplicationContext(),url,".mp4");
                                         Log.i("downloadFileName", "1");
                                     } else if (type.contains("photo")) {
                                         String url = jsonObject2.get("media_url").getAsString();
-                                        downloadurl.DL(url, gettwitid(newClip), ".jpg", getApplicationContext());
+//                                        downloadurl.DL(url, gettwitid(newClip), ".jpg", getApplicationContext());
+                                        downloadurl d = new downloadurl();
+                                        d.DownL(getApplication(),url,"jpg");
                                         Log.i("downloadFileName", "1.5");
                                     }
 

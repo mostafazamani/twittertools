@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -122,6 +123,7 @@ public class FolloweingNfyAdapter extends BaseAdapter {
                     @Override
                     public void onFailure(Call call, Throwable t) {
                         dialog.dismiss();
+                        Toast.makeText(mContext, "try again", Toast.LENGTH_SHORT).show();
 
                     }
                 });
