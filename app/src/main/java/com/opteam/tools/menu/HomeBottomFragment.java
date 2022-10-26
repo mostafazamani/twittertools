@@ -28,8 +28,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
@@ -64,6 +68,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -105,6 +110,55 @@ public class HomeBottomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.home_fragment, container, false);
+
+        MobileAds.initialize(view.getContext());
+        AdView adView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                Log.i("adbanner","clicked");
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+                Log.i("adbanner","closed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                Log.i("adbanner",adError.getMessage());
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+                Log.i("adbanner","impression");
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.i("adbanner","Loaded");
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                Log.i("adbanner","opened");
+            }
+        });
+
+
         Twitter.initialize(view.getContext());
         preferences = view.getContext().getSharedPreferences("Courser", Context.MODE_PRIVATE);
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -160,7 +214,7 @@ public class HomeBottomFragment extends Fragment {
                                 // new Remove(database, session).execute(index);
 
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
-                                    Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index+1).getUser_id()));
+                                    Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()));
                                     firestore.collection("crush")
                                             .document(String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()))
                                             .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -207,7 +261,7 @@ public class HomeBottomFragment extends Fragment {
                     mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                         @Override
                         public void onRewardedVideoAdLoaded() {
-                                    mRewardedVideoAd.show();
+                            mRewardedVideoAd.show();
                         }
 
                         @Override
@@ -222,7 +276,8 @@ public class HomeBottomFragment extends Fragment {
 
                         @Override
                         public void onRewardedVideoAdClosed() {
-
+//                            Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                         }
 
                         @Override
@@ -232,7 +287,8 @@ public class HomeBottomFragment extends Fragment {
 
                         @Override
                         public void onRewardedVideoAdLeftApplication() {
-
+                            Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                         }
 
                         @Override
@@ -242,11 +298,11 @@ public class HomeBottomFragment extends Fragment {
 
                         @Override
                         public void onRewardedVideoCompleted() {
-
+                            ListCrushs(database, session, firestore, view.getContext());
                         }
                     });
 
-                  loadRewardedVideoAd();
+                    loadRewardedVideoAd();
                 } else
                     ListCrushs(database, session, firestore, view.getContext());
             }
@@ -316,6 +372,7 @@ public class HomeBottomFragment extends Fragment {
         mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/5531784892",
                 new AdRequest.Builder().build());
     }
+
     public void read_crushs() {
         collectionReference = firestore.collection("crush").
                 document(String.valueOf(session.getId())).collection("cr");
@@ -481,7 +538,7 @@ public class HomeBottomFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 dialog.dismiss();
-                if (documentSnapshot.getData()!=null) {
+                if (documentSnapshot.getData() != null) {
                     Set<String> ma = documentSnapshot.getData().keySet();
                     Log.i("list", ma.toString());
                     Log.i("list", list.toString());
@@ -504,7 +561,7 @@ public class HomeBottomFragment extends Fragment {
                             Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
                         crushsAdapter.AddToList(list1);
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
                 }
             }

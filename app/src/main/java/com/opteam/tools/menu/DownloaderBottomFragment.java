@@ -19,6 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.opteam.tools.MyTwitterApiClient;
@@ -34,6 +40,8 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import java.util.Arrays;
+
 public class DownloaderBottomFragment extends Fragment {
 
     public static String STARTFOREGROUND_ACTION = "startforeground";
@@ -47,6 +55,54 @@ public class DownloaderBottomFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.downloader_fragment, container, false);
+
+
+        MobileAds.initialize(view.getContext());
+        AdView adView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                Log.i("adbanner","clicked");
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+                Log.i("adbanner","closed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                Log.i("adbanner",adError.getMessage());
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+                Log.i("adbanner","impression");
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.i("adbanner","Loaded");
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                Log.i("adbanner","opened");
+            }
+        });
 
         prefs = view.getContext().getSharedPreferences("PREF_CLIP", MODE_PRIVATE);
         sw = prefs.getBoolean("csRunning",false);

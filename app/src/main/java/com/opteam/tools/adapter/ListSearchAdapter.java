@@ -144,6 +144,7 @@ public class ListSearchAdapter extends BaseAdapter {
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
+                        dialog1.dismiss();
                         Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                     }
 

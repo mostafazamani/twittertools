@@ -13,6 +13,11 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.opteam.tools.models.UserShow;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -37,6 +42,23 @@ public class Launcher extends AppCompatActivity {
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
         preferences1 = getSharedPreferences("Courser", Context.MODE_PRIVATE);
         preferences2 = getSharedPreferences("AdL", Context.MODE_PRIVATE);
+        String url = "https://www.dropbox.com/s/17b9g70xy9t8gpl/ad.txt?dl=1";
+        final RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                preferences2.edit().putString("ad", response.trim()).apply();
+                Log.i("adl", response);
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("adl", error.getMessage());
+            }
+        });
+
+        queue.add(stringRequest);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

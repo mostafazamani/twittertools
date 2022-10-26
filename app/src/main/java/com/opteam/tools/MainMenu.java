@@ -16,6 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.opteam.tools.Room.ProgressState;
@@ -45,6 +51,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +97,8 @@ public class MainMenu extends AppCompatActivity {
         Twitter.initialize(this);
         setContentView(R.layout.content_main);
         progressViewModel = new ViewModelProvider(this).get(ProgressViewModel.class);
+
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final MotionLayout motionLayout = findViewById(R.id.view);
