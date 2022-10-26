@@ -3,6 +3,7 @@ package com.opteam.tools.adapter;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -17,6 +18,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +52,7 @@ public class ListSearchAdapter extends BaseAdapter {
     private TwitterSession session;
     private Dialog dialog;
     private ProgressDialog dialog1;
-
+    RewardedVideoAd mRewardedVideoAd;
 
     public ListSearchAdapter(Context context, List<UserCrushSearch> list,
                              CircularItemAdapter adapter, LayoutInflater inflater, Dialog dialog) {
@@ -108,51 +114,188 @@ public class ListSearchAdapter extends BaseAdapter {
         dialog1.setMessage("wait...");
         dialog1.setCancelable(false);
 
+        SharedPreferences preferences1 = convertView.getContext().getSharedPreferences("AdL", Context.MODE_PRIVATE);
+        String a = preferences1.getString("ad", "true");
+
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog1.show();
-                Picasso.with(context).load(url).into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        firestore.collection("crush")
-                                .document(String.valueOf(list.get(i).getId())).set(map, SetOptions.merge())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        dialog1.dismiss();
-                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-                                        Log.i("firebase", String.valueOf(list.get(i).getId()));
-//                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
-                                        database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
-                                        View v = inflater.inflate(R.layout.circular_adapter, null);
-                                        ImageView itemView = v.findViewById(R.id.img_item);
-                                        itemView.setImageBitmap(bitmap);
-                                        adapter.addItem(v);
-                                        dialog.dismiss();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.i("firebase", "not saved" + e.getMessage());
+                MobileAds.initialize(view.getContext(), "ca-app-pub-6353098097853332~3028901753");
+                 mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(view.getContext());
+                if (a.equals("true")) {
+                    mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+                        @Override
+                        public void onRewardedVideoAdLoaded() {
+                            mRewardedVideoAd.show();
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdOpened() {
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoStarted() {
+
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdClosed() {
+                            Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
+                            dialog1.dismiss();
+                        }
+
+                        @Override
+                        public void onRewarded(RewardItem rewardItem) {
                                 dialog1.dismiss();
-                                Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            Picasso.with(context).load(url).into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    firestore.collection("crush")
+                                            .document(String.valueOf(list.get(i).getId())).set(map, SetOptions.merge())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    dialog1.dismiss();
+                                                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                                    Log.i("firebase", String.valueOf(list.get(i).getId()));
+//                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
+                                                    database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
+                                                    View v = inflater.inflate(R.layout.circular_adapter, null);
+                                                    ImageView itemView = v.findViewById(R.id.img_item);
+                                                    itemView.setImageBitmap(bitmap);
+                                                    adapter.addItem(v);
+                                                    dialog.dismiss();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.i("firebase", "not saved" + e.getMessage());
+                                                    dialog1.dismiss();
+                                                    Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
 
-                    }
+                                }
 
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        dialog1.dismiss();
-                        Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
-                    }
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
+                                    dialog1.dismiss();
+                                    Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                                }
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                    }
-                });
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdLeftApplication() {
+                            Toast.makeText(view.getContext(), "failed", Toast.LENGTH_SHORT).show();
+                            dialog1.dismiss();
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdFailedToLoad(int i) {
+                                        dialog1.dismiss();
+                            Picasso.with(context).load(url).into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    firestore.collection("crush")
+                                            .document(String.valueOf(list.get(i).getId())).set(map, SetOptions.merge())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    dialog1.dismiss();
+                                                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                                    Log.i("firebase", String.valueOf(list.get(i).getId()));
+//                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
+                                                    database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
+                                                    View v = inflater.inflate(R.layout.circular_adapter, null);
+                                                    ImageView itemView = v.findViewById(R.id.img_item);
+                                                    itemView.setImageBitmap(bitmap);
+                                                    adapter.addItem(v);
+                                                    dialog.dismiss();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.i("firebase", "not saved" + e.getMessage());
+                                                    dialog1.dismiss();
+                                                    Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
+                                    dialog1.dismiss();
+                                    Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onRewardedVideoCompleted() {
+
+                        }
+                    });
+
+                    loadRewardedVideoAd();
+                } else {
+
+                    Picasso.with(context).load(url).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            firestore.collection("crush")
+                                    .document(String.valueOf(list.get(i).getId())).set(map, SetOptions.merge())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dialog1.dismiss();
+                                            Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                            Log.i("firebase", String.valueOf(list.get(i).getId()));
+//                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
+                                            database.userCrushDao().insert(new UserCrush(list.get(i).getId()));
+                                            View v = inflater.inflate(R.layout.circular_adapter, null);
+                                            ImageView itemView = v.findViewById(R.id.img_item);
+                                            itemView.setImageBitmap(bitmap);
+                                            adapter.addItem(v);
+                                            dialog.dismiss();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.i("firebase", "not saved" + e.getMessage());
+                                            dialog1.dismiss();
+                                            Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                            dialog1.dismiss();
+                            Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+                }
 
 
             }
@@ -173,6 +316,11 @@ public class ListSearchAdapter extends BaseAdapter {
         } else
             url = "https://pbs.twimg.com/profile_images/1275172653968633856/V25e9N9E_400x400.jpg";
         return url;
+    }
+
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd("ca-app-pub-6353098097853332/5531784892",
+                new AdRequest.Builder().build());
     }
 
 }
