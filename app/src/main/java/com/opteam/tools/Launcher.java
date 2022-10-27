@@ -53,7 +53,7 @@ public class Launcher extends AppCompatActivity {
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("adl", error.getMessage());
+                Log.i("adl", "error");
             }
         });
 

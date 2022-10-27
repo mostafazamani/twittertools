@@ -110,7 +110,7 @@ public class ListSearchAdapter extends BaseAdapter {
                 .build();
         firestore.setFirestoreSettings(settings);
 
-        dialog1 = new ProgressDialog(convertView.getContext());
+        dialog1 = new ProgressDialog(context);
         dialog1.setMessage("wait...");
         dialog1.setCancelable(false);
 
@@ -128,6 +128,7 @@ public class ListSearchAdapter extends BaseAdapter {
                     mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                         @Override
                         public void onRewardedVideoAdLoaded() {
+                            dialog1.dismiss();
                             mRewardedVideoAd.show();
                         }
 
@@ -143,13 +144,15 @@ public class ListSearchAdapter extends BaseAdapter {
 
                         @Override
                         public void onRewardedVideoAdClosed() {
-                            Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "closed", Toast.LENGTH_SHORT).show();
                             dialog1.dismiss();
+                            dialog1.cancel();
                         }
 
                         @Override
                         public void onRewarded(RewardItem rewardItem) {
                                 dialog1.dismiss();
+                                dialog1.cancel();
                             Picasso.with(context).load(url).into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -159,6 +162,7 @@ public class ListSearchAdapter extends BaseAdapter {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     dialog1.dismiss();
+                                                    dialog1.cancel();
                                                     Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
                                                     Log.i("firebase", String.valueOf(list.get(i).getId()));
 //                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
@@ -168,12 +172,14 @@ public class ListSearchAdapter extends BaseAdapter {
                                                     itemView.setImageBitmap(bitmap);
                                                     adapter.addItem(v);
                                                     dialog.dismiss();
+                                                    dialog.cancel();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.i("firebase", "not saved" + e.getMessage());
                                                     dialog1.dismiss();
+                                                    dialog1.cancel();
                                                     Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
@@ -183,6 +189,7 @@ public class ListSearchAdapter extends BaseAdapter {
                                 @Override
                                 public void onBitmapFailed(Drawable errorDrawable) {
                                     dialog1.dismiss();
+                                    dialog1.cancel();
                                     Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -197,11 +204,13 @@ public class ListSearchAdapter extends BaseAdapter {
                         public void onRewardedVideoAdLeftApplication() {
                             Toast.makeText(view.getContext(), "failed", Toast.LENGTH_SHORT).show();
                             dialog1.dismiss();
+                            dialog1.cancel();
                         }
 
                         @Override
                         public void onRewardedVideoAdFailedToLoad(int i) {
                                         dialog1.dismiss();
+                            dialog1.cancel();
                             Picasso.with(context).load(url).into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -211,6 +220,7 @@ public class ListSearchAdapter extends BaseAdapter {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     dialog1.dismiss();
+                                                    dialog1.cancel();
                                                     Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
                                                     Log.i("firebase", String.valueOf(list.get(i).getId()));
 //                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
@@ -220,12 +230,14 @@ public class ListSearchAdapter extends BaseAdapter {
                                                     itemView.setImageBitmap(bitmap);
                                                     adapter.addItem(v);
                                                     dialog.dismiss();
+                                                    dialog.cancel();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.i("firebase", "not saved" + e.getMessage());
                                                     dialog1.dismiss();
+                                                    dialog1.cancel();
                                                     Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
@@ -235,6 +247,7 @@ public class ListSearchAdapter extends BaseAdapter {
                                 @Override
                                 public void onBitmapFailed(Drawable errorDrawable) {
                                     dialog1.dismiss();
+                                    dialog1.cancel();
                                     Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -247,13 +260,13 @@ public class ListSearchAdapter extends BaseAdapter {
 
                         @Override
                         public void onRewardedVideoCompleted() {
-
+                            dialog1.dismiss();
                         }
                     });
 
                     loadRewardedVideoAd();
                 } else {
-
+                        dialog1.show();
                     Picasso.with(context).load(url).into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -263,6 +276,7 @@ public class ListSearchAdapter extends BaseAdapter {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             dialog1.dismiss();
+                                            dialog1.cancel();
                                             Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
                                             Log.i("firebase", String.valueOf(list.get(i).getId()));
 //                                        new Ins(database).execute(new UserCrush(list.get(i).getId()));
@@ -272,12 +286,14 @@ public class ListSearchAdapter extends BaseAdapter {
                                             itemView.setImageBitmap(bitmap);
                                             adapter.addItem(v);
                                             dialog.dismiss();
+                                            dialog.cancel();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             Log.i("firebase", "not saved" + e.getMessage());
                                             dialog1.dismiss();
+                                            dialog1.cancel();
                                             Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                                         }
                                     });
@@ -287,6 +303,7 @@ public class ListSearchAdapter extends BaseAdapter {
                         @Override
                         public void onBitmapFailed(Drawable errorDrawable) {
                             dialog1.dismiss();
+                            dialog1.cancel();
                             Toast.makeText(context, "try again!", Toast.LENGTH_SHORT).show();
                         }
 

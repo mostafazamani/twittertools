@@ -98,6 +98,7 @@ public class HomeBottomFragment extends Fragment {
     public Button btn_open_nav;
     ArrayList<Bitmap> itemTitles;
     ProgressDialog dialog;
+    ProgressDialog dialog5;
     int step = 0;
 
     public Context context;
@@ -210,8 +211,11 @@ public class HomeBottomFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-
+                                dialog5 = new ProgressDialog(view.getContext());
+                                dialog5.setMessage("wait...");
+                                dialog5.setCancelable(false);
                                 // new Remove(database, session).execute(index);
+                                dialog5.show();
 
                                 if (database.userCrushDao().getUserCrush().size() > 0) {
                                     Log.i("removeItem", String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()));
@@ -223,10 +227,13 @@ public class HomeBottomFragment extends Fragment {
                                             database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index + 1));
                                             Log.i("removeItem", "remove from fire base");
                                             adapter.removeItemAt(index);
+                                            dialog5.dismiss();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
+                                            dialog5.dismiss();
                                             Log.i("removeItem", e.getMessage());
                                         }
                                     });
