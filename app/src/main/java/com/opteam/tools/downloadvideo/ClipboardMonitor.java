@@ -169,7 +169,7 @@ public class ClipboardMonitor extends Service {
 
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_MUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_baseline_cloud_download_tint)
                 .setContentTitle("Auto Download")
@@ -208,7 +208,7 @@ public class ClipboardMonitor extends Service {
         Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
         restartServiceIntent.setPackage(getPackageName());
 
-        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_MUTABLE);
         AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmService.set(
                 AlarmManager.ELAPSED_REALTIME,
@@ -229,7 +229,7 @@ public class ClipboardMonitor extends Service {
     public PendingIntent makePendingIntent(String name) {
         Intent intent = new Intent(getApplicationContext(), ClipboardMonitor.class);
         intent.setAction(name);
-        return PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+        return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_MUTABLE);
     }
 
     public long gettwitid(String t) {

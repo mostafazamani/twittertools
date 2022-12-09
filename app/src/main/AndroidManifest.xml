@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <application
         android:allowBackup="true"
@@ -19,7 +22,7 @@
         android:theme="@style/AppTheme">
         <service
             android:name="com.opteam.tools.FirebaseMessageReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -40,6 +43,7 @@
         <activity
             android:name="com.opteam.tools.MainMenu"
             android:label="@string/title_activity_main_menu"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -48,11 +52,13 @@
 
         <activity
             android:name="com.opteam.tools.HomeActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.opteam.tools.Launcher"
             android:launchMode="singleTask"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -66,10 +72,13 @@
             android:name="com.opteam.tools.IntroActivityApp"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:exported="true"
+
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
         <activity
             android:name="com.opteam.tools.MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action

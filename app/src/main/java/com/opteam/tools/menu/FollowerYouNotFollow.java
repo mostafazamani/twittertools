@@ -134,6 +134,34 @@ public class FollowerYouNotFollow extends Fragment {
         }
 
 
+        /////////////////////////////
+        if (progressBar.getProgress() == 100) {
+            if (progressBar2.getProgress() == 100) {
+                if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar2.setVisibility(View.INVISIBLE);
+                    txtProgress.setVisibility(View.INVISIBLE);
+                    txtProgress2.setVisibility(View.INVISIBLE);
+                    follow_all.setVisibility(View.VISIBLE);
+                    ynfAdapter = new FollowerYnfAdapter(view.getContext());
+                    list.setAdapter(ynfAdapter);
+
+                    db = DbFollow.getInstance(view.getContext());
+                    db.getReadableDatabase();
+
+                    fo = new ArrayList<>();
+
+                    followList = db.getExpectItem(DbFollow.TB_FOLLOWER, DbFollow.TB_FOLLOWING);
+                    ynfAdapter.AddToList(followList);
+                    ynfAdapter.notifyDataSetChanged();
+                    db.close();
+                    refreshLayout.setEnabled(true);
+                }
+            }
+        }
+
+
+
         final int[] x = {0};
         model = new ViewModelProvider(getActivity()).get(ProgressViewModel.class);
         model.getState().observe(getViewLifecycleOwner(), new Observer<List<ProgressState>>() {
