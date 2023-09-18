@@ -1,14 +1,10 @@
-package com.opteam.tools;
-
+package com.op.crush;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
-
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,65 +12,67 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.SetOptions;
-
-import com.opteam.tools.Room.ProgressState;
-import com.opteam.tools.Room.ProgressViewModel;
-import com.opteam.tools.background.FlwService;
-import com.opteam.tools.loc.GPSTracker;
-import com.opteam.tools.menu.DownloaderBottomFragment;
-import com.opteam.tools.menu.ExploreBottomFragment;
-import com.opteam.tools.menu.FollowBottomFragment;
-import com.opteam.tools.menu.HomeBottomFragment;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.op.crush.Room.ProgressState;
+import com.op.crush.Room.ProgressViewModel;
+import com.op.crush.background.FlwService;
+import com.op.crush.background.LoadFollower;
+import com.op.crush.background.LoadFollowing;
+import com.op.crush.menu.DownloaderBottomFragment;
+import com.op.crush.menu.ExploreBottomFragment;
+import com.op.crush.menu.FollowBottomFragment;
+import com.op.crush.menu.HomeBottomFragment;
+import com.op.crush.menu.ThemeDialog;
+import com.op.crush.menu.TwittsBottomFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.opteam.tools.models.UserShow;
-
+import com.op.crush.models.UserShow;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.motion.widget.MotionLayout;
-
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
-import java.io.IOException;
+import androidx.work.BackoffPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,10 +85,12 @@ public class MainMenu extends AppCompatActivity {
     private TwitterSession session;
 
 
-    SharedPreferences preferences;
+
+
+    SharedPreferences preferences ;
     BottomNavigationView bottomNavigationView;
     ImageView profile, banner;
-    TextView fc, fwc, tid, tname;
+    TextView fc,fwc,tid,tname;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -98,7 +98,7 @@ public class MainMenu extends AppCompatActivity {
 
     Fragment fragment1 = new HomeBottomFragment();
     Fragment fragment2 = new ExploreBottomFragment();
-    //    Fragment fragment3 = new TwittsBottomFragment();
+//    Fragment fragment3 = new TwittsBottomFragment();
     Fragment fragment4 = new FollowBottomFragment();
     Fragment fragment5 = new DownloaderBottomFragment(); //downloader
     FragmentManager fm = getSupportFragmentManager();
@@ -118,9 +118,9 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.content_main);
         progressViewModel = new ViewModelProvider(this).get(ProgressViewModel.class);
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final MotionLayout motionLayout = findViewById(R.id.view);
+
 
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -162,7 +162,13 @@ public class MainMenu extends AppCompatActivity {
         }.start();
 
 
+
+
         bottomNavigationView = findViewById(R.id.bottom_nav);
+
+
+
+
 
 
         preferences = getSharedPreferences("Courser", Context.MODE_PRIVATE);
@@ -194,12 +200,11 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onChanged(List<ProgressState> progressStates) {
                 if (progressStates != null && progressStates.size() > 0) {
-                    //    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
+                //    text.setText(String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                     Log.i("vm", String.valueOf(progressStates.get(progressStates.size() - 1).getState()));
                 }
             }
         });
-
 
 
         session = TwitterCore.getInstance().getSessionManager().getActiveSession();
@@ -211,57 +216,6 @@ public class MainMenu extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
         firestore.setFirestoreSettings(settings);
-
-
-        GPSTracker mGPS = new GPSTracker(this, this);
-
-
-        Locale locale = new Locale("En");
-
-        Geocoder geocoder = new Geocoder(this, locale);
-
-        List<Address> list;
-
-        try {
-
-            if (mGPS.canGetLocation) {
-                mGPS.getLocation();
-                list = geocoder.getFromLocation(mGPS.getLatitude(), mGPS.getLongitude(), 2);
-                if (list.size() > 0) {
-                    Address address = list.get(0);
-
-                    Map<String, String> ma = new HashMap<>();
-                    ma.put(String.valueOf(session.getUserName()), String.valueOf(session.getUserName()));
-                    firestore.collection("location")
-                            .document(address.getAdminArea()).set(ma, SetOptions.merge())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.i("firebase", "check location" + e.getMessage());
-
-                                }
-                            });
-                }
-
-                } else {
-                    Toast.makeText(this, "turn on location", Toast.LENGTH_SHORT).show();
-                    displayLocationSettingsRequest(this);
-                    System.out.println("Unable");
-                }
-
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.i("locop", e.getMessage());
-        }
 
 
 //
@@ -313,14 +267,15 @@ public class MainMenu extends AppCompatActivity {
 //        });
 
 
+
         ////////////////////Night Mode
 
         Menu menu = navigationView.getMenu();
-        //   MenuItem menuItem = menu.findItem(R.id.nav_switch);
-        //    View actionView = MenuItemCompat.getActionView(menuItem);
-        //    nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
-        //    night_preferences = getSharedPreferences("night" , 0);
-        //    Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
+     //   MenuItem menuItem = menu.findItem(R.id.nav_switch);
+    //    View actionView = MenuItemCompat.getActionView(menuItem);
+    //    nightswitch = (SwitchCompat) actionView.findViewById(R.id.nightswitch);
+    //    night_preferences = getSharedPreferences("night" , 0);
+    //    Boolean aBoolean = night_preferences.getBoolean("night_mode",true);
 
         /*if (aBoolean){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -355,13 +310,13 @@ public class MainMenu extends AppCompatActivity {
                 switch (id) {
                     case R.id.about_us:
 
-                        Dialog about_us = new Dialog(MainMenu.this, android.R.style.Theme_NoTitleBar_Fullscreen);
+                        Dialog about_us=new Dialog(MainMenu.this,android.R.style.Theme_NoTitleBar_Fullscreen);
                         about_us.setTitle("select color");
                         about_us.setCancelable(true);
                         about_us.setContentView(R.layout.about_us);
                         about_us.show();
                         break;
-                    case R.id.policy:
+                    case R.id.policy :
                         String url = "https://twittwetools.w3spaces.com/";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
@@ -373,11 +328,11 @@ public class MainMenu extends AppCompatActivity {
                             startActivity(launchIntent);//null pointer check in case package name was not found
                         }
                         break;
-                    case R.id.exit:
+                    case R.id.exit :
                         SharedPreferences preferences;
                         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
                         preferences.edit().putString("log", "logout").apply();
-                        Intent intent = new Intent(MainMenu.this, MainActivity.class);
+                        Intent intent = new Intent(MainMenu.this,MainActivity.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -397,47 +352,7 @@ public class MainMenu extends AppCompatActivity {
         bottomNavigationView.setItemIconTintList(null); //baraye selectas
 
 
-    }
 
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("GpsTurnon", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i("GpsTurnon", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(MainMenu.this, 102);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i("GpsTurnon", "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i("GpsTurnon", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
-                }
-            }
-        });
     }
 
     // open drawer for toolbar icon
@@ -452,11 +367,6 @@ public class MainMenu extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void restartApp() {
         Intent intent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(intent);
@@ -469,10 +379,12 @@ public class MainMenu extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
 
+
+
                     switch (menuItem.getItemId()) {
                         case R.id.item_1:
                             fm.beginTransaction().hide(active).show(fragment1).commit();
-                            //       bar.setVisibility(View.VISIBLE);
+                     //       bar.setVisibility(View.VISIBLE);
                             active = fragment1;
                             return true;
                         //selectedFragment = new HomeBottomFragment();
@@ -542,10 +454,8 @@ public class MainMenu extends AppCompatActivity {
                     UserShow show = response.body();
 //                    Toast.makeText(MainMenu.this, "" + show.getProfile_name() + "\n"
 //                            + show.getProfile_image_url() + "\n" + show.getFollowers_count(), Toast.LENGTH_SHORT).show();
-                    int cf = show.getFollowings_count();
-                    int cff = show.getFollowers_count();
+                    int cf = show.getFollowers_count() + show.getFollowings_count();
                     preferences.edit().putInt("CP", cf).apply();
-                    preferences.edit().putInt("CPf", cff).apply();
 
                     String purl = show.getProfile_image_url();
                     String burl = show.getProfile_banner_url();
@@ -581,6 +491,7 @@ public class MainMenu extends AppCompatActivity {
 
         return url;
     }
+
 
 
 }

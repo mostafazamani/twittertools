@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.opteam.tools">
+    package="com.op.crush">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,42 +8,36 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name="com.opteam.tools.FirebaseMessageReceiver"
-            android:exported="true">
+            android:name=".FirebaseMessageReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.opteam.tools.background.FlwService" />
+        <service android:name=".background.FlwService" />
         <service
-            android:name="com.opteam.tools.downloadvideo.ClipboardMonitor"
+            android:name=".downloadvideo.ClipboardMonitor"
             android:exported="false"
             android:label="Clipboard Monitor"
-            android:stopWithTask="false"
-            android:requestLegacyExternalStorage="true"/>
+            android:stopWithTask="false" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6353098097853332~7673257724" />
+            android:value="ca-app-pub-6353098097853332~3028901753" />
 
 
         <activity
-            android:name="com.opteam.tools.MainMenu"
+            android:name="com.op.crush.MainMenu"
             android:label="@string/title_activity_main_menu"
-            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -51,14 +45,12 @@
         </activity>
 
         <activity
-            android:name="com.opteam.tools.HomeActivity"
-            android:exported="true"
+            android:name="com.op.crush.HomeActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.opteam.tools.Launcher"
+            android:name="com.op.crush.Launcher"
             android:launchMode="singleTask"
-            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -69,16 +61,13 @@
         </activity>
 
         <activity
-            android:name="com.opteam.tools.IntroActivityApp"
+            android:name="com.op.crush.IntroActivityApp"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:exported="true"
-
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
         <activity
-            android:name="com.opteam.tools.MainActivity"
-            android:exported="true"
+            android:name="com.op.crush.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action
