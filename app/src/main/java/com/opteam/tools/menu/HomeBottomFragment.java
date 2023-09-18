@@ -117,7 +117,7 @@ public class HomeBottomFragment extends Fragment {
 
         if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else{
+        } else {
             // Write you code here if permission already given.
         }
 
@@ -131,40 +131,40 @@ public class HomeBottomFragment extends Fragment {
             @Override
             public void onAdClicked() {
                 // Code to be executed when the user clicks on an ad.
-                Log.i("adbanner","clicked");
+                Log.i("adbanner", "clicked");
             }
 
             @Override
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
-                Log.i("adbanner","closed");
+                Log.i("adbanner", "closed");
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
                 // Code to be executed when an ad request fails.
-                Log.i("adbanner",adError.getMessage());
+                Log.i("adbanner", adError.getMessage());
             }
 
             @Override
             public void onAdImpression() {
                 // Code to be executed when an impression is recorded
                 // for an ad.
-                Log.i("adbanner","impression");
+                Log.i("adbanner", "impression");
             }
 
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
-                Log.i("adbanner","Loaded");
+                Log.i("adbanner", "Loaded");
             }
 
             @Override
             public void onAdOpened() {
                 // Code to be executed when an ad opens an overlay that
                 // covers the screen.
-                Log.i("adbanner","opened");
+                Log.i("adbanner", "opened");
             }
         });
 
@@ -231,21 +231,21 @@ public class HomeBottomFragment extends Fragment {
                                     firestore.collection("crush")
                                             .document(String.valueOf(database.userCrushDao().getUserCrush().get(index + 1).getUser_id()))
                                             .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index + 1));
-                                            Log.i("removeItem", "remove from fire base");
-                                            adapter.removeItemAt(index);
-                                            dialog5.dismiss();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
-                                            dialog5.dismiss();
-                                            Log.i("removeItem", e.getMessage());
-                                        }
-                                    });
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    database.userCrushDao().delete(database.userCrushDao().getUserCrush().get(index + 1));
+                                                    Log.i("removeItem", "remove from fire base");
+                                                    adapter.removeItemAt(index);
+                                                    dialog5.dismiss();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
+                                                    dialog5.dismiss();
+                                                    Log.i("removeItem", e.getMessage());
+                                                }
+                                            });
 
                                 }
 
@@ -549,45 +549,46 @@ public class HomeBottomFragment extends Fragment {
     public void ListCrushs(UserCrushDatabase database, TwitterSession session, FirebaseFirestore firestore
             , Context context) {
         List<UserCrush> list = database.userCrushDao().getUserCrush();
-        firestore.collection("crush").document(String.valueOf(session.getUserId()))
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                dialog.dismiss();
-                if (documentSnapshot.getData() != null) {
-                    Set<String> ma = documentSnapshot.getData().keySet();
-                    Log.i("list", ma.toString());
-                    Log.i("list", list.toString());
-                    if (ma.size() > 0) {
-                        List<Long> list1 = new ArrayList<>();
-                        List<String> stringList = new ArrayList<>(ma);
-                        for (int i = 0; i < stringList.size(); i++) {
-                            for (int j = 0; j < list.size(); j++) {
-                                Log.i("crushslist", String.valueOf(list.get(j).getUser_id()));
-                                Log.i("crushslist", stringList.get(i));
-                                if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
-                                    list1.add(list.get(j).getUser_id());
+        if (session != null)
+            firestore.collection("crush").document(String.valueOf(session.getUserId()))
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            dialog.dismiss();
+                            if (documentSnapshot.getData() != null) {
+                                Set<String> ma = documentSnapshot.getData().keySet();
+                                Log.i("list", ma.toString());
+                                Log.i("list", list.toString());
+                                if (ma.size() > 0) {
+                                    List<Long> list1 = new ArrayList<>();
+                                    List<String> stringList = new ArrayList<>(ma);
+                                    for (int i = 0; i < stringList.size(); i++) {
+                                        for (int j = 0; j < list.size(); j++) {
+                                            Log.i("crushslist", String.valueOf(list.get(j).getUser_id()));
+                                            Log.i("crushslist", stringList.get(i));
+                                            if (stringList.get(i).equals(String.valueOf(list.get(j).getUser_id()))) {
+                                                list1.add(list.get(j).getUser_id());
+                                            }
+                                        }
+                                    }
+
+                                    CrushsAdapter crushsAdapter = new CrushsAdapter(context);
+                                    list_crushs.setAdapter(crushsAdapter);
+                                    if (list1.size() < 1)
+                                        Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
+                                    crushsAdapter.AddToList(list1);
                                 }
+                            } else {
+                                Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
                             }
                         }
-
-                        CrushsAdapter crushsAdapter = new CrushsAdapter(context);
-                        list_crushs.setAdapter(crushsAdapter);
-                        if (list1.size() < 1)
-                            Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
-                        crushsAdapter.AddToList(list1);
-                    }
-                } else {
-                    Toast.makeText(context, "No one found", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
-                Log.i("crushslist", "onFailure");
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            dialog.dismiss();
+                            Log.i("crushslist", "onFailure");
+                        }
+                    });
     }
 
     public static class ListOfCrush extends AsyncTask<Void, Void, Void> {
@@ -710,11 +711,11 @@ public class HomeBottomFragment extends Fragment {
                 firestore.collection("crush")
                         .document(String.valueOf(database.userCrushDao().getUserCrush().get(integers[0]).getId()))
                         .update(String.valueOf(session.getId()), FieldValue.delete()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i("removeItem", "remove from fire base");
-                    }
-                });
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.i("removeItem", "remove from fire base");
+                            }
+                        });
 
             }
             return null;

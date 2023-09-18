@@ -47,11 +47,11 @@ public class FlwService extends Service {
                 .build();
 
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
-                Builder(LoadFollowing.class, 2, TimeUnit.MINUTES)
+                Builder(LoadFollowing.class, 120, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
         PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
-                Builder(LoadFollower.class, 2, TimeUnit.MINUTES)
+                Builder(LoadFollower.class, 120, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
 
@@ -79,20 +79,20 @@ public class FlwService extends Service {
                 .build();
 
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.
-                Builder(LoadFollowing.class, 720, TimeUnit.MINUTES)
+                Builder(LoadFollowing.class, 120, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
         PeriodicWorkRequest workRequest1 = new PeriodicWorkRequest.
-                Builder(LoadFollower.class, 720, TimeUnit.MINUTES)
+                Builder(LoadFollower.class, 120, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
 
 
         WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("following",
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.REPLACE,
                 workRequest);
 
         WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("follower",
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.REPLACE,
                 workRequest1);
 
 
@@ -107,86 +107,5 @@ public class FlwService extends Service {
         super.onTaskRemoved(rootIntent);
     }
 
-    public void loadFollowers(final TwitterSession twitterSession, long next) {
-        db = DbFollow.getInstance(this);
-        db.getWritableDatabase();
-
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowersList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-                    followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null) {
-
-                        for (int i = 0; i < fol.getResults().size(); i++) {
-
-                            db.AddItem(fol.getResults().get(i), DbFollow.TB_FOLLOWER);
-
-                        }
-                    }
-
-                    db.close();
-                    countFollower++;
-                    Log.i("follwer", String.valueOf(countFollower));
-                    if (fol.getNextCursor() != 0) {
-                        loadFollowers(twitterSession, fol.getNextCursor());
-                    } else {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-
-            }
-        });
-
-
-    }
-
-    public void loadFollowings(final TwitterSession twitterSession, long next) {
-        db = DbFollow.getInstance(this);
-        db.getWritableDatabase();
-        MyTwitterApiClient myTwitterApiClient = new MyTwitterApiClient(twitterSession);
-        myTwitterApiClient.getCustomTwitterService().FollowingList(twitterSession.getId(), next, 200).enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(Call call, @NonNull Response response) {
-                if (response.body() != null) {
-
-                    followmodel fol = (followmodel) response.body();
-                    if (fol.getResults() != null) {
-
-                        for (int i = 0; i < fol.getResults().size(); i++) {
-                            if (fol.getResults().get(i) != null)
-                                db.AddItem(fol.getResults().get(i), DbFollow.TB_FOLLOWING);
-                        }
-                    }
-
-                    db.close();
-                    countFollowing++;
-                    Log.i("following", String.valueOf(countFollowing));
-
-                    if (fol.getNextCursor() != 0) {
-                        loadFollowings(twitterSession, fol.getNextCursor());
-                    } else {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                Log.i("following", String.valueOf(countFollowing));
-
-            }
-        });
-
-
-    }
 
 }

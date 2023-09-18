@@ -135,8 +135,8 @@ public class FollowerYouNotFollow extends Fragment {
 
 
         /////////////////////////////
-        if (progressBar.getProgress() == 100) {
-            if (progressBar2.getProgress() == 100) {
+        if (progressBar.getProgress() >= 100) {
+            if (progressBar2.getProgress() >= 100) {
                 if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar2.setVisibility(View.INVISIBLE);
@@ -172,8 +172,8 @@ public class FollowerYouNotFollow extends Fragment {
                     progressBar.setProgress(stat);
                     if (stat <= 100)
                         txtProgress.setText("Following\n" + String.valueOf(stat) + "%");
-                    if (stat == 100) {
-                        if (statFollower == 100) {
+                    if (stat >= 100) {
+                        if (statFollower >= 100) {
                             x[0] += 1;
 
                             if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {
@@ -212,8 +212,8 @@ public class FollowerYouNotFollow extends Fragment {
                     progressBar2.setProgress(statFollower);
                     if (statFollower <= 100)
                         txtProgress2.setText("Follower \n" + String.valueOf(statFollower) + "%");
-                    if (statFollower == 100) {
-                        if (stat == 100) {
+                    if (statFollower >= 100) {
+                        if (stat >= 100) {
                             x[0] += 1;
 
                             if (preferences.getInt("FollowerCount", 0) == 1 && preferences.getInt("FollowingCount", 0) == 1) {

@@ -223,14 +223,13 @@ public class DownloaderBottomFragment extends Fragment {
         final RandomTextView randomTextView = view.findViewById(
                 R.id.random_textview);
 
-         firestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .build();
         firestore.setFirestoreSettings(settings);
 
 
-
-        GPSTracker mGPS = new GPSTracker(view.getContext(),getActivity());
+        GPSTracker mGPS = new GPSTracker(view.getContext(), getActivity());
 
 
         Locale locale = new Locale("En");
@@ -253,48 +252,48 @@ public class DownloaderBottomFragment extends Fragment {
 
                     Map<String, String> ma = new HashMap<>();
                     ma.put(String.valueOf(session.getUserName()), String.valueOf(session.getUserName()));
-                    firestore.collection("location")
-                            .document(address.getAdminArea()).set(ma, SetOptions.merge())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                    if (ma.size() > 0)
+                        firestore.collection("location")
+                                .document(address.getAdminArea()).set(ma, SetOptions.merge())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
 
 
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.i("firebase", "check location" + e.getMessage());
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.i("firebase", "check location" + e.getMessage());
 
-                                }
-                            });
+                                    }
+                                });
 
+                    if (address.getAdminArea() != null)
+                        firestore.collection("location").document(address.getAdminArea()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.getData() != null) {
+                                    Set<String> ma = documentSnapshot.getData().keySet();
+                                    Log.i("list", ma.toString());
+                                    if (ma.size() > 0) {
+                                        List<String> stringList = new ArrayList<>(ma);
 
+                                        for (int i = 0; i < stringList.size(); i++) {
+                                            ////////////////////
 
-                    firestore.collection("location").document(address.getAdminArea()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.getData() != null) {
-                                Set<String> ma = documentSnapshot.getData().keySet();
-                                Log.i("list", ma.toString());
-                                if (ma.size() > 0) {
-                                    List<String> stringList = new ArrayList<>(ma);
+                                            randomTextView.setOnRippleViewClickListener(
+                                                    new RandomTextView.OnRippleViewClickListener() {
+                                                        @Override
+                                                        public void onRippleViewClicked(View view) {
 
-                                    for (int i = 0; i < stringList.size(); i++) {
-                                        ////////////////////
+                                                        }
+                                                    });
 
-                                        randomTextView.setOnRippleViewClickListener(
-                                                new RandomTextView.OnRippleViewClickListener() {
-                                                    @Override
-                                                    public void onRippleViewClicked(View view) {
-
-                                                    }
-                                                });
-
-                                        if (!Objects.equals(stringList.get(i), session.getUserName()))
-                                            randomTextView.addKeyWord(stringList.get(i));
-                                        if (stringList.size() < 2)
-                                            randomTextView.addKeyWord("Mzamani1998");
+                                            if (!Objects.equals(stringList.get(i), session.getUserName()))
+                                                randomTextView.addKeyWord(stringList.get(i));
+                                            if (stringList.size() < 2)
+                                                randomTextView.addKeyWord("Mzamani1998");
 
 
 //                                    new Handler().postDelayed(new Runnable()
@@ -309,20 +308,20 @@ public class DownloaderBottomFragment extends Fragment {
 //                                    }, 2 * 1000);
 
 
+                                        }
+                                        randomTextView.show();
                                     }
-                                    randomTextView.show();
+                                } else {
+                                    Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
+                            }
+                        });
                 }
 
             } else {
@@ -365,23 +364,23 @@ public class DownloaderBottomFragment extends Fragment {
                                     " ,AdminArea : " + address.getAdminArea() +
                                     " ,CountryName : " + address.getCountryName() +
                                     " ,SubLocality : " + address.getSubLocality());
+                            if (address.getAdminArea() != null)
+                                firestore.collection("location").document(address.getAdminArea()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if (documentSnapshot.getData() != null) {
+                                            Set<String> ma = documentSnapshot.getData().keySet();
+                                            Log.i("list", ma.toString());
+                                            if (ma.size() > 0) {
+                                                List<String> stringList = new ArrayList<>(ma);
+                                                for (int i = 0; i < stringList.size(); i++) {
+                                                    ////////////////////
 
-                            firestore.collection("location").document(address.getAdminArea()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if (documentSnapshot.getData() != null) {
-                                        Set<String> ma = documentSnapshot.getData().keySet();
-                                        Log.i("list", ma.toString());
-                                        if (ma.size() > 0) {
-                                            List<String> stringList = new ArrayList<>(ma);
-                                            for (int i = 0; i < stringList.size(); i++) {
-                                                ////////////////////
 
-
-                                                if (!Objects.equals(stringList.get(i), session.getUserName()))
-                                                    randomTextView.addKeyWord(stringList.get(i));
-                                                if (stringList.size() < 2)
-                                                    randomTextView.addKeyWord("Mzamani1998");
+                                                    if (!Objects.equals(stringList.get(i), session.getUserName()))
+                                                        randomTextView.addKeyWord(stringList.get(i));
+                                                    if (stringList.size() < 2)
+                                                        randomTextView.addKeyWord("Mzamani1998");
 
 
 //                                    new Handler().postDelayed(new Runnable()
@@ -396,35 +395,35 @@ public class DownloaderBottomFragment extends Fragment {
 //                                    }, 2 * 1000);
 
 
+                                                }
+                                                randomTextView.show();
                                             }
-                                            randomTextView.show();
+                                        } else {
+                                            Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(view.getContext(), "No one found", Toast.LENGTH_SHORT).show();
 
-                                }
-                            });
+                                    }
+                                });
                         }
 
-                        } else {
+                    } else {
 
-                            System.out.println("Unable");
-                            displayLocationSettingsRequest(view.getContext());
-                            Toast.makeText(view.getContext(), "Turn on Location", Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    } catch(IOException e){
-                        e.printStackTrace();
-                        Log.i("locop", e.getMessage());
+                        System.out.println("Unable");
+                        displayLocationSettingsRequest(view.getContext());
+                        Toast.makeText(view.getContext(), "Turn on Location", Toast.LENGTH_SHORT).show();
                     }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("locop", e.getMessage());
                 }
+            }
 
         });
 
@@ -473,7 +472,6 @@ public class DownloaderBottomFragment extends Fragment {
             }
         });
     }
-
 
 
     public long gettwitid(String t) {
